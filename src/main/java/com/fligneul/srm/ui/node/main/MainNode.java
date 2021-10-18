@@ -1,6 +1,6 @@
 package com.fligneul.srm.ui.node.main;
 
-import javafx.scene.control.Label;
+import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +11,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class MainNode extends StackPane {
     private static final Logger LOGGER = LogManager.getLogger(MainNode.class);
-
+    private static final String FXML_PATH = "main.fxml";
 
     public MainNode() {
-        getChildren().add(new Label("TestView"));
+        FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
+
 }

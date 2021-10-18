@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
  * Application launcher
  * This class MUST NOT extends {@link Application} to load the JavaFX components at startup
  */
-public class Launcher {
-    private static final Logger LOGGER = LogManager.getLogger(Launcher.class);
+public class ShootingRangeManagerLauncher {
+    private static final Logger LOGGER = LogManager.getLogger(ShootingRangeManagerLauncher.class);
 
     /**
      * Start the application from the launcher
@@ -19,6 +19,6 @@ public class Launcher {
      */
     public static void main(String[] args) {
         LOGGER.debug("Start application with args {}", (Object[]) args);
-        Main.main(args);
+        ShootingRangeManagerMain.main(args);
     }
 }

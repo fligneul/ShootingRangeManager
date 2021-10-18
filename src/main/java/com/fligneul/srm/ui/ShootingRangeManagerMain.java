@@ -1,6 +1,10 @@
 package com.fligneul.srm.ui;
 
+import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.di.module.UIModule;
 import com.fligneul.srm.ui.node.main.MainNode;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -12,11 +16,15 @@ import java.util.Objects;
  * Main application
  * Build the {@link MainNode} and display it
  */
-public class Main extends Application {
+public class ShootingRangeManagerMain extends Application {
     private static final String APPLICATION_TITLE = "Shooting Range Manager";
     private static final String APPLICATION_ICON_PNG = "/ShootingRangeManager.png";
     private static final int APPLICATION_WIDTH = 1280;
     private static final int APPLICATION_HEIGHT = 720;
+
+    private static final AbstractModule[] MODULES = new AbstractModule[]{
+            new UIModule()
+    };
 
     /**
      * Launch the application
@@ -25,7 +33,7 @@ public class Main extends Application {
      *         application command line arguments
      */
     public static void main(String[] args) {
-        launch(Main.class);
+        launch(ShootingRangeManagerMain.class);
     }
 
     /**
@@ -36,10 +44,13 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        // Initialize FXML loader with Guice injector
+        FXMLGuiceNodeLoader.setInjector(Guice.createInjector(MODULES));
+
         // Create main node and display it
         MainNode mainNode = new MainNode();
         primaryStage.setTitle(APPLICATION_TITLE);
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream(APPLICATION_ICON_PNG))));
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(ShootingRangeManagerMain.class.getResourceAsStream(APPLICATION_ICON_PNG))));
         primaryStage.setScene(new Scene(mainNode, APPLICATION_WIDTH, APPLICATION_HEIGHT));
         primaryStage.show();
     }

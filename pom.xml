@@ -28,6 +28,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <javafx.version>15.0.1</javafx.version>
+        <guice.version>5.0.1</guice.version>
 
         <log4j.version>2.14.1</log4j.version>
     </properties>
@@ -43,6 +44,13 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- DI -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
         </dependency>
 
         <!-- Logging -->
@@ -65,7 +73,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.6</version>
                 <configuration>
-                    <mainClass>com.fligneul.srm.ui.Launcher</mainClass>
+                    <mainClass>com.fligneul.srm.ui.ShootingRangeManagerLauncher</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -101,7 +109,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.fligneul.srm.ui.Launcher</mainClass>
+                            <mainClass>com.fligneul.srm.ui.ShootingRangeManagerLauncher</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
