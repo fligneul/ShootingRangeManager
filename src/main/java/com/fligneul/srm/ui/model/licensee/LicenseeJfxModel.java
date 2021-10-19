@@ -1,0 +1,298 @@
+package com.fligneul.srm.ui.model.licensee;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+import java.time.LocalDate;
+
+public class LicenseeJfxModel {
+    public static int DEFAULT_ID = -1;
+
+    private final int id;
+    private final StringProperty licenceNumber = new SimpleStringProperty("");
+    private final StringProperty firstName = new SimpleStringProperty("");
+    private final StringProperty lastName = new SimpleStringProperty("");
+    private final StringProperty maidenName = new SimpleStringProperty("");
+    private final StringProperty sex = new SimpleStringProperty("");
+    private final ObjectProperty<LocalDate> dateOfBirth = new SimpleObjectProperty<>(LocalDate.EPOCH);
+    private final StringProperty placeOfBirth = new SimpleStringProperty("");
+    private final StringProperty departmentOfBirth = new SimpleStringProperty("");
+    private final StringProperty countryOfBirth = new SimpleStringProperty("");
+    private final StringProperty address = new SimpleStringProperty("");
+    private final StringProperty zipCode = new SimpleStringProperty("");
+    private final StringProperty city = new SimpleStringProperty("");
+    private final StringProperty email = new SimpleStringProperty("");
+    private final StringProperty phoneNumber = new SimpleStringProperty("");
+    private final StringProperty licenceState = new SimpleStringProperty("");
+    private final ObjectProperty<LocalDate> firstLicenceDate = new SimpleObjectProperty<>(LocalDate.EPOCH);
+    private final StringProperty season = new SimpleStringProperty("");
+    private final StringProperty ageCategory = new SimpleStringProperty("");
+    private final BooleanProperty handisport = new SimpleBooleanProperty(false);
+    private final BooleanProperty blacklisted = new SimpleBooleanProperty(false);
+
+
+    protected LicenseeJfxModel(int id, String firstName, String lastName, LocalDate dateOfBirth) {
+        this.id = id;
+        this.firstName.set(firstName);
+        this.lastName.set(lastName);
+        this.dateOfBirth.set(dateOfBirth);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getLicenceNumber() {
+        return licenceNumber.get();
+    }
+
+    public StringProperty licenceNumberProperty() {
+        return licenceNumber;
+    }
+
+    public void setLicenceNumber(final String licenceNumber) {
+        this.licenceNumber.set(licenceNumber);
+    }
+
+    public String getFirstName() {
+        return firstName.get();
+    }
+
+    public StringProperty firstNameProperty() {
+        return firstName;
+    }
+
+    public void setFirstName(final String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public StringProperty lastNameProperty() {
+        return lastName;
+    }
+
+    public void setLastName(final String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public String getMaidenName() {
+        return maidenName.get();
+    }
+
+    public StringProperty maidenNameProperty() {
+        return maidenName;
+    }
+
+    public void setMaidenName(final String maidenName) {
+        this.maidenName.set(maidenName);
+    }
+
+    public String getSex() {
+        return sex.get();
+    }
+
+    public StringProperty sexProperty() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex.set(sex);
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth.get();
+    }
+
+    public ObjectProperty<LocalDate> dateOfBirthProperty() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(final LocalDate dateOfBirth) {
+        this.dateOfBirth.set(dateOfBirth);
+    }
+
+    public String getPlaceOfBirth() {
+        return placeOfBirth.get();
+    }
+
+    public StringProperty placeOfBirthProperty() {
+        return placeOfBirth;
+    }
+
+    public void setPlaceOfBirth(final String placeOfBirth) {
+        this.placeOfBirth.set(placeOfBirth);
+    }
+
+    public String getDepartmentOfBirth() {
+        return departmentOfBirth.get();
+    }
+
+    public StringProperty departmentOfBirthProperty() {
+        return departmentOfBirth;
+    }
+
+    public void setDepartmentOfBirth(final String departmentOfBirth) {
+        this.departmentOfBirth.set(departmentOfBirth);
+    }
+
+    public String getCountryOfBirth() {
+        return countryOfBirth.get();
+    }
+
+    public StringProperty countryOfBirthProperty() {
+        return countryOfBirth;
+    }
+
+    public void setCountryOfBirth(final String countryOfBirth) {
+        this.countryOfBirth.set(countryOfBirth);
+    }
+
+    public String getAddress() {
+        return address.get();
+    }
+
+    public StringProperty addressProperty() {
+        return address;
+    }
+
+    public void setAddress(final String address) {
+        this.address.set(address);
+    }
+
+    public String getZipCode() {
+        return zipCode.get();
+    }
+
+    public StringProperty zipCodeProperty() {
+        return zipCode;
+    }
+
+    public void setZipCode(final String zipCode) {
+        this.zipCode.set(zipCode);
+    }
+
+    public String getCity() {
+        return city.get();
+    }
+
+    public StringProperty cityProperty() {
+        return city;
+    }
+
+    public void setCity(final String city) {
+        this.city.set(city);
+    }
+
+    public String getEmail() {
+        return email.get();
+    }
+
+    public StringProperty emailProperty() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email.set(email);
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.get();
+    }
+
+    public StringProperty phoneNumberProperty() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(final String phoneNumber) {
+        this.phoneNumber.set(phoneNumber);
+    }
+
+    public String getLicenceState() {
+        return licenceState.get();
+    }
+
+    public StringProperty licenceStateProperty() {
+        return licenceState;
+    }
+
+    public void setLicenceState(final String licenceState) {
+        this.licenceState.set(licenceState);
+    }
+
+    public LocalDate getFirstLicenceDate() {
+        return firstLicenceDate.get();
+    }
+
+    public ObjectProperty<LocalDate> firstLicenceDateProperty() {
+        return firstLicenceDate;
+    }
+
+    public void setFirstLicenceDate(final LocalDate firstLicenceDate) {
+        this.firstLicenceDate.set(firstLicenceDate);
+    }
+
+    public String getSeason() {
+        return season.get();
+    }
+
+    public StringProperty seasonProperty() {
+        return season;
+    }
+
+    public void setSeason(final String season) {
+        this.season.set(season);
+    }
+
+    public String getAgeCategory() {
+        return ageCategory.get();
+    }
+
+    public StringProperty ageCategoryProperty() {
+        return ageCategory;
+    }
+
+    public void setAgeCategory(final String ageCategory) {
+        this.ageCategory.set(ageCategory);
+    }
+
+    public boolean isHandisport() {
+        return handisport.get();
+    }
+
+    public BooleanProperty handisportProperty() {
+        return handisport;
+    }
+
+    public void setHandisport(final boolean handisport) {
+        this.handisport.set(handisport);
+    }
+
+    public boolean isBlacklisted() {
+        return blacklisted.get();
+    }
+
+    public BooleanProperty blacklistedProperty() {
+        return blacklisted;
+    }
+
+    public void setBlacklisted(final boolean blacklisted) {
+        this.blacklisted.set(blacklisted);
+    }
+
+    @Override
+    public String toString() {
+        return "LicenseeJfxModel{" +
+                "id=" + id +
+                ", licenceNumber=" + licenceNumber +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                '}';
+    }
+}
