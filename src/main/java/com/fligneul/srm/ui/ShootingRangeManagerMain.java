@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.di.module.DatabaseModule;
 import com.fligneul.srm.di.module.ServiceModule;
 import com.fligneul.srm.di.module.UIModule;
 import com.fligneul.srm.ui.node.main.MainNode;
@@ -24,6 +25,7 @@ public class ShootingRangeManagerMain extends Application {
     private static final int APPLICATION_HEIGHT = 720;
 
     private static final AbstractModule[] MODULES = new AbstractModule[]{
+            new DatabaseModule(),
             new ServiceModule(),
             new UIModule()
     };

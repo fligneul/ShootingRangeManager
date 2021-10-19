@@ -1,0 +1,79 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Florian L." id="1">
+        <createTable tableName="licensee">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="licenceNumber" type="VARCHAR(50)"/>
+            <column name="firstname" type="VARCHAR(50)"/>
+            <column name="lastname" type="VARCHAR(50)"/>
+            <column name="maidenName" type="VARCHAR(50)"/>
+            <column name="sex" type="VARCHAR(50)"/>
+            <column name="dateOfBirth" type="DATE"/>
+            <column name="placeOfBirth" type="VARCHAR(50)"/>
+            <column name="departmentOfBirth" type="VARCHAR(50)"/>
+            <column name="countryOfBirth" type="VARCHAR(50)"/>
+            <column name="address" type="VARCHAR(50)"/>
+            <column name="zipCode" type="VARCHAR(50)"/>
+            <column name="city" type="VARCHAR(50)"/>
+            <column name="email" type="VARCHAR(50)"/>
+            <column name="phoneNumber" type="VARCHAR(50)"/>
+            <column name="licenceState" type="VARCHAR(50)"/>
+            <column name="firstLicenceDate" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="season" type="VARCHAR(50)"/>
+            <column name="ageCategory" type="VARCHAR(50)"/>
+            <column name="handisport" type="BOOLEAN"/>
+            <column name="blacklisted" type="BOOLEAN"/>
+        </createTable>
+        <createTable tableName="firingPoint">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+        <createTable tableName="firingPost">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="firingPointId" type="INT">
+                <constraints foreignKeyName="fk_firingPost_firingPoint_id" references="firingPoint(id)"
+                             deleteCascade="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+        <createTable tableName="attendance">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="licenseeId" type="INT">
+                <constraints foreignKeyName="fk_attendance_licensee_id" references="licensee(id)"/>
+            </column>
+            <column name="startDate" type="TIMESTAMP"/>
+            <column name="stopDate" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="firingPointId" type="INT">
+                <constraints foreignKeyName="fk_attendance_firingPoint_id" references="firingPoint(id)"/>
+            </column>
+            <column name="firingPostId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_attendance_firingPost_id" references="firingPost(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="user">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints unique="true"/>
+            </column>
+            <column name="admin" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
