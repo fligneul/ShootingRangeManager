@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.service.user;
 
 import com.fligneul.srm.ui.node.settings.items.AccountSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.FiringPointSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.ISettingsItemNode;
 import com.fligneul.srm.ui.node.settings.items.UsersSettingsNode;
 
@@ -11,6 +12,7 @@ public class UserViewService {
 
     public List<Class<? extends ISettingsItemNode>> getAccessibleSettingsNode() {
         return Arrays.asList(
+                FiringPointSettingsNode.class,
                 AccountSettingsNode.class,
                 UsersSettingsNode.class
         );

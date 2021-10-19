@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<fx:root prefWidth="1024.0" type="StackPane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+    <VBox alignment="TOP_CENTER" spacing="10.0">
+        <Label text="Pas de tir">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Separator/>
+        <GridPane alignment="CENTER" hgap="10" vgap="10.0" VBox.vgrow="ALWAYS">
+            <Label text="Liste des pas de tir" GridPane.columnIndex="1">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+            <ListView fx:id="firingPointListView" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                      GridPane.vgrow="ALWAYS">
+                <placeholder>
+                    <Label text="Aucun pas de tir enregistré"/>
+                </placeholder>
+            </ListView>
+            <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                <children>
+                    <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false"
+                            onAction="#createFiringPoint">
+                        <graphic>
+                            <FontIcon iconColor="#43a047" iconLiteral="fas-plus" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="firingPointEditButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#editFiringPoint">
+                        <graphic>
+                            <FontIcon iconColor="#757575" iconLiteral="fas-edit" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="firingPointDeleteButton" disable="true" maxHeight="30.0" maxWidth="30.0"
+                            minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#deleteFiringPoint">
+                        <graphic>
+                            <FontIcon iconColor="#e53935" iconLiteral="fas-trash-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                </children>
+            </HBox>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true"
+                       style="-fx-opacity: 0.7;" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                       GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <viewport>
+                    <Rectangle2D minX="30.0" minY="30.0"/>
+                </viewport>
+                <image>
+                    <Image url="@../../../../image/arrow-right-solid.png"/>
+                </image>
+            </ImageView>
+            <Label text="Liste des postes de tir" GridPane.columnIndex="3">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+            <ListView fx:id="firingPostListView" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                <placeholder>
+                    <Label text="Veuillez sélectionner un pas de tir"/>
+                </placeholder>
+            </ListView>
+            <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER"
+                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                <children>
+                    <Button fx:id="firingPostCreateButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#createFiringPost">
+                        <graphic>
+                            <FontIcon iconColor="#43a047" iconLiteral="fas-plus" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="firingPostEditButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#editFiringPost">
+                        <graphic>
+                            <FontIcon iconColor="#757575" iconLiteral="fas-edit" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="firingPostDeleteButton" disable="true" maxHeight="30.0" maxWidth="30.0"
+                            minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#deleteFiringPost">
+                        <graphic>
+                            <FontIcon iconColor="#e53935" iconLiteral="fas-trash-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                </children>
+            </HBox>
+            <columnConstraints>
+                <ColumnConstraints minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+                <ColumnConstraints percentWidth="40.0"/>
+                <ColumnConstraints percentWidth="10.0"/>
+                <ColumnConstraints percentWidth="40.0"/>
+                <ColumnConstraints minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <VBox.margin>
+                <Insets top="5.0"/>
+            </VBox.margin>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
+        </GridPane>
+    </VBox>
+</fx:root>
