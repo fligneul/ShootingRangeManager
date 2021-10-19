@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.fligneul.srm.ui.node.settings.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root alignment="TOP_CENTER" type="StackPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+    <HBox>
+        <VBox alignment="TOP_CENTER" maxWidth="250.0" minWidth="250.0" spacing="10.0">
+            <Label text="Menu">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Label>
+            <SettingsItemListView fx:id="settingsItemListView" VBox.vgrow="ALWAYS">
+                <VBox.margin>
+                    <Insets right="5.0" />
+                </VBox.margin>
+            </SettingsItemListView>
+        </VBox>
+        <Separator orientation="VERTICAL" />
+        <BorderPane fx:id="settingsDetailNode" HBox.hgrow="ALWAYS" />
+    </HBox>
+</fx:root>

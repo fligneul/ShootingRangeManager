@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.node.main;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.service.AuthenticationService;
 import com.fligneul.srm.ui.node.licensee.LicenseeNode;
+import com.fligneul.srm.ui.node.settings.SettingsNode;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -39,6 +40,7 @@ public class MainContentNode extends AnchorPane {
 
         mainTabPane.getTabs().clear();
         mainTabPane.getTabs().add(createTab("Licenciés", new LicenseeNode()));
+        mainTabPane.getTabs().add(createTab("Réglages", new SettingsNode()));
     }
 
     @Inject

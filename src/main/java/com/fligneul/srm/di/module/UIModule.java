@@ -1,5 +1,7 @@
 package com.fligneul.srm.di.module;
 
+import com.fligneul.srm.ui.node.settings.items.AccountSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.UsersSettingsNode;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.google.inject.AbstractModule;
@@ -15,5 +17,8 @@ public class UIModule extends AbstractModule {
         bind(LicenseeServiceToJfxModel.class).in(Singleton.class);
 
         bind(LicenseeSelectionService.class).in(Singleton.class);
+
+        bind(AccountSettingsNode.class).in(Singleton.class);
+        bind(UsersSettingsNode.class).in(Singleton.class);
     }
 }

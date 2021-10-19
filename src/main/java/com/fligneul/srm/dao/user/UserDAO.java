@@ -109,6 +109,18 @@ public class UserDAO implements IDAO<UserJfxModel> {
         }
     }
 
+    public void deleteByName(final String name) {
+        try {
+            databaseConnectionService.getContext()
+                    .delete(Tables.USER)
+                    .where(Tables.USER.USERNAME.eq(name))
+                    .execute();
+            databaseConnectionService.getConnection().commit();
+        } catch (DataAccessException | SQLException e) {
+            LOGGER.error("Error during user deletion", e);
+        }
+    }
+
     private Stream<UserJfxModel> internalGet(Condition... conditions) throws DataAccessException {
         return databaseConnectionService.getContext()
                 .select()

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+    <VBox alignment="TOP_CENTER" spacing="10.0">
+        <Label text="Mon compte">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Separator/>
+        <GridPane alignment="TOP_CENTER" hgap="10" vgap="10" VBox.vgrow="ALWAYS">
+            <Label text="Modification du mot de passe" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0">Nom
+                du stand
+            </Label>
+            <Label text="Nouveau mot de passe" GridPane.rowIndex="1"/>
+            <Label text="Confirmer mot de passe" GridPane.rowIndex="2"/>
+            <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <PasswordField fx:id="passwordConfirmField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <VBox alignment="TOP_CENTER" spacing="10" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                <children>
+                    <Label fx:id="infoLabel" managed="false"/>
+                    <Label fx:id="errorLabel" managed="false" textFill="RED"/>
+                    <Button fx:id="saveButton" mnemonicParsing="false" onAction="#save" text="Enregistrer">
+                        <graphic>
+                            <FontIcon iconColor="#757575" iconLiteral="fas-save" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                </children>
+            </VBox>
+            <columnConstraints>
+                <ColumnConstraints/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                <RowConstraints/>
+            </rowConstraints>
+        </GridPane>
+    </VBox>
+</fx:root>
