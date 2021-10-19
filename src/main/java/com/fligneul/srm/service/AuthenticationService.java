@@ -1,13 +1,19 @@
 package com.fligneul.srm.service;
 
+import com.fligneul.srm.dao.user.UserDAO;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
+import liquibase.exception.LiquibaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException;
 
 import javax.inject.Inject;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * User authentication service
@@ -16,9 +22,15 @@ public class AuthenticationService {
     private static final Logger LOGGER = LogManager.getLogger(AuthenticationService.class);
 
     private final Subject<Boolean> authenticatedSubject = BehaviorSubject.createDefault(false);
+    private final Subject<Optional<String>> userAuthenticatedSubject = BehaviorSubject.createDefault(Optional.empty());
+    private DatabaseConnectionService databaseConnectionService;
+    private UserDAO userDAO;
 
     @Inject
-    private void injectDependencies() {
+    private void injectDependencies(DatabaseConnectionService databaseConnectionService,
+                                    UserDAO userDAO) {
+        this.databaseConnectionService = databaseConnectionService;
+        this.userDAO = userDAO;
     }
 
     /**
@@ -32,17 +44,26 @@ public class AuthenticationService {
      * @return the error message if the authentication fail
      */
     public Optional<String> authenticate(final String username, final char[] passwd) {
-        if (username.equals("azerty")) {
-            try {
-                Thread.sleep(2_000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            authenticatedSubject.onNext(true);
-            return Optional.empty();
-        } else {
-            authenticatedSubject.onNext(false);
-            return Optional.of("Connexion refusée");
+        try {
+            Connection connection = databaseConnectionService.initConnection(username, passwd);
+            connection.isValid(1_000);
+            AtomicReference<String> message = new AtomicReference<>();
+            userDAO.getByName(username.toUpperCase())
+                    .ifPresentOrElse(user -> {
+                        authenticatedSubject.onNext(true);
+                        userAuthenticatedSubject.onNext(Optional.of(user.getName()));
+                    }, () -> {
+                        authenticatedSubject.onNext(false);
+                        userAuthenticatedSubject.onNext(Optional.empty());
+                        message.set("Connexion refusée");
+                    });
+            return Optional.ofNullable(message.get());
+        } catch (JdbcSQLInvalidAuthorizationSpecException e) {
+            LOGGER.warn("Unauthorized user {}", username, e);
+            return Optional.of("Utilisateur inconnu");
+        } catch (SQLException | LiquibaseException e) {
+            LOGGER.error("Connection error", e);
+            return Optional.of("Erreur de connexion à la base de données");
         }
     }
 
@@ -51,6 +72,8 @@ public class AuthenticationService {
      */
     public void disconnect() {
         authenticatedSubject.onNext(false);
+        userAuthenticatedSubject.onNext(Optional.empty());
+        databaseConnectionService.closeConnection();
     }
 
     /**
@@ -61,4 +84,14 @@ public class AuthenticationService {
     public Observable<Boolean> getAuthenticatedObs() {
         return authenticatedSubject;
     }
+
+    /**
+     * The authenticated user subject, if a user is logged, it contained the current username, empty otherwise
+     *
+     * @return the authenticated user subject, if a user is logged, it contained the current username, empty otherwise
+     */
+    public Observable<Optional<String>> getUserAuthenticatedObs() {
+        return userAuthenticatedSubject;
+    }
+
 }
