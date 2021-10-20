@@ -1,5 +1,6 @@
 package com.fligneul.srm.di.module;
 
+import com.fligneul.srm.dao.attendance.AttendanceDAO;
 import com.fligneul.srm.dao.licensee.LicenseeDAO;
 import com.fligneul.srm.dao.range.FiringPointDAO;
 import com.fligneul.srm.dao.range.FiringPostDAO;
@@ -21,5 +22,6 @@ public class DatabaseModule extends AbstractModule {
         bind(FiringPostDAO.class).in(Singleton.class);
         bind(FiringPointDAO.class).in(Singleton.class);
         bind(LicenseeDAO.class).in(Singleton.class);
+        bind(AttendanceDAO.class).in(Singleton.class);
     }
 }

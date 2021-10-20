@@ -1,0 +1,83 @@
+package com.fligneul.srm.ui.model.presence;
+
+import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
+import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
+import java.time.LocalDateTime;
+
+public class LicenseePresenceJfxModel {
+    public static int DEFAULT_ID = -1;
+
+    private final int id;
+    private final LicenseeJfxModel licensee;
+    private final ObjectProperty<LocalDateTime> startDate = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDateTime> stopDate = new SimpleObjectProperty<>();
+    private final ObjectProperty<FiringPointJfxModel> firingPoint = new SimpleObjectProperty<>();
+    private final ObjectProperty<FiringPostJfxModel> firingPost = new SimpleObjectProperty<>();
+
+    protected LicenseePresenceJfxModel(int id, LicenseeJfxModel licensee, LocalDateTime startDate, FiringPointJfxModel firingPoint) {
+        this.id = id;
+        this.licensee = licensee;
+        this.startDate.set(startDate);
+        this.firingPoint.set(firingPoint);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public LicenseeJfxModel getLicensee() {
+        return licensee;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate.get();
+    }
+
+    public ObjectProperty<LocalDateTime> startDateProperty() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate.set(startDate);
+    }
+
+    public LocalDateTime getStopDate() {
+        return stopDate.get();
+    }
+
+    public ObjectProperty<LocalDateTime> stopDateProperty() {
+        return stopDate;
+    }
+
+    public void setStopDate(LocalDateTime stopDate) {
+        this.stopDate.set(stopDate);
+    }
+
+    public FiringPointJfxModel getFiringPoint() {
+        return firingPoint.get();
+    }
+
+    public ObjectProperty<FiringPointJfxModel> firingPointProperty() {
+        return firingPoint;
+    }
+
+    public void setFiringPoint(FiringPointJfxModel firingPoint) {
+        this.firingPoint.set(firingPoint);
+    }
+
+    public FiringPostJfxModel getFiringPost() {
+        return firingPost.get();
+    }
+
+    public ObjectProperty<FiringPostJfxModel> firingPostProperty() {
+        return firingPost;
+    }
+
+    public void setFiringPost(FiringPostJfxModel firingPost) {
+        this.firingPost.set(firingPost);
+    }
+}
