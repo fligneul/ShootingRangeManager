@@ -2,6 +2,7 @@ package com.fligneul.srm.ui.node.login;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.service.AuthenticationService;
+import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.service.ShutdownService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -22,6 +23,8 @@ public class LoginNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LoginNode.class);
     private static final String FXML_PATH = "login.fxml";
 
+    @FXML
+    private Label shootingRangeNameLabel;
     @FXML
     private TextField username;
     @FXML
@@ -44,12 +47,15 @@ public class LoginNode extends VBox {
 
     @Inject
     public void injectDependencies(final AuthenticationService authenticationService,
-                                   final ShutdownService shutdownService) {
+                                   final ShutdownService shutdownService,
+                                   final PreferenceService preferenceService) {
         this.authenticationService = authenticationService;
         this.shutdownService = shutdownService;
 
         username.setOnKeyPressed(this::enterKeyHandle);
         password.setOnKeyPressed(this::enterKeyHandle);
+
+        shootingRangeNameLabel.setText(preferenceService.getShootingRangeName());
     }
 
     @FXML

@@ -2,6 +2,7 @@ package com.fligneul.srm.di.module;
 
 import com.fligneul.srm.ui.node.settings.items.AccountSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.FiringPointSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.GeneralSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.UsersSettingsNode;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
@@ -22,6 +23,7 @@ public class UIModule extends AbstractModule {
 
         bind(LicenseeSelectionService.class).in(Singleton.class);
 
+        bind(GeneralSettingsNode.class).in(Singleton.class);
         bind(FiringPointSettingsNode.class).in(Singleton.class);
         bind(AccountSettingsNode.class).in(Singleton.class);
         bind(UsersSettingsNode.class).in(Singleton.class);
