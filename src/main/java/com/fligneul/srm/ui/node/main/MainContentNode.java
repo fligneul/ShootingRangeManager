@@ -2,10 +2,13 @@ package com.fligneul.srm.ui.node.main;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.service.AuthenticationService;
+import com.fligneul.srm.service.RoleService;
+import com.fligneul.srm.ui.model.user.ERole;
 import com.fligneul.srm.ui.node.attendance.AttendanceNode;
 import com.fligneul.srm.ui.node.licensee.LicenseeNode;
 import com.fligneul.srm.ui.node.settings.SettingsNode;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -24,11 +27,11 @@ public class MainContentNode extends AnchorPane {
     private static final Logger LOGGER = LogManager.getLogger(MainNode.class);
     private static final String FXML_PATH = "mainContent.fxml";
 
-    @FXML
-    private TabPane mainTabPane;
-
     private AuthenticationService authenticationService;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @FXML
+    private TabPane mainTabPane;
 
     public MainContentNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -38,16 +41,25 @@ public class MainContentNode extends AnchorPane {
                 LOGGER.info("Display tab {}", nv.getId());
             }
         });
-
-        mainTabPane.getTabs().clear();
-        mainTabPane.getTabs().add(createTab("Émargement", new AttendanceNode()));
-        mainTabPane.getTabs().add(createTab("Licenciés", new LicenseeNode()));
-        mainTabPane.getTabs().add(createTab("Réglages", new SettingsNode()));
     }
 
     @Inject
-    public void injectDependencies(AuthenticationService authenticationService) {
+    public void injectDependencies(AuthenticationService authenticationService,
+                                   RoleService roleService) {
         this.authenticationService = authenticationService;
+
+        compositeDisposable.add(roleService.getRoleObs().distinctUntilChanged()
+                .observeOn(JavaFxScheduler.platform())
+                .subscribe(this::manageTabsForRole));
+    }
+
+    private void manageTabsForRole(ERole role) {
+        mainTabPane.getTabs().clear();
+        mainTabPane.getTabs().add(createTab("Émargement", new AttendanceNode()));
+        if (ERole.ADMINISTRATOR.equals(role)) {
+            mainTabPane.getTabs().add(createTab("Licenciés", new LicenseeNode()));
+            mainTabPane.getTabs().add(createTab("Réglages", new SettingsNode()));
+        }
     }
 
     @FXML

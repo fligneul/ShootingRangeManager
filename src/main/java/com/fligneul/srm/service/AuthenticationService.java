@@ -1,6 +1,7 @@
 package com.fligneul.srm.service;
 
 import com.fligneul.srm.dao.user.UserDAO;
+import com.fligneul.srm.ui.model.user.ERole;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
@@ -25,12 +26,15 @@ public class AuthenticationService {
     private final Subject<Optional<String>> userAuthenticatedSubject = BehaviorSubject.createDefault(Optional.empty());
     private DatabaseConnectionService databaseConnectionService;
     private UserDAO userDAO;
+    private RoleService roleService;
 
     @Inject
     private void injectDependencies(DatabaseConnectionService databaseConnectionService,
-                                    UserDAO userDAO) {
+                                    UserDAO userDAO,
+                                    RoleService roleService) {
         this.databaseConnectionService = databaseConnectionService;
         this.userDAO = userDAO;
+        this.roleService = roleService;
     }
 
     /**
@@ -52,9 +56,11 @@ public class AuthenticationService {
                     .ifPresentOrElse(user -> {
                         authenticatedSubject.onNext(true);
                         userAuthenticatedSubject.onNext(Optional.of(user.getName()));
+                        roleService.send(user.getRole());
                     }, () -> {
                         authenticatedSubject.onNext(false);
                         userAuthenticatedSubject.onNext(Optional.empty());
+                        roleService.send(ERole.NONE);
                         message.set("Connexion refusée");
                     });
             return Optional.ofNullable(message.get());
@@ -73,6 +79,7 @@ public class AuthenticationService {
     public void disconnect() {
         authenticatedSubject.onNext(false);
         userAuthenticatedSubject.onNext(Optional.empty());
+        roleService.send(ERole.NONE);
         databaseConnectionService.closeConnection();
     }
 

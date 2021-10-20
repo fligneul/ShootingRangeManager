@@ -9,6 +9,7 @@ import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
+import com.fligneul.srm.ui.service.user.UserViewService;
 import com.google.inject.AbstractModule;
 
 import javax.inject.Singleton;
@@ -19,6 +20,8 @@ import javax.inject.Singleton;
 public class UIModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(UserViewService.class).in(Singleton.class);
+
         bind(FiringPointServiceToJfxModel.class).in(Singleton.class);
         bind(LicenseeServiceToJfxModel.class).in(Singleton.class);
         bind(AttendanceServiceToJfxModel.class).in(Singleton.class);

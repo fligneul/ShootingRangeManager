@@ -38,14 +38,17 @@ public class SettingsNode extends StackPane {
 
     @Inject
     private void injectDependencies(final Injector injector, final UserViewService userViewService) {
-        ObservableList<ISettingsItemNode> settingsItemNodes = FXCollections.observableArrayList();
-        userViewService.getAccessibleSettingsNode().forEach(nodeClass -> {
-            try {
-                settingsItemNodes.add(injector.getInstance(nodeClass));
-            } catch (ConfigurationException | ProvisionException e) {
-                LOGGER.error("Error during node {} creation", nodeClass.getName(), e);
-            }
-        });
-        settingsItemListView.setItems(settingsItemNodes);
+        userViewService.getAccessibleSettingsNode()
+                .subscribe(nodes -> {
+                    ObservableList<ISettingsItemNode> settingsItemNodes = FXCollections.observableArrayList();
+                    nodes.forEach(nodeClass -> {
+                        try {
+                            settingsItemNodes.add(injector.getInstance(nodeClass));
+                        } catch (ConfigurationException | ProvisionException e) {
+                            LOGGER.error("Error during node {} creation", nodeClass.getName(), e);
+                        }
+                    });
+                    settingsItemListView.setItems(settingsItemNodes);
+                });
     }
 }
