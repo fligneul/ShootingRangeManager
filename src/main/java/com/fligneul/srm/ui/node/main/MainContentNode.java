@@ -5,6 +5,7 @@ import com.fligneul.srm.service.AuthenticationService;
 import com.fligneul.srm.service.RoleService;
 import com.fligneul.srm.ui.model.user.ERole;
 import com.fligneul.srm.ui.node.attendance.AttendanceNode;
+import com.fligneul.srm.ui.node.history.HistoryNode;
 import com.fligneul.srm.ui.node.licensee.LicenseeNode;
 import com.fligneul.srm.ui.node.settings.SettingsNode;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -57,6 +58,7 @@ public class MainContentNode extends AnchorPane {
         mainTabPane.getTabs().clear();
         mainTabPane.getTabs().add(createTab("Émargement", new AttendanceNode()));
         if (ERole.ADMINISTRATOR.equals(role)) {
+            mainTabPane.getTabs().add(createTab("Historique", new HistoryNode()));
             mainTabPane.getTabs().add(createTab("Licenciés", new LicenseeNode()));
             mainTabPane.getTabs().add(createTab("Réglages", new SettingsNode()));
         }

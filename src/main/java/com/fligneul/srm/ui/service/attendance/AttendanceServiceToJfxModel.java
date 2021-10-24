@@ -63,4 +63,13 @@ public class AttendanceServiceToJfxModel {
         }
     }
 
+    public void deleteLicenseePresence(LicenseePresenceJfxModel licenseePresenceJfxModel) {
+        if (licenseePresenceJfxModel.getId() != -1) {
+            attendanceDAO.delete(licenseePresenceJfxModel);
+            licenseePresenceJfxModels.removeIf(item -> item.getId() == licenseePresenceJfxModel.getId());
+        } else {
+            LOGGER.warn("Can't delete an unsaved licensee presence");
+        }
+    }
+
 }

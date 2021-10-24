@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<fx:root prefWidth="500.0" type="TableView" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <columns>
+        <TableColumn fx:id="licenseeColumn" prefWidth="100.0" text="Licencié"/>
+        <TableColumn fx:id="startTimeColumn" prefWidth="100.0" text="Début"/>
+        <TableColumn fx:id="firingPointColumn" prefWidth="80" text="Pas de tir"/>
+        <TableColumn fx:id="firingPostColumn" prefWidth="80" text="Poste de tir"/>
+        <TableColumn fx:id="stopTimeColumn" prefWidth="100.0" text="Fin"/>
+        <TableColumn fx:id="editColumn" prefWidth="40.0" />
+        <TableColumn fx:id="deleteColumn" prefWidth="40.0" />
+    </columns>
+</fx:root>
