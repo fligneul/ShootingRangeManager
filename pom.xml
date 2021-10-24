@@ -39,6 +39,7 @@
         <snakeyaml.version>1.29</snakeyaml.version>
         <jooq.version>3.15.3</jooq.version>
         <ikonli.version>12.2.0</ikonli.version>
+        <commons-csv.version>1.9.0</commons-csv.version>
 
         <log4j.version>2.14.1</log4j.version>
     </properties>
@@ -130,6 +131,13 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
+        </dependency>
+
+        <!-- CSV -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
         </dependency>
 
         <!-- Logging -->

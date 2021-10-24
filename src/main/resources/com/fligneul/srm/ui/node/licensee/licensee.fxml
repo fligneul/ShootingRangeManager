@@ -36,6 +36,12 @@
                             <FontIcon iconColor="#43a047" iconLiteral="fas-plus" iconSize="20"/>
                         </graphic>
                     </Button>
+                    <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false"
+                            onAction="#importLicensee">
+                        <graphic>
+                            <FontIcon iconColor="#757575" iconLiteral="fas-file-import" iconSize="20"/>
+                        </graphic>
+                    </Button>
                 </children>
                 <VBox.margin>
                     <Insets bottom="5.0"/>
