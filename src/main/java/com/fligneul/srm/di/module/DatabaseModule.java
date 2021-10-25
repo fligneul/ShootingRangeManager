@@ -5,6 +5,7 @@ import com.fligneul.srm.dao.licensee.LicenseeDAO;
 import com.fligneul.srm.dao.range.FiringPointDAO;
 import com.fligneul.srm.dao.range.FiringPostDAO;
 import com.fligneul.srm.dao.user.UserDAO;
+import com.fligneul.srm.dao.weapon.WeaponDAO;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.google.inject.AbstractModule;
 
@@ -22,6 +23,7 @@ public class DatabaseModule extends AbstractModule {
         bind(FiringPostDAO.class).in(Singleton.class);
         bind(FiringPointDAO.class).in(Singleton.class);
         bind(LicenseeDAO.class).in(Singleton.class);
+        bind(WeaponDAO.class).in(Singleton.class);
         bind(AttendanceDAO.class).in(Singleton.class);
     }
 }

@@ -3,7 +3,9 @@ package com.fligneul.srm.ui.model.presence;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ public class LicenseePresenceJfxModel {
     private final ObjectProperty<LocalDateTime> stopDate = new SimpleObjectProperty<>();
     private final ObjectProperty<FiringPointJfxModel> firingPoint = new SimpleObjectProperty<>();
     private final ObjectProperty<FiringPostJfxModel> firingPost = new SimpleObjectProperty<>();
+    private final ObjectProperty<WeaponJfxModel> weapon = new SimpleObjectProperty<>();
 
     protected LicenseePresenceJfxModel(int id, LicenseeJfxModel licensee, LocalDateTime startDate, FiringPointJfxModel firingPoint) {
         this.id = id;
@@ -37,7 +40,7 @@ public class LicenseePresenceJfxModel {
         return startDate.get();
     }
 
-    public ObjectProperty<LocalDateTime> startDateProperty() {
+    public ReadOnlyObjectProperty<LocalDateTime> startDateProperty() {
         return startDate;
     }
 
@@ -49,7 +52,7 @@ public class LicenseePresenceJfxModel {
         return stopDate.get();
     }
 
-    public ObjectProperty<LocalDateTime> stopDateProperty() {
+    public ReadOnlyObjectProperty<LocalDateTime> stopDateProperty() {
         return stopDate;
     }
 
@@ -61,7 +64,7 @@ public class LicenseePresenceJfxModel {
         return firingPoint.get();
     }
 
-    public ObjectProperty<FiringPointJfxModel> firingPointProperty() {
+    public ReadOnlyObjectProperty<FiringPointJfxModel> firingPointProperty() {
         return firingPoint;
     }
 
@@ -73,11 +76,23 @@ public class LicenseePresenceJfxModel {
         return firingPost.get();
     }
 
-    public ObjectProperty<FiringPostJfxModel> firingPostProperty() {
+    public ReadOnlyObjectProperty<FiringPostJfxModel> firingPostProperty() {
         return firingPost;
     }
 
     public void setFiringPost(FiringPostJfxModel firingPost) {
         this.firingPost.set(firingPost);
+    }
+
+    public WeaponJfxModel getWeapon() {
+        return weapon.get();
+    }
+
+    public ReadOnlyObjectProperty<WeaponJfxModel> weaponProperty() {
+        return weapon;
+    }
+
+    public void setWeapon(WeaponJfxModel weapon) {
+        this.weapon.set(weapon);
     }
 }
