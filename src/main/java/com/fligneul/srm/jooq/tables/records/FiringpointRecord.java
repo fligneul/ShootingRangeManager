@@ -5,6 +5,7 @@ package com.fligneul.srm.jooq.tables.records;
 
 
 import com.fligneul.srm.jooq.tables.Firingpoint;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record2;

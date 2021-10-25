@@ -7,6 +7,7 @@ package com.fligneul.srm.jooq.tables;
 import com.fligneul.srm.jooq.DefaultSchema;
 import com.fligneul.srm.jooq.Keys;
 import com.fligneul.srm.jooq.tables.records.FiringpointRecord;
+
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
