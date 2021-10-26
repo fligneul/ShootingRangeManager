@@ -40,6 +40,7 @@
         <jooq.version>3.15.3</jooq.version>
         <ikonli.version>12.2.0</ikonli.version>
         <commons-csv.version>1.9.0</commons-csv.version>
+        <zip4j.version>2.9.0</zip4j.version>
 
         <log4j.version>2.14.1</log4j.version>
     </properties>
@@ -138,6 +139,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons-csv.version}</version>
+        </dependency>
+
+        <!-- Zip4j -->
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>${zip4j.version}</version>
         </dependency>
 
         <!-- Logging -->

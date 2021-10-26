@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.service.user;
 import com.fligneul.srm.service.RoleService;
 import com.fligneul.srm.ui.model.user.ERole;
 import com.fligneul.srm.ui.node.settings.items.AccountSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.BackupSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.FiringPointSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.GeneralSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.ISettingsItemNode;
@@ -29,7 +30,8 @@ public class UserViewService {
                         FiringPointSettingsNode.class,
                         AccountSettingsNode.class,
                         UsersSettingsNode.class,
-                        WeaponSettingsNode.class
+                        WeaponSettingsNode.class,
+                        BackupSettingsNode.class
                 )
         );
 
