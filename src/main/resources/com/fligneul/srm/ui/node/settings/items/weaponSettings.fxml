@@ -21,11 +21,13 @@
             </font>
         </Label>
         <Separator/>
-        <Label text="Liste des armes du club">
-            <font>
-                <Font size="14.0"/>
-            </font>
-        </Label>
+        <HBox>
+            <Label text="Liste des armes du club">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+        </HBox>
         <ListView fx:id="weaponListView" VBox.vgrow="ALWAYS">
             <placeholder>
                 <Label text="Aucune arme enregistrée"/>
