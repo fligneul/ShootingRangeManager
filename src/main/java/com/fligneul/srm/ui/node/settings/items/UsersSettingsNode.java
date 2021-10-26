@@ -24,8 +24,6 @@ public class UsersSettingsNode extends StackPane implements ISettingsItemNode {
     private static final String TITLE = "Utilisateurs";
 
     @FXML
-    private TextField shootingRangeNameTextField;
-    @FXML
     private ListView<UserJfxModel> userListView;
     @FXML
     private Button userDeleteButton;

@@ -30,11 +30,7 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
     private static final String TITLE = "Pas de tir";
 
     @FXML
-    private TextField shootingRangeNameTextField;
-    @FXML
     private ListView<FiringPointJfxModel> firingPointListView;
-    @FXML
-    private TextField firingPostNameTextField;
     @FXML
     private ListView<FiringPostJfxModel> firingPostListView;
     @FXML
