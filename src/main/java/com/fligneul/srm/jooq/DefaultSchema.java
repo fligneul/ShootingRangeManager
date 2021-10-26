@@ -9,12 +9,14 @@ import com.fligneul.srm.jooq.tables.Firingpoint;
 import com.fligneul.srm.jooq.tables.Firingpost;
 import com.fligneul.srm.jooq.tables.Licensee;
 import com.fligneul.srm.jooq.tables.User;
-import org.jooq.Catalog;
-import org.jooq.Table;
-import org.jooq.impl.SchemaImpl;
+import com.fligneul.srm.jooq.tables.Weapon;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jooq.Catalog;
+import org.jooq.Table;
+import org.jooq.impl.SchemaImpl;
 
 
 /**
@@ -56,6 +58,11 @@ public class DefaultSchema extends SchemaImpl {
     public final User USER = User.USER;
 
     /**
+     * The table <code>WEAPON</code>.
+     */
+    public final Weapon WEAPON = Weapon.WEAPON;
+
+    /**
      * No further instances allowed
      */
     private DefaultSchema() {
@@ -75,7 +82,8 @@ public class DefaultSchema extends SchemaImpl {
             Firingpoint.FIRINGPOINT,
             Firingpost.FIRINGPOST,
             Licensee.LICENSEE,
-            User.USER
+            User.USER,
+            Weapon.WEAPON
         );
     }
 }

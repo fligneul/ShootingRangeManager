@@ -7,12 +7,17 @@ package com.fligneul.srm.jooq.tables;
 import com.fligneul.srm.jooq.DefaultSchema;
 import com.fligneul.srm.jooq.Keys;
 import com.fligneul.srm.jooq.tables.records.AttendanceRecord;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -21,10 +26,6 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -78,6 +79,11 @@ public class Attendance extends TableImpl<AttendanceRecord> {
      */
     public final TableField<AttendanceRecord, Integer> FIRINGPOSTID = createField(DSL.name("FIRINGPOSTID"), SQLDataType.INTEGER, this, "");
 
+    /**
+     * The column <code>ATTENDANCE.WEAPONID</code>.
+     */
+    public final TableField<AttendanceRecord, Integer> WEAPONID = createField(DSL.name("WEAPONID"), SQLDataType.INTEGER, this, "");
+
     private Attendance(Name alias, Table<AttendanceRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -128,12 +134,13 @@ public class Attendance extends TableImpl<AttendanceRecord> {
 
     @Override
     public List<ForeignKey<AttendanceRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.FK_ATTENDANCE_LICENSEE_ID, Keys.FK_ATTENDANCE_FIRINGPOINT_ID, Keys.FK_ATTENDANCE_FIRINGPOST_ID);
+        return Arrays.asList(Keys.FK_ATTENDANCE_LICENSEE_ID, Keys.FK_ATTENDANCE_FIRINGPOINT_ID, Keys.FK_ATTENDANCE_FIRINGPOST_ID, Keys.FK_ATTENDANCE_WEAPON_ID);
     }
 
     private transient Licensee _licensee;
     private transient Firingpoint _firingpoint;
     private transient Firingpost _firingpost;
+    private transient Weapon _weapon;
 
     public Licensee licensee() {
         if (_licensee == null)
@@ -154,6 +161,13 @@ public class Attendance extends TableImpl<AttendanceRecord> {
             _firingpost = new Firingpost(this, Keys.FK_ATTENDANCE_FIRINGPOST_ID);
 
         return _firingpost;
+    }
+
+    public Weapon weapon() {
+        if (_weapon == null)
+            _weapon = new Weapon(this, Keys.FK_ATTENDANCE_WEAPON_ID);
+
+        return _weapon;
     }
 
     @Override
@@ -183,11 +197,11 @@ public class Attendance extends TableImpl<AttendanceRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Integer, Integer, LocalDateTime, LocalDateTime, Integer, Integer> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<Integer, Integer, LocalDateTime, LocalDateTime, Integer, Integer, Integer> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

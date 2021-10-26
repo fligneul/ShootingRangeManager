@@ -9,6 +9,7 @@ import com.fligneul.srm.jooq.tables.Firingpoint;
 import com.fligneul.srm.jooq.tables.Firingpost;
 import com.fligneul.srm.jooq.tables.Licensee;
 import com.fligneul.srm.jooq.tables.User;
+import com.fligneul.srm.jooq.tables.Weapon;
 
 
 /**
@@ -41,4 +42,9 @@ public class Tables {
      * The table <code>USER</code>.
      */
     public static final User USER = User.USER;
+
+    /**
+     * The table <code>WEAPON</code>.
+     */
+    public static final Weapon WEAPON = Weapon.WEAPON;
 }

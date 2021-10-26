@@ -27,17 +27,19 @@
 
             <Label text="Numéro de licence" GridPane.halignment="RIGHT"/>
             <TextField fx:id="licenseeNumberTextField" GridPane.columnIndex="1"/>
-            <Label text="Pas de tir" GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
-            <ComboBox fx:id="firingPointComboBox" prefWidth="150.0" GridPane.columnIndex="3"/>
-
+            <Label text="Heure de début" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+            <TextField fx:id="startTimeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label text="Heure de fin" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
             <TextField fx:id="stopTimeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Pas de tir" GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
+            <ComboBox fx:id="firingPointComboBox" prefWidth="150.0" GridPane.columnIndex="3"/>
             <Label text="Poste de tir" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
             <ComboBox fx:id="firingPostComboBox" disable="true" prefWidth="150.0" GridPane.columnIndex="3"
                       GridPane.rowIndex="1"/>
-            <Label text="Heure de début" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-            <TextField fx:id="startTimeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
+            <Label text="Arme" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="weaponComboBox" prefWidth="150.0" GridPane.columnIndex="3"
+                      GridPane.rowIndex="2"/>
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" top="10.0"/>
             </VBox.margin>

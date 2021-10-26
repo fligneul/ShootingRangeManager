@@ -5,13 +5,14 @@ package com.fligneul.srm.jooq.tables.records;
 
 
 import com.fligneul.srm.jooq.tables.Licensee;
+
+import java.time.LocalDate;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record21;
 import org.jooq.Row21;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import java.time.LocalDate;
 
 
 /**

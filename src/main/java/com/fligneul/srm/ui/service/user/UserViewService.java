@@ -7,6 +7,7 @@ import com.fligneul.srm.ui.node.settings.items.FiringPointSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.GeneralSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.ISettingsItemNode;
 import com.fligneul.srm.ui.node.settings.items.UsersSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.WeaponSettingsNode;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 
@@ -27,7 +28,8 @@ public class UserViewService {
                         GeneralSettingsNode.class,
                         FiringPointSettingsNode.class,
                         AccountSettingsNode.class,
-                        UsersSettingsNode.class
+                        UsersSettingsNode.class,
+                        WeaponSettingsNode.class
                 )
         );
 

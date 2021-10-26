@@ -7,6 +7,9 @@ package com.fligneul.srm.jooq.tables;
 import com.fligneul.srm.jooq.DefaultSchema;
 import com.fligneul.srm.jooq.Keys;
 import com.fligneul.srm.jooq.tables.records.LicenseeRecord;
+
+import java.time.LocalDate;
+
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
@@ -21,8 +24,6 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.LocalDate;
 
 
 /**
