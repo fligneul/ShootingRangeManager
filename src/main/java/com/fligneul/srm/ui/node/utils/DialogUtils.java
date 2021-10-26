@@ -32,6 +32,24 @@ public class DialogUtils {
         });
     }
 
+    public static void showInformationDialog(final String title, final String text, final String contentText, final Runnable action) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(text);
+        alert.setContentText(contentText);
+
+        alert.showAndWait().ifPresent(any -> action.run());
+    }
+
+    public static void showErrorDialog(final String title, final String text, final String contentText, final Runnable action) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(text);
+        alert.setContentText(contentText);
+
+        alert.showAndWait().ifPresent(any -> action.run());
+    }
+
     public static void showInputTextDialog(final String title, final String text, final String inputText, final String promptText, final Consumer<String> action) {
         TextInputDialog dialog = new TextInputDialog(promptText);
 

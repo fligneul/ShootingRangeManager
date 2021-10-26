@@ -1,6 +1,7 @@
 package com.fligneul.srm.di.module;
 
 import com.fligneul.srm.service.AuthenticationService;
+import com.fligneul.srm.service.BackupService;
 import com.fligneul.srm.service.FirstStartService;
 import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.service.RoleService;
@@ -23,5 +24,7 @@ public class ServiceModule extends AbstractModule {
         bind(RoleService.class).in(Singleton.class);
         bind(AuthenticationService.class).in(Singleton.class);
         bind(ShutdownService.class).in(Singleton.class);
+
+        bind(BackupService.class).in(Singleton.class);
     }
 }

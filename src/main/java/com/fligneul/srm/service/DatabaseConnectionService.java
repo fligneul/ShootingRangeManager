@@ -14,12 +14,15 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handle connection to the database
@@ -41,13 +44,7 @@ public class DatabaseConnectionService {
      * @return {@code true} if the DB is already created
      */
     public boolean isDatabaseCreated() {
-        Path databasePath = Path.of(DATABASE_PATH);
-        try {
-            return Files.find(databasePath.getParent(), 1, (path, basicFileAttributes) -> path.toFile().getName().matches(databasePath.getFileName() + DB_EXTENSION_REGEX)).findAny().isPresent();
-        } catch (IOException e) {
-            LOGGER.debug("Error during DB search", e);
-            return false;
-        }
+        return !getDatabaseFiles().isEmpty();
     }
 
     /**
@@ -76,13 +73,15 @@ public class DatabaseConnectionService {
      * Close the current JDBC connection
      */
     public void closeConnection() {
-        try {
-            connect.commit();
-            connect.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (connect != null) {
+            try {
+                connect.commit();
+                connect.close();
+            } catch (SQLException e) {
+                LOGGER.error("Error during DB close, e");
+            }
+            connect = null;
         }
-        connect = null;
     }
 
     /**
@@ -109,5 +108,31 @@ public class DatabaseConnectionService {
             throw new IllegalStateException("Should not get context if not instantiated");
         }
         return context;
+    }
+
+    /**
+     * Return the DB files on the filesystem
+     *
+     * @return list of all DB files
+     */
+    protected List<File> getDatabaseFiles() {
+        Path databasePath = Path.of(DATABASE_PATH);
+        try {
+            return Files.find(databasePath.getParent(), 1, (path, basicFileAttributes) -> path.toFile().getName().matches(databasePath.getFileName() + DB_EXTENSION_REGEX))
+                    .map(Path::toFile)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            LOGGER.debug("Error during DB file search", e);
+            return List.of();
+        }
+    }
+
+    /**
+     * Return the DB directory on the filesystem
+     *
+     * @return the DB directory
+     */
+    protected File getDatabaseDirectory() {
+        return Path.of(DATABASE_PATH).getParent().toFile();
     }
 }
