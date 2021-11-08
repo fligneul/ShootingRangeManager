@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.model.presence;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class LicenseePresenceJfxModelBuilder {
     private FiringPointJfxModel firingPoint;
     private FiringPostJfxModel firingPost;
     private WeaponJfxModel weapon;
+    private StatusJfxModel status;
 
 
     public LicenseePresenceJfxModelBuilder setId(int id) {
@@ -53,12 +55,18 @@ public class LicenseePresenceJfxModelBuilder {
         return this;
     }
 
+    public LicenseePresenceJfxModelBuilder setStatus(StatusJfxModel status) {
+        this.status = status;
+        return this;
+    }
+
     public LicenseePresenceJfxModel createLicenseePresenceJfxModel() {
         LicenseePresenceJfxModel model = new LicenseePresenceJfxModel(Optional.ofNullable(id).orElse(LicenseePresenceJfxModel.DEFAULT_ID), licensee, startDate, firingPoint);
 
         Optional.ofNullable(stopDate).ifPresent(model::setStopDate);
         Optional.ofNullable(firingPost).ifPresent(model::setFiringPost);
         Optional.ofNullable(weapon).ifPresent(model::setWeapon);
+        Optional.ofNullable(status).ifPresent(model::setStatus);
 
         return model;
     }

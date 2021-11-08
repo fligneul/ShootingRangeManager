@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<fx:root maxWidth="800.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxWidth="800.0" type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <children>
         <GridPane hgap="10.0" vgap="5.0">
             <columnConstraints>
@@ -20,6 +20,7 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
             </columnConstraints>
             <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -40,6 +41,9 @@
             <Label text="Arme" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
             <ComboBox fx:id="weaponComboBox" prefWidth="150.0" GridPane.columnIndex="3"
                       GridPane.rowIndex="2"/>
+            <Label text="Statut" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="statusComboBox" prefWidth="150.0" GridPane.columnIndex="3"
+                      GridPane.rowIndex="3"/>
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" top="10.0"/>
             </VBox.margin>

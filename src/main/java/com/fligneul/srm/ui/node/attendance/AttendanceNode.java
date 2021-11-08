@@ -5,10 +5,12 @@ import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
+import com.fligneul.srm.ui.service.status.StatusServiceToJfxModel;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.collections.FXCollections;
@@ -38,6 +40,8 @@ public class AttendanceNode extends StackPane {
     @FXML
     private ComboBox<WeaponJfxModel> weaponComboBox;
     @FXML
+    private ComboBox<StatusJfxModel> statusComboBox;
+    @FXML
     private Label attendanceListTitle;
     @FXML
     private Button saveButton;
@@ -55,7 +59,8 @@ public class AttendanceNode extends StackPane {
     private void injectDependencies(FiringPointServiceToJfxModel firingPointService,
                                     AttendanceServiceToJfxModel attendanceService,
                                     AttendanceSelectionService attendanceSelectionService,
-                                    WeaponServiceToJfxModel weaponService) {
+                                    WeaponServiceToJfxModel weaponService,
+                                    StatusServiceToJfxModel statusService) {
         this.attendanceService = attendanceService;
         this.attendanceSelectionService = attendanceSelectionService;
         firingPointComboBox.setItems(firingPointService.getFiringPointList());
@@ -107,6 +112,19 @@ public class AttendanceNode extends StackPane {
             }
         });
 
+        statusComboBox.setItems(statusService.getStatusList());
+        statusComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(StatusJfxModel statusJfxModel) {
+                return Optional.ofNullable(statusJfxModel).map(StatusJfxModel::getName).orElse("");
+            }
+
+            @Override
+            public StatusJfxModel fromString(String s) {
+                throw new IllegalArgumentException("Should not pass here");
+            }
+        });
+
         attendanceListTitle.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
         attendanceSelectionService.selectedObs()
@@ -127,8 +145,10 @@ public class AttendanceNode extends StackPane {
 
         Optional.ofNullable(firingPostComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setFiringPost);
         Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
+        Optional.ofNullable(statusComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setStatus);
 
         attendanceService.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
+        clearAttendance();
     }
 
     @FXML
