@@ -9,8 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,14 +16,11 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Optional;
 
 public class AttendanceLicenseeSimpleNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(AttendanceLicenseeSimpleNode.class);
     private static final String FXML_PATH = "licenseeSimple.fxml";
 
-    @FXML
-    private ImageView profileImage;
     @FXML
     private TextField licenceNumberTextField;
     @FXML
@@ -51,9 +46,6 @@ public class AttendanceLicenseeSimpleNode extends VBox {
 
     public AttendanceLicenseeSimpleNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
-
-        Optional.ofNullable(getClass().getResourceAsStream("/blank.png"))
-                .ifPresent(is -> this.profileImage.setImage(new Image(is)));
     }
 
     @Inject
