@@ -17,7 +17,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row7;
+import org.jooq.Row8;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -84,6 +84,11 @@ public class Attendance extends TableImpl<AttendanceRecord> {
      */
     public final TableField<AttendanceRecord, Integer> WEAPONID = createField(DSL.name("WEAPONID"), SQLDataType.INTEGER, this, "");
 
+    /**
+     * The column <code>ATTENDANCE.STATUSID</code>.
+     */
+    public final TableField<AttendanceRecord, Integer> STATUSID = createField(DSL.name("STATUSID"), SQLDataType.INTEGER, this, "");
+
     private Attendance(Name alias, Table<AttendanceRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -134,13 +139,14 @@ public class Attendance extends TableImpl<AttendanceRecord> {
 
     @Override
     public List<ForeignKey<AttendanceRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.FK_ATTENDANCE_LICENSEE_ID, Keys.FK_ATTENDANCE_FIRINGPOINT_ID, Keys.FK_ATTENDANCE_FIRINGPOST_ID, Keys.FK_ATTENDANCE_WEAPON_ID);
+        return Arrays.asList(Keys.FK_ATTENDANCE_LICENSEE_ID, Keys.FK_ATTENDANCE_FIRINGPOINT_ID, Keys.FK_ATTENDANCE_FIRINGPOST_ID, Keys.FK_ATTENDANCE_WEAPON_ID, Keys.FK_ATTENDANCE_STATUS_ID);
     }
 
     private transient Licensee _licensee;
     private transient Firingpoint _firingpoint;
     private transient Firingpost _firingpost;
     private transient Weapon _weapon;
+    private transient Status _status;
 
     public Licensee licensee() {
         if (_licensee == null)
@@ -170,6 +176,13 @@ public class Attendance extends TableImpl<AttendanceRecord> {
         return _weapon;
     }
 
+    public Status status() {
+        if (_status == null)
+            _status = new Status(this, Keys.FK_ATTENDANCE_STATUS_ID);
+
+        return _status;
+    }
+
     @Override
     public Attendance as(String alias) {
         return new Attendance(DSL.name(alias), this);
@@ -197,11 +210,11 @@ public class Attendance extends TableImpl<AttendanceRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<Integer, Integer, LocalDateTime, LocalDateTime, Integer, Integer, Integer> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row8<Integer, Integer, LocalDateTime, LocalDateTime, Integer, Integer, Integer, Integer> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 }
