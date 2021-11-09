@@ -92,4 +92,31 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Florian L." id="3">
+        <createTable tableName="shootingLogbook">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="creationDate" type="DATE"/>
+        </createTable>
+        <createTable tableName="shootingSession">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="sessionDate" type="DATE"/>
+            <column name="instructorName" type="VARCHAR(100)"/>
+            <column name="shootingLogbookId" type="INT">
+                <constraints foreignKeyName="fk_shootingSession_shootingLogbook_id" references="shootingLogbook(id)"/>
+            </column>
+            <column name="weaponId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_shootingSession_weapon_id" references="weapon(id)"/>
+            </column>
+        </createTable>
+        <addColumn tableName="licensee">
+            <column name="shootingLogbookId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_licensee_shootingLogbook_id"
+                             references="shootingLogbook(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

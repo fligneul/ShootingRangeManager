@@ -8,12 +8,16 @@ import com.fligneul.srm.jooq.tables.Attendance;
 import com.fligneul.srm.jooq.tables.Firingpoint;
 import com.fligneul.srm.jooq.tables.Firingpost;
 import com.fligneul.srm.jooq.tables.Licensee;
+import com.fligneul.srm.jooq.tables.Shootinglogbook;
+import com.fligneul.srm.jooq.tables.Shootingsession;
 import com.fligneul.srm.jooq.tables.User;
 import com.fligneul.srm.jooq.tables.Weapon;
 import com.fligneul.srm.jooq.tables.records.AttendanceRecord;
 import com.fligneul.srm.jooq.tables.records.FiringpointRecord;
 import com.fligneul.srm.jooq.tables.records.FiringpostRecord;
 import com.fligneul.srm.jooq.tables.records.LicenseeRecord;
+import com.fligneul.srm.jooq.tables.records.ShootinglogbookRecord;
+import com.fligneul.srm.jooq.tables.records.ShootingsessionRecord;
 import com.fligneul.srm.jooq.tables.records.UserRecord;
 import com.fligneul.srm.jooq.tables.records.WeaponRecord;
 
@@ -39,6 +43,8 @@ public class Keys {
     public static final UniqueKey<FiringpointRecord> PK_FIRINGPOINT = Internal.createUniqueKey(Firingpoint.FIRINGPOINT, DSL.name("PK_FIRINGPOINT"), new TableField[] { Firingpoint.FIRINGPOINT.ID }, true);
     public static final UniqueKey<FiringpostRecord> PK_FIRINGPOST = Internal.createUniqueKey(Firingpost.FIRINGPOST, DSL.name("PK_FIRINGPOST"), new TableField[] { Firingpost.FIRINGPOST.ID }, true);
     public static final UniqueKey<LicenseeRecord> PK_LICENSEE = Internal.createUniqueKey(Licensee.LICENSEE, DSL.name("PK_LICENSEE"), new TableField[] { Licensee.LICENSEE.ID }, true);
+    public static final UniqueKey<ShootinglogbookRecord> PK_SHOOTINGLOGBOOK = Internal.createUniqueKey(Shootinglogbook.SHOOTINGLOGBOOK, DSL.name("PK_SHOOTINGLOGBOOK"), new TableField[] { Shootinglogbook.SHOOTINGLOGBOOK.ID }, true);
+    public static final UniqueKey<ShootingsessionRecord> PK_SHOOTINGSESSION = Internal.createUniqueKey(Shootingsession.SHOOTINGSESSION, DSL.name("PK_SHOOTINGSESSION"), new TableField[] { Shootingsession.SHOOTINGSESSION.ID }, true);
     public static final UniqueKey<UserRecord> CONSTRAINT_2 = Internal.createUniqueKey(User.USER, DSL.name("CONSTRAINT_2"), new TableField[] { User.USER.USERNAME }, true);
     public static final UniqueKey<UserRecord> PK_USER = Internal.createUniqueKey(User.USER, DSL.name("PK_USER"), new TableField[] { User.USER.ID }, true);
     public static final UniqueKey<WeaponRecord> PK_WEAPON = Internal.createUniqueKey(Weapon.WEAPON, DSL.name("PK_WEAPON"), new TableField[] { Weapon.WEAPON.ID }, true);
@@ -52,4 +58,7 @@ public class Keys {
     public static final ForeignKey<AttendanceRecord, LicenseeRecord> FK_ATTENDANCE_LICENSEE_ID = Internal.createForeignKey(Attendance.ATTENDANCE, DSL.name("FK_ATTENDANCE_LICENSEE_ID"), new TableField[] { Attendance.ATTENDANCE.LICENSEEID }, Keys.PK_LICENSEE, new TableField[] { Licensee.LICENSEE.ID }, true);
     public static final ForeignKey<AttendanceRecord, WeaponRecord> FK_ATTENDANCE_WEAPON_ID = Internal.createForeignKey(Attendance.ATTENDANCE, DSL.name("FK_ATTENDANCE_WEAPON_ID"), new TableField[] { Attendance.ATTENDANCE.WEAPONID }, Keys.PK_WEAPON, new TableField[] { Weapon.WEAPON.ID }, true);
     public static final ForeignKey<FiringpostRecord, FiringpointRecord> FK_FIRINGPOST_FIRINGPOINT_ID = Internal.createForeignKey(Firingpost.FIRINGPOST, DSL.name("FK_FIRINGPOST_FIRINGPOINT_ID"), new TableField[] { Firingpost.FIRINGPOST.FIRINGPOINTID }, Keys.PK_FIRINGPOINT, new TableField[] { Firingpoint.FIRINGPOINT.ID }, true);
+    public static final ForeignKey<LicenseeRecord, ShootinglogbookRecord> FK_LICENSEE_SHOOTINGLOGBOOK_ID = Internal.createForeignKey(Licensee.LICENSEE, DSL.name("FK_LICENSEE_SHOOTINGLOGBOOK_ID"), new TableField[] { Licensee.LICENSEE.SHOOTINGLOGBOOKID }, Keys.PK_SHOOTINGLOGBOOK, new TableField[] { Shootinglogbook.SHOOTINGLOGBOOK.ID }, true);
+    public static final ForeignKey<ShootingsessionRecord, ShootinglogbookRecord> FK_SHOOTINGSESSION_SHOOTINGLOGBOOK_ID = Internal.createForeignKey(Shootingsession.SHOOTINGSESSION, DSL.name("FK_SHOOTINGSESSION_SHOOTINGLOGBOOK_ID"), new TableField[] { Shootingsession.SHOOTINGSESSION.SHOOTINGLOGBOOKID }, Keys.PK_SHOOTINGLOGBOOK, new TableField[] { Shootinglogbook.SHOOTINGLOGBOOK.ID }, true);
+    public static final ForeignKey<ShootingsessionRecord, WeaponRecord> FK_SHOOTINGSESSION_WEAPON_ID = Internal.createForeignKey(Shootingsession.SHOOTINGSESSION, DSL.name("FK_SHOOTINGSESSION_WEAPON_ID"), new TableField[] { Shootingsession.SHOOTINGSESSION.WEAPONID }, Keys.PK_WEAPON, new TableField[] { Weapon.WEAPON.ID }, true);
 }

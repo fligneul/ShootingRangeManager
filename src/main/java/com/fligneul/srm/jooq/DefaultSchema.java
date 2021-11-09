@@ -8,6 +8,8 @@ import com.fligneul.srm.jooq.tables.Attendance;
 import com.fligneul.srm.jooq.tables.Firingpoint;
 import com.fligneul.srm.jooq.tables.Firingpost;
 import com.fligneul.srm.jooq.tables.Licensee;
+import com.fligneul.srm.jooq.tables.Shootinglogbook;
+import com.fligneul.srm.jooq.tables.Shootingsession;
 import com.fligneul.srm.jooq.tables.User;
 import com.fligneul.srm.jooq.tables.Weapon;
 
@@ -53,6 +55,16 @@ public class DefaultSchema extends SchemaImpl {
     public final Licensee LICENSEE = Licensee.LICENSEE;
 
     /**
+     * The table <code>SHOOTINGLOGBOOK</code>.
+     */
+    public final Shootinglogbook SHOOTINGLOGBOOK = Shootinglogbook.SHOOTINGLOGBOOK;
+
+    /**
+     * The table <code>SHOOTINGSESSION</code>.
+     */
+    public final Shootingsession SHOOTINGSESSION = Shootingsession.SHOOTINGSESSION;
+
+    /**
      * The table <code>USER</code>.
      */
     public final User USER = User.USER;
@@ -82,6 +94,8 @@ public class DefaultSchema extends SchemaImpl {
             Firingpoint.FIRINGPOINT,
             Firingpost.FIRINGPOST,
             Licensee.LICENSEE,
+            Shootinglogbook.SHOOTINGLOGBOOK,
+            Shootingsession.SHOOTINGSESSION,
             User.USER,
             Weapon.WEAPON
         );

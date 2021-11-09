@@ -1,11 +1,13 @@
 package com.fligneul.srm.dao.licensee;
 
 import com.fligneul.srm.dao.IDAO;
+import com.fligneul.srm.dao.logbook.ShootingLogbookDAO;
 import com.fligneul.srm.jooq.Tables;
 import com.fligneul.srm.jooq.tables.records.LicenseeRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
+import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
@@ -23,10 +25,13 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
+    private ShootingLogbookDAO shootingLogbookDAO;
 
     @Inject
-    public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
+    public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
+                                   final ShootingLogbookDAO shootingLogbookDAO) {
         this.databaseConnectionService = databaseConnectionService;
+        this.shootingLogbookDAO = shootingLogbookDAO;
     }
 
     @Override
@@ -53,6 +58,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                             .set(Tables.LICENSEE.AGECATEGORY, item.getAgeCategory())
                             .set(Tables.LICENSEE.HANDISPORT, item.isHandisport())
                             .set(Tables.LICENSEE.BLACKLISTED, item.isBlacklisted())
+                            .set(Tables.LICENSEE.SHOOTINGLOGBOOKID, Optional.ofNullable(item.getShootingLogbook()).map(ShootingLogbookJfxModel::getId).orElse(null))
                             .returning()
                             .fetchOne())
                     .map(this::convertToJfxModel);
@@ -112,6 +118,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                     .set(Tables.LICENSEE.AGECATEGORY, licensee.getAgeCategory())
                     .set(Tables.LICENSEE.HANDISPORT, licensee.isHandisport())
                     .set(Tables.LICENSEE.BLACKLISTED, licensee.isBlacklisted())
+                    .set(Tables.LICENSEE.SHOOTINGLOGBOOKID, Optional.ofNullable(licensee.getShootingLogbook()).map(ShootingLogbookJfxModel::getId).orElse(null))
                     .where(Tables.LICENSEE.ID.eq(licensee.getId()))
                     .execute();
 
@@ -173,6 +180,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         Optional.ofNullable(licenseeRecord.getAgecategory()).ifPresent(builder::setAgeCategory);
         Optional.ofNullable(licenseeRecord.getHandisport()).ifPresent(builder::setHandisport);
         Optional.ofNullable(licenseeRecord.getBlacklisted()).ifPresent(builder::setBlacklisted);
+        Optional.ofNullable(licenseeRecord.getShootinglogbookid()).ifPresent(logbookId -> builder.setShootingLogbook(shootingLogbookDAO.getById(logbookId).orElseThrow()));
 
         return builder.createLicenseeJfxModel();
     }

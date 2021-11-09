@@ -8,6 +8,8 @@ import com.fligneul.srm.jooq.tables.Attendance;
 import com.fligneul.srm.jooq.tables.Firingpoint;
 import com.fligneul.srm.jooq.tables.Firingpost;
 import com.fligneul.srm.jooq.tables.Licensee;
+import com.fligneul.srm.jooq.tables.Shootinglogbook;
+import com.fligneul.srm.jooq.tables.Shootingsession;
 import com.fligneul.srm.jooq.tables.User;
 import com.fligneul.srm.jooq.tables.Weapon;
 
@@ -37,6 +39,16 @@ public class Tables {
      * The table <code>LICENSEE</code>.
      */
     public static final Licensee LICENSEE = Licensee.LICENSEE;
+
+    /**
+     * The table <code>SHOOTINGLOGBOOK</code>.
+     */
+    public static final Shootinglogbook SHOOTINGLOGBOOK = Shootinglogbook.SHOOTINGLOGBOOK;
+
+    /**
+     * The table <code>SHOOTINGSESSION</code>.
+     */
+    public static final Shootingsession SHOOTINGSESSION = Shootingsession.SHOOTINGSESSION;
 
     /**
      * The table <code>USER</code>.

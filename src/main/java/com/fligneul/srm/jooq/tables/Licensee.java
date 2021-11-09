@@ -9,13 +9,15 @@ import com.fligneul.srm.jooq.Keys;
 import com.fligneul.srm.jooq.tables.records.LicenseeRecord;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row21;
+import org.jooq.Row22;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -152,6 +154,11 @@ public class Licensee extends TableImpl<LicenseeRecord> {
      */
     public final TableField<LicenseeRecord, Boolean> BLACKLISTED = createField(DSL.name("BLACKLISTED"), SQLDataType.BOOLEAN, this, "");
 
+    /**
+     * The column <code>LICENSEE.SHOOTINGLOGBOOKID</code>.
+     */
+    public final TableField<LicenseeRecord, Integer> SHOOTINGLOGBOOKID = createField(DSL.name("SHOOTINGLOGBOOKID"), SQLDataType.INTEGER, this, "");
+
     private Licensee(Name alias, Table<LicenseeRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -201,6 +208,20 @@ public class Licensee extends TableImpl<LicenseeRecord> {
     }
 
     @Override
+    public List<ForeignKey<LicenseeRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.FK_LICENSEE_SHOOTINGLOGBOOK_ID);
+    }
+
+    private transient Shootinglogbook _shootinglogbook;
+
+    public Shootinglogbook shootinglogbook() {
+        if (_shootinglogbook == null)
+            _shootinglogbook = new Shootinglogbook(this, Keys.FK_LICENSEE_SHOOTINGLOGBOOK_ID);
+
+        return _shootinglogbook;
+    }
+
+    @Override
     public Licensee as(String alias) {
         return new Licensee(DSL.name(alias), this);
     }
@@ -227,11 +248,11 @@ public class Licensee extends TableImpl<LicenseeRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row21 type methods
+    // Row22 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row21<Integer, String, String, String, String, String, LocalDate, String, String, String, String, String, String, String, String, String, LocalDate, String, String, Boolean, Boolean> fieldsRow() {
-        return (Row21) super.fieldsRow();
+    public Row22<Integer, String, String, String, String, String, LocalDate, String, String, String, String, String, String, String, String, String, LocalDate, String, String, Boolean, Boolean, Integer> fieldsRow() {
+        return (Row22) super.fieldsRow();
     }
 }
