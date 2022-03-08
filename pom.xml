@@ -35,7 +35,7 @@
         <rxjava3.version>3.1.0</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
         <h2.version>1.4.200</h2.version>
-        <liquibase.version>4.5.0</liquibase.version>
+        <liquibase.version>4.8.0</liquibase.version>
         <snakeyaml.version>1.29</snakeyaml.version>
         <jooq.version>3.15.3</jooq.version>
         <ikonli.version>12.2.0</ikonli.version>
