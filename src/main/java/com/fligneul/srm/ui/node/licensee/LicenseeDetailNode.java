@@ -153,6 +153,8 @@ public class LicenseeDetailNode extends VBox {
         idCardTextField.setText("");
         handisportCheckBox.setSelected(false);
         idPhotoCheckBox.setSelected(false);
+        licenceBlacklistLabel.setManaged(false);
+        licenceBlacklistLabel.setVisible(false);
     }
 
     private void updateComponents(final LicenseeJfxModel licenseeJfxModel) {
