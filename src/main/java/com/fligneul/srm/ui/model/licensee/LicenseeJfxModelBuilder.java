@@ -20,6 +20,9 @@ public class LicenseeJfxModelBuilder {
     private String email;
     private String phoneNumber;
     private String licenceState;
+    private LocalDate medicalCertificateDate;
+    private LocalDate idCardDate;
+    private Boolean idPhoto;
     private LocalDate firstLicenceDate;
     private String season;
     private String ageCategory;
@@ -106,6 +109,21 @@ public class LicenseeJfxModelBuilder {
         return this;
     }
 
+    public LicenseeJfxModelBuilder setMedicalCertificateDate(final LocalDate medicalCertificateDate) {
+        this.medicalCertificateDate = medicalCertificateDate;
+        return this;
+    }
+
+    public LicenseeJfxModelBuilder setIdCardDate(final LocalDate idCardDate) {
+        this.idCardDate = idCardDate;
+        return this;
+    }
+
+    public LicenseeJfxModelBuilder setIdPhoto(final Boolean idPhoto) {
+        this.idPhoto = idPhoto;
+        return this;
+    }
+
     public LicenseeJfxModelBuilder setFirstLicenceDate(final LocalDate firstLicenceDate) {
         this.firstLicenceDate = firstLicenceDate;
         return this;
@@ -146,6 +164,9 @@ public class LicenseeJfxModelBuilder {
         Optional.ofNullable(email).ifPresent(licenseeJfxModel::setEmail);
         Optional.ofNullable(phoneNumber).ifPresent(licenseeJfxModel::setPhoneNumber);
         Optional.ofNullable(licenceState).ifPresent(licenseeJfxModel::setLicenceState);
+        Optional.ofNullable(medicalCertificateDate).ifPresent(licenseeJfxModel::setMedicalCertificateDate);
+        Optional.ofNullable(idCardDate).ifPresent(licenseeJfxModel::setIdCardDate);
+        Optional.ofNullable(idPhoto).ifPresent(licenseeJfxModel::setIdPhoto);
         Optional.ofNullable(firstLicenceDate).ifPresent(licenseeJfxModel::setFirstLicenceDate);
         Optional.ofNullable(season).ifPresent(licenseeJfxModel::setSeason);
         Optional.ofNullable(ageCategory).ifPresent(licenseeJfxModel::setAgeCategory);

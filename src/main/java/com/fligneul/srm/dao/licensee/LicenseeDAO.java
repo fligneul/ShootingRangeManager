@@ -48,6 +48,9 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                             .set(Tables.LICENSEE.EMAIL, item.getEmail())
                             .set(Tables.LICENSEE.PHONENUMBER, item.getPhoneNumber())
                             .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState())
+                            .set(Tables.LICENSEE.MEDICALCERTIFICATEDATE, item.getMedicalCertificateDate())
+                            .set(Tables.LICENSEE.IDCARDDATE, item.getIdCardDate())
+                            .set(Tables.LICENSEE.IDPHOTO, item.hasIdPhoto())
                             .set(Tables.LICENSEE.FIRSTLICENCEDATE, item.getFirstLicenceDate())
                             .set(Tables.LICENSEE.SEASON, item.getSeason())
                             .set(Tables.LICENSEE.AGECATEGORY, item.getAgeCategory())
@@ -107,6 +110,9 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                     .set(Tables.LICENSEE.EMAIL, licensee.getEmail())
                     .set(Tables.LICENSEE.PHONENUMBER, licensee.getPhoneNumber())
                     .set(Tables.LICENSEE.LICENCESTATE, licensee.getLicenceState())
+                    .set(Tables.LICENSEE.MEDICALCERTIFICATEDATE, licensee.getMedicalCertificateDate())
+                    .set(Tables.LICENSEE.IDCARDDATE, licensee.getIdCardDate())
+                    .set(Tables.LICENSEE.IDPHOTO, licensee.hasIdPhoto())
                     .set(Tables.LICENSEE.FIRSTLICENCEDATE, licensee.getFirstLicenceDate())
                     .set(Tables.LICENSEE.SEASON, licensee.getSeason())
                     .set(Tables.LICENSEE.AGECATEGORY, licensee.getAgeCategory())
@@ -168,6 +174,9 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         Optional.ofNullable(licenseeRecord.getEmail()).ifPresent(builder::setEmail);
         Optional.ofNullable(licenseeRecord.getPhonenumber()).ifPresent(builder::setPhoneNumber);
         Optional.ofNullable(licenseeRecord.getLicencestate()).ifPresent(builder::setLicenceState);
+        Optional.ofNullable(licenseeRecord.getMedicalcertificatedate()).ifPresent(builder::setMedicalCertificateDate);
+        Optional.ofNullable(licenseeRecord.getIdcarddate()).ifPresent(builder::setIdCardDate);
+        Optional.ofNullable(licenseeRecord.getIdphoto()).ifPresent(builder::setIdPhoto);
         Optional.ofNullable(licenseeRecord.getFirstlicencedate()).ifPresent(builder::setFirstLicenceDate);
         Optional.ofNullable(licenseeRecord.getSeason()).ifPresent(builder::setSeason);
         Optional.ofNullable(licenseeRecord.getAgecategory()).ifPresent(builder::setAgeCategory);
