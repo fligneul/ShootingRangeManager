@@ -7,7 +7,11 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <fx:root maxWidth="800.0" type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
@@ -74,9 +78,9 @@
         <Separator prefWidth="200.0"/>
         <GridPane hgap="10.0" vgap="5.0">
             <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="120.0"/>
+                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
             </columnConstraints>
             <rowConstraints>
@@ -112,14 +116,15 @@
 
         <GridPane hgap="10.0" vgap="5.0">
             <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="120.0"/>
+                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
@@ -144,6 +149,12 @@
                 <TextField fx:id="seasonTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <Label text="Catégorie d'âge" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
                 <TextField fx:id="ageCategoryTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                <Label text="Date du certificat médical" GridPane.rowIndex="4"/>
+                <TextField fx:id="medicalCertificateTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <Label text="Date de la carte d'identité" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                <TextField fx:id="idCardTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                <Label text="Photo" GridPane.rowIndex="5"/>
+                <CheckBox fx:id="idPhotoCheckBox" disable="true" style="-fx-opacity: 1;" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
             </children>
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0"/>

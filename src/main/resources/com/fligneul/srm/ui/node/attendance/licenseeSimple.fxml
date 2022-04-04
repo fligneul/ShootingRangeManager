@@ -88,6 +88,7 @@
                 <Label text="Catégorie d'âge" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
                 <TextField fx:id="ageCategoryTextField" editable="false" GridPane.columnIndex="3"
                            GridPane.rowIndex="3"/>
+                <Label fx:id="licenceErrorLabel" text="Certains documents sont manquant, veuillez contacter le secrétariat" textFill="RED" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4" GridPane.halignment="CENTER"/>
             </children>
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0"/>

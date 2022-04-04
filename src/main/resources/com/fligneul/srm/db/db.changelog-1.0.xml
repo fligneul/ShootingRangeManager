@@ -92,4 +92,15 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Florian L." id="3">
+        <addColumn tableName="licensee">
+            <column name="medicalCertificateDate" afterColumn="licenceState" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="idCardDate" afterColumn="medicalCertificateDate" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="idPhoto" afterColumn="idCardDate" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
