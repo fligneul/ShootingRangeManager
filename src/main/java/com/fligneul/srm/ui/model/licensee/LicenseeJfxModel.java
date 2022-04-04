@@ -8,6 +8,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 public class LicenseeJfxModel {
@@ -29,15 +32,17 @@ public class LicenseeJfxModel {
     private final StringProperty email = new SimpleStringProperty("");
     private final StringProperty phoneNumber = new SimpleStringProperty("");
     private final StringProperty licenceState = new SimpleStringProperty("");
-    private final ObjectProperty<LocalDate> firstLicenceDate = new SimpleObjectProperty<>(LocalDate.EPOCH);
+    private final ObjectProperty<LocalDate> medicalCertificateDate = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDate> idCardDate = new SimpleObjectProperty<>();
+    private final BooleanProperty idPhoto = new SimpleBooleanProperty(false);
+    private final ObjectProperty<LocalDate> firstLicenceDate = new SimpleObjectProperty<>();
     private final StringProperty season = new SimpleStringProperty("");
     private final StringProperty ageCategory = new SimpleStringProperty("");
     private final BooleanProperty handisport = new SimpleBooleanProperty(false);
     private final BooleanProperty blacklisted = new SimpleBooleanProperty(false);
     private final ObjectProperty<ShootingLogbookJfxModel> shootingLogbook = new SimpleObjectProperty<>();
 
-
-    protected LicenseeJfxModel(int id, String firstName, String lastName, LocalDate dateOfBirth) {
+    protected LicenseeJfxModel(int id, @NotBlank String firstName, @NotBlank String lastName, @NotNull LocalDate dateOfBirth) {
         this.id = id;
         this.firstName.set(firstName);
         this.lastName.set(lastName);
@@ -228,7 +233,43 @@ public class LicenseeJfxModel {
         this.licenceState.set(licenceState);
     }
 
-    public LocalDate getFirstLicenceDate() {
+    public @Null LocalDate getMedicalCertificateDate() {
+        return medicalCertificateDate.get();
+    }
+
+    public ObjectProperty<LocalDate> medicalCertificateDateProperty() {
+        return medicalCertificateDate;
+    }
+
+    public void setMedicalCertificateDate(final LocalDate medicalCertificateDate) {
+        this.medicalCertificateDate.set(medicalCertificateDate);
+    }
+
+    public @Null LocalDate getIdCardDate() {
+        return idCardDate.get();
+    }
+
+    public ObjectProperty<LocalDate> idCardDateProperty() {
+        return idCardDate;
+    }
+
+    public void setIdCardDate(final LocalDate idCardDate) {
+        this.idCardDate.set(idCardDate);
+    }
+
+    public boolean hasIdPhoto() {
+        return idPhoto.get();
+    }
+
+    public BooleanProperty idPhotoProperty() {
+        return idPhoto;
+    }
+
+    public void setIdPhoto(final boolean hasIdPhoto) {
+        this.idPhoto.set(hasIdPhoto);
+    }
+
+    public @Null LocalDate getFirstLicenceDate() {
         return firstLicenceDate.get();
     }
 

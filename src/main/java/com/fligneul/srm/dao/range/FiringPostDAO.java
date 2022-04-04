@@ -1,8 +1,8 @@
 package com.fligneul.srm.dao.range;
 
 import com.fligneul.srm.dao.IDAOWithForeignKey;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.FiringpostRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.FiringpostRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import org.apache.logging.log4j.LogManager;

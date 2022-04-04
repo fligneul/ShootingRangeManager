@@ -12,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
+import org.jooq.conf.RenderNameCase;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 
 import java.io.File;
@@ -65,7 +67,7 @@ public class DatabaseConnectionService {
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connect));
         Liquibase liquibase = new Liquibase(DB_CHANGELOG_MASTER_XML, new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
-        context = DSL.using(connect, SQLDialect.H2);
+        context = DSL.using(connect, SQLDialect.H2, new Settings().withRenderNameCase(RenderNameCase.AS_IS));
         return connect;
     }
 

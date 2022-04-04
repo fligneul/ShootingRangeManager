@@ -1,8 +1,8 @@
 package com.fligneul.srm.dao.user;
 
 import com.fligneul.srm.dao.IDAO;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.UserRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.UserRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.user.ERole;
 import com.fligneul.srm.ui.model.user.UserJfxModel;

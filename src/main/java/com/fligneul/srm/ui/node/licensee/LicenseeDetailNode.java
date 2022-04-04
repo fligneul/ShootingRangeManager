@@ -71,6 +71,12 @@ public class LicenseeDetailNode extends VBox {
     private TextField seasonTextField;
     @FXML
     private TextField ageCategoryTextField;
+    @FXML
+    private TextField medicalCertificateTextField;
+    @FXML
+    private TextField idCardTextField;
+    @FXML
+    private CheckBox idPhotoCheckBox;
 
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
     private LicenseeSelectionService licenseeSelectionService;
@@ -119,7 +125,10 @@ public class LicenseeDetailNode extends VBox {
         firstLicenceDateTextField.textProperty().unbind();
         seasonTextField.textProperty().unbind();
         ageCategoryTextField.textProperty().unbind();
+        medicalCertificateTextField.textProperty().unbind();
+        idCardTextField.textProperty().unbind();
         handisportCheckBox.selectedProperty().unbind();
+        idPhotoCheckBox.selectedProperty().unbind();
         licenceBlacklistLabel.managedProperty().unbind();
         licenceBlacklistLabel.visibleProperty().unbind();
 
@@ -140,7 +149,10 @@ public class LicenseeDetailNode extends VBox {
         firstLicenceDateTextField.setText("");
         seasonTextField.setText("");
         ageCategoryTextField.setText("");
+        medicalCertificateTextField.setText("");
+        idCardTextField.setText("");
         handisportCheckBox.setSelected(false);
+        idPhotoCheckBox.setSelected(false);
         licenceBlacklistLabel.setManaged(false);
         licenceBlacklistLabel.setVisible(false);
     }
@@ -163,10 +175,17 @@ public class LicenseeDetailNode extends VBox {
         emailTextField.textProperty().bind(licenseeJfxModel.emailProperty());
         phoneNumberTextField.textProperty().bind(licenseeJfxModel.phoneNumberProperty());
         licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
-        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> licenseeJfxModel.getFirstLicenceDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), licenseeJfxModel.firstLicenceDateProperty()));
+        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getFirstLicenceDate())
+                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
+        medicalCertificateTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getMedicalCertificateDate())
+                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.medicalCertificateDateProperty()));
+        idCardTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getIdCardDate())
+                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.idCardDateProperty()));
+        handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
+        idPhotoCheckBox.selectedProperty().bind(licenseeJfxModel.idPhotoProperty());
         licenceBlacklistLabel.managedProperty().bind(licenseeJfxModel.blacklistedProperty());
         licenceBlacklistLabel.visibleProperty().bind(licenseeJfxModel.blacklistedProperty());
     }
