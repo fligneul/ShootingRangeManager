@@ -1,8 +1,8 @@
 package com.fligneul.srm.dao.logbook;
 
 import com.fligneul.srm.dao.IDAO;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.ShootinglogbookRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.ShootinglogbookRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import javafx.collections.FXCollections;
@@ -38,6 +38,9 @@ public class ShootingLogbookDAO implements IDAO<ShootingLogbookJfxModel> {
             Optional<ShootingLogbookJfxModel> optFiringPoint = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.SHOOTINGLOGBOOK)
                             .set(Tables.SHOOTINGLOGBOOK.CREATIONDATE, item.getCreationDate())
+                            .set(Tables.SHOOTINGLOGBOOK.KNOWLEDGECHECKDATE, item.getKnowledgeCheckDate())
+                            .set(Tables.SHOOTINGLOGBOOK.WHITETARGETLEVEL, item.hasWhiteTargetLevel())
+                            .set(Tables.SHOOTINGLOGBOOK.LICENSEEID, item.getLicenseeId())
                             .returning()
                             .fetchOne())
                     .map(this::convertToJfxModel);
@@ -62,6 +65,15 @@ public class ShootingLogbookDAO implements IDAO<ShootingLogbookJfxModel> {
         return Optional.empty();
     }
 
+    public Optional<ShootingLogbookJfxModel> getByLicenseeId(int id) {
+        try {
+            return internalGet(Tables.SHOOTINGLOGBOOK.LICENSEEID.eq(id)).findFirst();
+        } catch (DataAccessException e) {
+            LOGGER.error("Error during shooting logbook get", e);
+        }
+        return Optional.empty();
+    }
+
     @Override
     public List<ShootingLogbookJfxModel> getAll() {
         try {
@@ -80,6 +92,8 @@ public class ShootingLogbookDAO implements IDAO<ShootingLogbookJfxModel> {
             databaseConnectionService.getContext()
                     .update(Tables.SHOOTINGLOGBOOK)
                     .set(Tables.SHOOTINGLOGBOOK.CREATIONDATE, item.getCreationDate())
+                    .set(Tables.SHOOTINGLOGBOOK.KNOWLEDGECHECKDATE, item.getKnowledgeCheckDate())
+                    .set(Tables.SHOOTINGLOGBOOK.WHITETARGETLEVEL, item.hasWhiteTargetLevel())
                     .where(Tables.SHOOTINGLOGBOOK.ID.eq(item.getId()))
                     .execute();
 
@@ -119,8 +133,13 @@ public class ShootingLogbookDAO implements IDAO<ShootingLogbookJfxModel> {
     }
 
     private ShootingLogbookJfxModel convertToJfxModel(ShootinglogbookRecord shootingLogbookRecord) {
-        return new ShootingLogbookJfxModel(shootingLogbookRecord.getId(),
+        final ShootingLogbookJfxModel shootingLogbookJfxModel = new ShootingLogbookJfxModel(shootingLogbookRecord.getId(),
                 shootingLogbookRecord.getCreationdate(),
-                FXCollections.observableList(shootingSessionDAO.getAllByLogbookId(shootingLogbookRecord.getId())));
+                FXCollections.observableList(shootingSessionDAO.getAllByLogbookId(shootingLogbookRecord.getId())),
+                shootingLogbookRecord.getLicenseeid());
+
+        Optional.ofNullable(shootingLogbookRecord.getKnowledgecheckdate()).ifPresent(shootingLogbookJfxModel::setKnowledgeCheckDate);
+        shootingLogbookJfxModel.setWhiteTargetLevel(shootingLogbookRecord.getWhitetargetlevel());
+        return shootingLogbookJfxModel;
     }
 }

@@ -109,6 +109,13 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="creationDate" type="DATE"/>
+            <column name="knowledgeCheckDate" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="whiteTargetLevel" type="BOOLEAN"/>
+            <column name="licenseeId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_shootingLogbook_licensee_id" references="licensee(id)"/>
+            </column>
         </createTable>
         <createTable tableName="shootingSession">
             <column name="id" type="INT" autoIncrement="true">
@@ -123,11 +130,5 @@
                 <constraints nullable="true" foreignKeyName="fk_shootingSession_weapon_id" references="weapon(id)"/>
             </column>
         </createTable>
-        <addColumn tableName="licensee">
-            <column name="shootingLogbookId" type="INT">
-                <constraints nullable="true" foreignKeyName="fk_licensee_shootingLogbook_id"
-                             references="shootingLogbook(id)"/>
-            </column>
-        </addColumn>
     </changeSet>
 </databaseChangeLog>

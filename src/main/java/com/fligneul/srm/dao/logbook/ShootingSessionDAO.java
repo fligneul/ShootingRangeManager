@@ -2,8 +2,8 @@ package com.fligneul.srm.dao.logbook;
 
 import com.fligneul.srm.dao.IDAOWithForeignKey;
 import com.fligneul.srm.dao.weapon.WeaponDAO;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.ShootingsessionRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.ShootingsessionRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.logbook.ShootingSessionJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
