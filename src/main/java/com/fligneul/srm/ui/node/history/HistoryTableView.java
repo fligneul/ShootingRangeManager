@@ -7,7 +7,7 @@ import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
-import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
+import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -46,15 +46,13 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     @FXML
     private TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> deleteColumn;
     private LocalDate date;
-    private Runnable action;
-
 
     public HistoryTableView() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
     @Inject
-    private void injectDependencies(AttendanceServiceToJfxModel attendanceService) {
+    private void injectDependencies(HistoryAttendanceServiceToJfxModel attendanceService) {
         licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
         startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate().format(DateTimeFormatter.ofPattern("HH:mm"))));
         firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
@@ -67,7 +65,6 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
         editColumn.setCellFactory(param -> new ButtonActionTableCell<>(EDIT_FA_ICON, COLOR_GREY, item -> {
             LOGGER.info("Edit licensee presence {}", item.getId());
             DialogUtils.showCustomDialog("Modification d'un enregistrement de présence", new HistoryEditNode(date, item));
-            action.run();
         }));
 
         deleteColumn.setCellFactory(param -> new ButtonActionTableCell<>(TRASH_FA_ICON, COLOR_RED, item -> {
@@ -75,17 +72,11 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
                     "Etes-vous sur de vouloir supprimer l'enregistrement sélectionné ?",
                     () -> {
                         attendanceService.deleteLicenseePresence(item);
-                        action.run();
                     });
         }));
-
     }
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public void setRefreshAction(Runnable action) {
-        this.action = action;
     }
 }

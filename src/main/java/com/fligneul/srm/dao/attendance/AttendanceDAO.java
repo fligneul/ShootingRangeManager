@@ -106,23 +106,19 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
 
     public Optional<LicenseePresenceJfxModel> update(final LicenseePresenceJfxModel item) {
         try {
-            Optional<LicenseePresenceJfxModel> opt = Optional.ofNullable(databaseConnectionService.getContext()
-                            .update(Tables.ATTENDANCE)
-                            .set(Tables.ATTENDANCE.LICENSEEID, item.getLicensee().getId())
-                            .set(Tables.ATTENDANCE.STARTDATE, item.getStartDate())
-                            .set(Tables.ATTENDANCE.STOPDATE, item.getStopDate())
-                            .set(Tables.ATTENDANCE.FIRINGPOINTID, item.getFiringPoint().getId())
-                            .set(Tables.ATTENDANCE.FIRINGPOSTID, Optional.ofNullable(item.getFiringPost()).map(FiringPostJfxModel::getId).orElse(null))
-                            .set(Tables.ATTENDANCE.WEAPONID, Optional.ofNullable(item.getWeapon()).map(WeaponJfxModel::getId).orElse(null))
-                            .where(Tables.ATTENDANCE.ID.eq(item.getId()))
-                            .returning()
-                            .fetchOne())
-                    .map(this::convertToJfxModel);
+            databaseConnectionService.getContext()
+                    .update(Tables.ATTENDANCE)
+                    .set(Tables.ATTENDANCE.LICENSEEID, item.getLicensee().getId())
+                    .set(Tables.ATTENDANCE.STARTDATE, item.getStartDate())
+                    .set(Tables.ATTENDANCE.STOPDATE, item.getStopDate())
+                    .set(Tables.ATTENDANCE.FIRINGPOINTID, item.getFiringPoint().getId())
+                    .set(Tables.ATTENDANCE.FIRINGPOSTID, Optional.ofNullable(item.getFiringPost()).map(FiringPostJfxModel::getId).orElse(null))
+                    .set(Tables.ATTENDANCE.WEAPONID, Optional.ofNullable(item.getWeapon()).map(WeaponJfxModel::getId).orElse(null))
+                    .where(Tables.ATTENDANCE.ID.eq(item.getId()))
+                    .execute();
             databaseConnectionService.getConnection().commit();
 
-            opt.ifPresentOrElse(saved -> LOGGER.debug("Licensee presence updated with id {}", saved.getId()),
-                    () -> LOGGER.error("Error during licensee presence update"));
-            return opt;
+            return getById(item.getId());
         } catch (DataAccessException | SQLException e) {
             LOGGER.error("Error during item update", e);
         }

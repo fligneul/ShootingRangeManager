@@ -13,7 +13,7 @@ import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
-import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
+import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
@@ -57,7 +57,7 @@ public class HistoryEditNode extends VBox {
 
 
     private final LocalDate localDate;
-    private AttendanceServiceToJfxModel attendanceServiceToJfxModel;
+    private HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel;
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
 
     private LicenseePresenceJfxModel currentLicenseePresenceJfxModel;
@@ -77,12 +77,12 @@ public class HistoryEditNode extends VBox {
     }
 
     @Inject
-    public void injectDependencies(final AttendanceServiceToJfxModel attendanceServiceToJfxModel,
-                                   FiringPointServiceToJfxModel firingPointService,
-                                   AttendanceSelectionService attendanceSelectionService,
-                                   LicenseeServiceToJfxModel licenseeServiceToJfxModel,
-                                   WeaponServiceToJfxModel weaponService) {
-        this.attendanceServiceToJfxModel = attendanceServiceToJfxModel;
+    public void injectDependencies(final HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel,
+                                   final FiringPointServiceToJfxModel firingPointService,
+                                   final AttendanceSelectionService attendanceSelectionService,
+                                   final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
+                                   final WeaponServiceToJfxModel weaponService) {
+        this.historyAttendanceServiceToJfxModel = historyAttendanceServiceToJfxModel;
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
 
         startTimeTextField.setValidator(ValidationUtils.validateRequiredTime());
@@ -154,7 +154,7 @@ public class HistoryEditNode extends VBox {
             Optional.ofNullable(firingPostComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setFiringPost);
             Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
 
-            attendanceServiceToJfxModel.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
+            historyAttendanceServiceToJfxModel.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
 
             clearComponents();
             closeStage();
@@ -172,7 +172,7 @@ public class HistoryEditNode extends VBox {
         DialogUtils.showConfirmationDialog("Suppression d'un enregistrement", "Supprimer un enregistrement",
                 "Etes-vous sur de vouloir supprimer l'enregistrement sélectionné ?",
                 () -> {
-                    attendanceServiceToJfxModel.deleteLicenseePresence(currentLicenseePresenceJfxModel);
+                    historyAttendanceServiceToJfxModel.deleteLicenseePresence(currentLicenseePresenceJfxModel);
                     clearComponents();
                     closeStage();
                 });

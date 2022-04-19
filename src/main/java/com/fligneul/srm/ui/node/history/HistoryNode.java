@@ -1,9 +1,8 @@
 package com.fligneul.srm.ui.node.history;
 
-import com.fligneul.srm.dao.attendance.AttendanceDAO;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
-import javafx.collections.FXCollections;
+import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -28,7 +27,7 @@ public class HistoryNode extends StackPane {
     private Label historyDate;
     @FXML
     private HistoryTableView historyTableView;
-    private AttendanceDAO attendanceDAO;
+    private HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel;
 
     public HistoryNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -37,23 +36,22 @@ public class HistoryNode extends StackPane {
     }
 
     @Inject
-    private void injectDependencies(final AttendanceDAO attendanceDAO) {
-        this.attendanceDAO = attendanceDAO;
+    private void injectDependencies(final HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel) {
+        this.historyAttendanceServiceToJfxModel = historyAttendanceServiceToJfxModel;
     }
 
     @FXML
     private void displayHistory() {
+        historyAttendanceServiceToJfxModel.setHistoryDate(historyDatePicker.getValue());
+        historyTableView.setItems(historyAttendanceServiceToJfxModel.getLicenseePresenceList());
         historyDate.setText(historyDatePicker.getValue().format(DATE_FORMATTER));
         historyTableView.setDate(historyDatePicker.getValue());
-        historyTableView.setItems(FXCollections.observableList(attendanceDAO.getByDate(historyDatePicker.getValue())));
-        historyTableView.setRefreshAction(() -> historyTableView.setItems(FXCollections.observableList(attendanceDAO.getByDate(historyDatePicker.getValue()))));
         historyDisplayContainer.setVisible(true);
     }
 
     @FXML
     private void createLicenseePresence() {
         DialogUtils.showCustomDialog("Modification d'un enregistrement de présence", new HistoryEditNode(historyDatePicker.getValue()));
-        historyTableView.setItems(FXCollections.observableList(attendanceDAO.getByDate(historyDatePicker.getValue())));
     }
 
 
