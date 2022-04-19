@@ -6,6 +6,7 @@ import com.fligneul.srm.ui.node.settings.items.GeneralSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.UsersSettingsNode;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
+import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
@@ -27,6 +28,7 @@ public class UIModule extends AbstractModule {
         bind(FiringPointServiceToJfxModel.class).in(Singleton.class);
         bind(LicenseeServiceToJfxModel.class).in(Singleton.class);
         bind(AttendanceServiceToJfxModel.class).in(Singleton.class);
+        bind(HistoryAttendanceServiceToJfxModel.class).in(Singleton.class);
 
         bind(LicenseeSelectionService.class).in(Singleton.class);
         bind(AttendanceSelectionService.class).in(Singleton.class);

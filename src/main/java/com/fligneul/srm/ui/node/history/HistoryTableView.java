@@ -6,7 +6,7 @@ import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
-import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
+import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -46,15 +46,13 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     @FXML
     private TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> deleteColumn;
     private LocalDate date;
-    private Runnable action;
-
 
     public HistoryTableView() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
     @Inject
-    private void injectDependencies(AttendanceServiceToJfxModel attendanceService) {
+    private void injectDependencies(HistoryAttendanceServiceToJfxModel attendanceService) {
         licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
         startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate().format(DateTimeFormatter.ofPattern("HH:mm"))));
         firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
@@ -85,7 +83,6 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
                             LicenseePresenceJfxModel licenseePresenceJfxModel = getTableView().getItems().get(getIndex());
                             LOGGER.info("Edit licensee presence {}", licenseePresenceJfxModel.getId());
                             DialogUtils.showCustomDialog("Modification d'un enregistrement de présence", new HistoryEditNode(date, licenseePresenceJfxModel));
-                            action.run();
                         });
                     }
 
@@ -125,7 +122,6 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
                                     "Etes-vous sur de vouloir supprimer l'enregistrement sélectionné ?",
                                     () -> {
                                         attendanceService.deleteLicenseePresence(licenseePresenceJfxModel);
-                                        action.run();
                                     });
                         });
                     }
@@ -152,7 +148,4 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
         this.date = date;
     }
 
-    public void setRefreshAction(Runnable action) {
-        this.action = action;
-    }
 }
