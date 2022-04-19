@@ -33,7 +33,7 @@ public class DatabaseConnectionService {
     private static final Logger LOGGER = LogManager.getLogger(DatabaseConnectionService.class);
 
     private static final String DATABASE_PATH = "./database";
-    private static final String URL = "jdbc:h2:file:" + DATABASE_PATH;
+    private static final String URL = "jdbc:h2:file:" + DATABASE_PATH + ";TRACE_LEVEL_FILE=0";
     private static final String DB_EXTENSION_REGEX = ".*.db";
     private static final String DB_CHANGELOG_MASTER_XML = "com/fligneul/srm/db/db.changelog-master.xml";
 
@@ -67,7 +67,7 @@ public class DatabaseConnectionService {
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connect));
         Liquibase liquibase = new Liquibase(DB_CHANGELOG_MASTER_XML, new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
-        context = DSL.using(connect, SQLDialect.H2, new Settings().withRenderNameCase(RenderNameCase.AS_IS));
+        context = DSL.using(connect, SQLDialect.H2, new Settings().withRenderNameCase(RenderNameCase.UPPER));
         return connect;
     }
 

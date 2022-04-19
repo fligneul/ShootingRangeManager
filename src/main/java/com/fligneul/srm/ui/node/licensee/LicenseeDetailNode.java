@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.node.licensee;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
+import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -19,8 +20,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Optional;
 
 public class LicenseeDetailNode extends VBox {
@@ -164,7 +163,7 @@ public class LicenseeDetailNode extends VBox {
         licenceNumberTextField.textProperty().bind(licenseeJfxModel.licenceNumberProperty());
         firstnameTextField.textProperty().bind(licenseeJfxModel.firstNameProperty());
         lastnameTextField.textProperty().bind(licenseeJfxModel.lastNameProperty());
-        dateOfBirthTextField.textProperty().bind(Bindings.createStringBinding(() -> licenseeJfxModel.getDateOfBirth().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), licenseeJfxModel.dateOfBirthProperty()));
+        dateOfBirthTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.dateOfBirthProperty()));
         maidenNameTextField.textProperty().bind(licenseeJfxModel.maidenNameProperty());
         placeOfBirthTextField.textProperty().bind(licenseeJfxModel.placeOfBirthProperty());
         departmentOfBirthTextField.textProperty().bind(licenseeJfxModel.departmentOfBirthProperty());
@@ -175,15 +174,12 @@ public class LicenseeDetailNode extends VBox {
         emailTextField.textProperty().bind(licenseeJfxModel.emailProperty());
         phoneNumberTextField.textProperty().bind(licenseeJfxModel.phoneNumberProperty());
         licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
-        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getFirstLicenceDate())
-                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.firstLicenceDateProperty()));
+        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
-        medicalCertificateTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getMedicalCertificateDate())
-                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.medicalCertificateDateProperty()));
-        idCardTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getIdCardDate())
-                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.idCardDateProperty()));
+        medicalCertificateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.medicalCertificateDateProperty()));
+        idCardTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.idCardDateProperty()));
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
         idPhotoCheckBox.selectedProperty().bind(licenseeJfxModel.idPhotoProperty());
         licenceBlacklistLabel.managedProperty().bind(licenseeJfxModel.blacklistedProperty());

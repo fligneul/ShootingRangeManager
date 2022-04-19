@@ -2,6 +2,7 @@ package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.binding.Bindings;
@@ -15,10 +16,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Licensee simple detail node for attendance node.
+ * This node only display basic information about the licensee
+ */
 public class AttendanceLicenseeSimpleNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(AttendanceLicenseeSimpleNode.class);
     private static final String FXML_PATH = "licenseeSimple.fxml";
@@ -48,10 +52,19 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     @FXML
     private Label licenceErrorLabel;
 
+    /**
+     * Create the node and load the associated FXML file
+     */
     public AttendanceLicenseeSimpleNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param attendanceSelectionService
+     *         selection service for the current licensee
+     */
     @Inject
     public void injectDependencies(final AttendanceSelectionService attendanceSelectionService) {
         attendanceSelectionService.selectedObs()
@@ -79,15 +92,15 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         licenceErrorLabel.managedProperty().unbind();
         licenceErrorLabel.visibleProperty().unbind();
 
-        licenceNumberTextField.setText("");
-        firstnameTextField.setText("");
-        lastnameTextField.setText("");
-        dateOfBirthTextField.setText("");
-        maidenNameTextField.setText("");
-        licenceStateTextField.setText("");
-        firstLicenceDateTextField.setText("");
-        seasonTextField.setText("");
-        ageCategoryTextField.setText("");
+        licenceNumberTextField.setText(EMPTY);
+        firstnameTextField.setText(EMPTY);
+        lastnameTextField.setText(EMPTY);
+        dateOfBirthTextField.setText(EMPTY);
+        maidenNameTextField.setText(EMPTY);
+        licenceStateTextField.setText(EMPTY);
+        firstLicenceDateTextField.setText(EMPTY);
+        seasonTextField.setText(EMPTY);
+        ageCategoryTextField.setText(EMPTY);
         handisportCheckBox.setSelected(false);
         licenceBlacklistLabel.setVisible(false);
         licenceBlacklistLabel.setManaged(false);
@@ -101,19 +114,19 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         licenceNumberTextField.textProperty().bind(licenseeJfxModel.licenceNumberProperty());
         firstnameTextField.textProperty().bind(licenseeJfxModel.firstNameProperty());
         lastnameTextField.textProperty().bind(licenseeJfxModel.lastNameProperty());
-        dateOfBirthTextField.textProperty().bind(Bindings.createStringBinding(() -> licenseeJfxModel.getDateOfBirth().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), licenseeJfxModel.dateOfBirthProperty()));
+        dateOfBirthTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.dateOfBirthProperty()));
         maidenNameTextField.textProperty().bind(licenseeJfxModel.maidenNameProperty());
         licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
-        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> Optional.ofNullable(licenseeJfxModel.getFirstLicenceDate())
-                .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(""), licenseeJfxModel.firstLicenceDateProperty()));
+        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getFirstLicenceDate()), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
         licenceBlacklistLabel.visibleProperty().bind(licenseeJfxModel.blacklistedProperty());
         licenceBlacklistLabel.managedProperty().bind(licenseeJfxModel.blacklistedProperty());
 
-        BooleanBinding licenceReceiptIncomplete = licenseeJfxModel.medicalCertificateDateProperty().isNull().or(
-                licenseeJfxModel.idCardDateProperty().isNull().or(licenseeJfxModel.idPhotoProperty().not()));
+        BooleanBinding licenceReceiptIncomplete = licenseeJfxModel.medicalCertificateDateProperty().isNull()
+                .or(licenseeJfxModel.idCardDateProperty().isNull())
+                .or(licenseeJfxModel.idPhotoProperty().not());
         licenceErrorLabel.visibleProperty().bind(licenceReceiptIncomplete);
         licenceErrorLabel.managedProperty().bind(licenceReceiptIncomplete);
     }

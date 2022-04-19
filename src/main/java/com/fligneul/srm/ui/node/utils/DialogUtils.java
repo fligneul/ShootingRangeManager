@@ -1,5 +1,6 @@
 package com.fligneul.srm.ui.node.utils;
 
+import com.fligneul.srm.ui.ShootingRangeManagerMain;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -61,6 +62,7 @@ public class DialogUtils {
 
     public static <T extends Pane> void showCustomDialog(final String title, final T dialogPane) {
         Scene scene = new Scene(dialogPane);
+        scene.getStylesheets().add(ShootingRangeManagerMain.class.getResource("/style.css").toExternalForm());
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(title);

@@ -1,29 +1,29 @@
 package com.fligneul.srm.ui.node.history;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
-import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.component.cell.ButtonActionTableCell;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
+import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.paint.Paint;
-import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_GREY;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_RED;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EDIT_FA_ICON;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TRASH_FA_ICON;
 
 public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(HistoryTableView.class);
@@ -55,7 +55,7 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
 
     @Inject
     private void injectDependencies(AttendanceServiceToJfxModel attendanceService) {
-        licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
+        licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
         startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate().format(DateTimeFormatter.ofPattern("HH:mm"))));
         firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
         firingPostColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPost()).map(FiringPostJfxModel::getName).orElse("-")));
@@ -64,88 +64,21 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
         editColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue()));
         deleteColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue()));
 
-        editColumn.setCellFactory(new Callback<>() {
-            @Override
-            public TableCell<LicenseePresenceJfxModel, LicenseePresenceJfxModel> call(final TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> param) {
-                return new TableCell<>() {
+        editColumn.setCellFactory(param -> new ButtonActionTableCell<>(EDIT_FA_ICON, COLOR_GREY, item -> {
+            LOGGER.info("Edit licensee presence {}", item.getId());
+            DialogUtils.showCustomDialog("Modification d'un enregistrement de présence", new HistoryEditNode(date, item));
+            action.run();
+        }));
 
-                    private final Button btn = new Button();
+        deleteColumn.setCellFactory(param -> new ButtonActionTableCell<>(TRASH_FA_ICON, COLOR_RED, item -> {
+            DialogUtils.showConfirmationDialog("Suppression d'un enregistrement", "Supprimer un enregistrement",
+                    "Etes-vous sur de vouloir supprimer l'enregistrement sélectionné ?",
+                    () -> {
+                        attendanceService.deleteLicenseePresence(item);
+                        action.run();
+                    });
+        }));
 
-                    {
-                        btn.setMinHeight(26);
-                        btn.setMaxHeight(26);
-                        btn.setMinWidth(26);
-                        btn.setMaxWidth(26);
-                        FontIcon fontIcon = new FontIcon("fas-edit");
-                        fontIcon.setIconColor(Paint.valueOf("#757575"));
-                        fontIcon.setIconSize(18);
-                        btn.setGraphic(fontIcon);
-
-                        btn.setOnAction((ActionEvent event) -> {
-                            LicenseePresenceJfxModel licenseePresenceJfxModel = getTableView().getItems().get(getIndex());
-                            LOGGER.info("Edit licensee presence {}", licenseePresenceJfxModel.getId());
-                            DialogUtils.showCustomDialog("Modification d'un enregistrement de présence", new HistoryEditNode(date, licenseePresenceJfxModel));
-                            action.run();
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(LicenseePresenceJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btn);
-                        }
-                    }
-                };
-            }
-        });
-
-        deleteColumn.setCellFactory(new Callback<>() {
-            @Override
-            public TableCell<LicenseePresenceJfxModel, LicenseePresenceJfxModel> call(final TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> param) {
-                return new TableCell<>() {
-
-                    private final Button btn = new Button();
-
-                    {
-                        btn.setMinHeight(26);
-                        btn.setMaxHeight(26);
-                        btn.setMinWidth(26);
-                        btn.setMaxWidth(26);
-                        FontIcon fontIcon = new FontIcon("fas-trash-alt");
-                        fontIcon.setIconColor(Paint.valueOf("#e53935"));
-                        fontIcon.setIconSize(18);
-                        btn.setGraphic(fontIcon);
-
-                        btn.setOnAction((ActionEvent event) -> {
-                            LicenseePresenceJfxModel licenseePresenceJfxModel = getTableView().getItems().get(getIndex());
-                            DialogUtils.showConfirmationDialog("Suppression d'un enregistrement", "Supprimer un enregistrement",
-                                    "Etes-vous sur de vouloir supprimer l'enregistrement sélectionné ?",
-                                    () -> {
-                                        attendanceService.deleteLicenseePresence(licenseePresenceJfxModel);
-                                        action.run();
-                                    });
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(LicenseePresenceJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btn);
-                        }
-                    }
-                };
-            }
-        });
-    }
-
-    private String formatLicenseeName(final LicenseeJfxModel licenseeJfxModel) {
-        return String.format("%s %s", licenseeJfxModel.getLastName(), licenseeJfxModel.getFirstName());
     }
 
     public void setDate(LocalDate date) {

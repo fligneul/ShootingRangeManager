@@ -41,7 +41,7 @@ public class LicenseeListView extends ListView<LicenseeJfxModel> {
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
                                    final LicenseeSelectionService licenseeSelectionService) {
         SortedList<LicenseeJfxModel> licenseeJfxModels = new SortedList<>(licenseeServiceToJfxModel.getLicenseeList());
-        licenseeJfxModels.setComparator(Comparator.comparing(LicenseeJfxModel::getLastName));
+        licenseeJfxModels.setComparator(Comparator.comparing(licenseeJfxModel -> Optional.ofNullable(licenseeJfxModel.getLastName()).orElse("")));
         setItems(licenseeJfxModels);
 
         getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> licenseeSelectionService.setSelected(newV));

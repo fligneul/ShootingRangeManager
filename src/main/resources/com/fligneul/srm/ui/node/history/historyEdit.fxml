@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.fligneul.srm.ui.component.ValidatedTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -28,7 +29,7 @@
             <Label text="Numéro de licence" GridPane.halignment="RIGHT"/>
             <TextField fx:id="licenseeNumberTextField" GridPane.columnIndex="1"/>
             <Label text="Heure de début" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-            <TextField fx:id="startTimeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <ValidatedTextField fx:id="startTimeTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label text="Heure de fin" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
             <TextField fx:id="stopTimeTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 

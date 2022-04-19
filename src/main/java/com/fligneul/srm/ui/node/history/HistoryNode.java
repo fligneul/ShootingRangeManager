@@ -12,7 +12,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
-import java.time.format.DateTimeFormatter;
+
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.DATE_FORMATTER;
 
 public class HistoryNode extends StackPane {
     private static final String FXML_PATH = "history.fxml";
@@ -42,7 +43,7 @@ public class HistoryNode extends StackPane {
 
     @FXML
     private void displayHistory() {
-        historyDate.setText(historyDatePicker.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        historyDate.setText(historyDatePicker.getValue().format(DATE_FORMATTER));
         historyTableView.setDate(historyDatePicker.getValue());
         historyTableView.setItems(FXCollections.observableList(attendanceDAO.getByDate(historyDatePicker.getValue())));
         historyTableView.setRefreshAction(() -> historyTableView.setItems(FXCollections.observableList(attendanceDAO.getByDate(historyDatePicker.getValue()))));

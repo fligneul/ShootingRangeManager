@@ -1,6 +1,9 @@
 package com.fligneul.srm.ui.node.licensee;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.ValidatedDatePicker;
+import com.fligneul.srm.ui.component.ValidatedTextField;
+import com.fligneul.srm.ui.component.ValidationUtils;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
@@ -24,6 +27,8 @@ public class LicenseeCreateNode extends VBox {
     private static final String FXML_PATH = "licenseeCreate.fxml";
 
     @FXML
+    private Button saveButton;
+    @FXML
     private Button editButton;
     @FXML
     private Button deleteButton;
@@ -32,11 +37,11 @@ public class LicenseeCreateNode extends VBox {
     @FXML
     private TextField licenceNumberTextField;
     @FXML
-    private TextField firstnameTextField;
+    private ValidatedTextField<String> firstnameTextField;
     @FXML
-    private TextField lastnameTextField;
+    private ValidatedTextField<String> lastnameTextField;
     @FXML
-    private DatePicker dateOfBirthPicker;
+    private ValidatedDatePicker dateOfBirthPicker;
     @FXML
     private TextField maidenNameTextField;
     @FXML
@@ -86,12 +91,6 @@ public class LicenseeCreateNode extends VBox {
 
         Optional.ofNullable(licenseeJfxModel).ifPresent(this::updateComponents);
 
-        dateOfBirthPicker.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (!newV) {
-                dateOfBirthPicker.setValue(dateOfBirthPicker.getConverter().fromString(dateOfBirthPicker.getEditor().getText()));
-            }
-        });
-
         firstLicenceDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
             if (!newV) {
                 firstLicenceDatePicker.setValue(firstLicenceDatePicker.getConverter().fromString(firstLicenceDatePicker.getEditor().getText()));
@@ -109,6 +108,10 @@ public class LicenseeCreateNode extends VBox {
                 idCardDatePicker.setValue(idCardDatePicker.getConverter().fromString(idCardDatePicker.getEditor().getText()));
             }
         });
+
+        firstnameTextField.setValidator(ValidationUtils.validateRequiredString());
+        lastnameTextField.setValidator(ValidationUtils.validateRequiredString());
+        saveButton.disableProperty().bind(firstnameTextField.isValidProperty().not().or(lastnameTextField.isValidProperty().not()).or(dateOfBirthPicker.isValidProperty().not()));
     }
 
     public LicenseeCreateNode() {
@@ -179,8 +182,8 @@ public class LicenseeCreateNode extends VBox {
         final LicenseeJfxModelBuilder builder = new LicenseeJfxModelBuilder();
 
         builder.setId((currentLicenseeJfxModel != null ? currentLicenseeJfxModel.getId() : -1))
-                .setFirstName(firstnameTextField.getText())
-                .setLastName(lastnameTextField.getText())
+                .setFirstName(firstnameTextField.getValidValue())
+                .setLastName(lastnameTextField.getValidValue())
                 .setDateOfBirth(dateOfBirthPicker.getValue())
                 .setHandisport(handisportCheckBox.isSelected())
                 .setBlacklisted(blacklistCheckBox.isSelected())
