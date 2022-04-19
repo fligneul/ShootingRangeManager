@@ -67,7 +67,7 @@ public class DatabaseConnectionService {
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connect));
         Liquibase liquibase = new Liquibase(DB_CHANGELOG_MASTER_XML, new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
-        context = DSL.using(connect, SQLDialect.H2, new Settings().withRenderNameCase(RenderNameCase.AS_IS));
+        context = DSL.using(connect, SQLDialect.H2, new Settings().withRenderNameCase(RenderNameCase.UPPER));
         return connect;
     }
 
