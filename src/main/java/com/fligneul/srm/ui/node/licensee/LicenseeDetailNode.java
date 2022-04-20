@@ -174,12 +174,12 @@ public class LicenseeDetailNode extends VBox {
         emailTextField.textProperty().bind(licenseeJfxModel.emailProperty());
         phoneNumberTextField.textProperty().bind(licenseeJfxModel.phoneNumberProperty());
         licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
-        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.firstLicenceDateProperty()));
+        firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getFirstLicenceDate()), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
-        medicalCertificateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.medicalCertificateDateProperty()));
-        idCardTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.idCardDateProperty()));
+        medicalCertificateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getMedicalCertificateDate()), licenseeJfxModel.medicalCertificateDateProperty()));
+        idCardTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getIdCardDate()), licenseeJfxModel.idCardDateProperty()));
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
         idPhotoCheckBox.selectedProperty().bind(licenseeJfxModel.idPhotoProperty());
         licenceBlacklistLabel.managedProperty().bind(licenseeJfxModel.blacklistedProperty());
