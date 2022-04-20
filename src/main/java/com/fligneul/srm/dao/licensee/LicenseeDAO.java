@@ -1,6 +1,7 @@
 package com.fligneul.srm.dao.licensee;
 
 import com.fligneul.srm.dao.IDAO;
+import com.fligneul.srm.dao.logbook.ShootingLogbookDAO;
 import com.fligneul.srm.generated.jooq.Tables;
 import com.fligneul.srm.generated.jooq.tables.records.LicenseeRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
@@ -23,10 +24,13 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
+    private ShootingLogbookDAO shootingLogbookDAO;
 
     @Inject
-    public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
+    public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
+                                   final ShootingLogbookDAO shootingLogbookDAO) {
         this.databaseConnectionService = databaseConnectionService;
+        this.shootingLogbookDAO = shootingLogbookDAO;
     }
 
     @Override
@@ -182,6 +186,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         Optional.ofNullable(licenseeRecord.getAgecategory()).ifPresent(builder::setAgeCategory);
         Optional.ofNullable(licenseeRecord.getHandisport()).ifPresent(builder::setHandisport);
         Optional.ofNullable(licenseeRecord.getBlacklisted()).ifPresent(builder::setBlacklisted);
+        shootingLogbookDAO.getByLicenseeId(licenseeRecord.getId()).ifPresent(builder::setShootingLogbook);
 
         return builder.createLicenseeJfxModel();
     }

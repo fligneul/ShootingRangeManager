@@ -1,5 +1,7 @@
 package com.fligneul.srm.ui.model.licensee;
 
+import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -28,6 +30,7 @@ public class LicenseeJfxModelBuilder {
     private String ageCategory;
     private Boolean handisport;
     private Boolean blacklisted;
+    private ShootingLogbookJfxModel shootingLogbook;
 
     public LicenseeJfxModelBuilder setId(final int id) {
         this.id = id;
@@ -149,6 +152,11 @@ public class LicenseeJfxModelBuilder {
         return this;
     }
 
+    public LicenseeJfxModelBuilder setShootingLogbook(final ShootingLogbookJfxModel shootingLogbook) {
+        this.shootingLogbook = shootingLogbook;
+        return this;
+    }
+
     public LicenseeJfxModel createLicenseeJfxModel() {
         final LicenseeJfxModel licenseeJfxModel = new LicenseeJfxModel(Optional.ofNullable(id).orElse(LicenseeJfxModel.DEFAULT_ID), firstName, lastName, dateOfBirth);
 
@@ -172,6 +180,7 @@ public class LicenseeJfxModelBuilder {
         Optional.ofNullable(ageCategory).ifPresent(licenseeJfxModel::setAgeCategory);
         Optional.ofNullable(handisport).ifPresent(licenseeJfxModel::setHandisport);
         Optional.ofNullable(blacklisted).ifPresent(licenseeJfxModel::setBlacklisted);
+        Optional.ofNullable(shootingLogbook).ifPresent(licenseeJfxModel::setShootingLogbook);
 
         return licenseeJfxModel;
     }

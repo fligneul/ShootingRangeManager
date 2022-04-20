@@ -9,6 +9,7 @@ import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
 import com.fligneul.srm.ui.service.user.UserViewService;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
@@ -29,6 +30,7 @@ public class UIModule extends AbstractModule {
         bind(LicenseeServiceToJfxModel.class).in(Singleton.class);
         bind(AttendanceServiceToJfxModel.class).in(Singleton.class);
         bind(HistoryAttendanceServiceToJfxModel.class).in(Singleton.class);
+        bind(ShootingLogbookServiceToJfxModel.class).in(Singleton.class);
 
         bind(LicenseeSelectionService.class).in(Singleton.class);
         bind(AttendanceSelectionService.class).in(Singleton.class);

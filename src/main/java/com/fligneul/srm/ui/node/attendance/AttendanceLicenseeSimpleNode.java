@@ -2,7 +2,9 @@ package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.model.logbook.ShootingSessionJfxModel;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
+import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -10,14 +12,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Optional;
+import java.util.Comparator;
 
 public class AttendanceLicenseeSimpleNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(AttendanceLicenseeSimpleNode.class);
@@ -47,13 +52,23 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     private TextField ageCategoryTextField;
     @FXML
     private Label licenceErrorLabel;
+    @FXML
+    private GridPane shootingLogbookPane;
+    @FXML
+    private TextField shootingLogbookCreationDateTextField;
+    @FXML
+    private TextField shootingLogbookLastSessionDateTextField;
+
+    private ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel;
 
     public AttendanceLicenseeSimpleNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
     @Inject
-    public void injectDependencies(final AttendanceSelectionService attendanceSelectionService) {
+    public void injectDependencies(final AttendanceSelectionService attendanceSelectionService,
+                                   final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel) {
+        this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
         attendanceSelectionService.selectedObs()
                 .distinctUntilChanged()
                 .observeOn(JavaFxScheduler.platform())
@@ -78,6 +93,8 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         licenceBlacklistLabel.managedProperty().unbind();
         licenceErrorLabel.managedProperty().unbind();
         licenceErrorLabel.visibleProperty().unbind();
+        shootingLogbookCreationDateTextField.textProperty().unbind();
+        shootingLogbookLastSessionDateTextField.textProperty().unbind();
 
         licenceNumberTextField.setText("");
         firstnameTextField.setText("");
@@ -93,6 +110,10 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         licenceBlacklistLabel.setManaged(false);
         licenceErrorLabel.setVisible(false);
         licenceErrorLabel.setManaged(false);
+        shootingLogbookPane.setManaged(false);
+        shootingLogbookPane.setVisible(false);
+        shootingLogbookCreationDateTextField.setText("");
+        shootingLogbookLastSessionDateTextField.setText("");
     }
 
     private void updateComponents(final LicenseeJfxModel licenseeJfxModel) {
@@ -116,5 +137,19 @@ public class AttendanceLicenseeSimpleNode extends VBox {
                 licenseeJfxModel.idCardDateProperty().isNull().or(licenseeJfxModel.idPhotoProperty().not()));
         licenceErrorLabel.visibleProperty().bind(licenceReceiptIncomplete);
         licenceErrorLabel.managedProperty().bind(licenceReceiptIncomplete);
+
+        shootingLogbookServiceToJfxModel.getShootingLogbookList().stream()
+                .filter(logbook -> logbook.getLicenseeId() == licenseeJfxModel.getId())
+                .findFirst()
+                .ifPresent(shootingLogbookJfxModel -> {
+                    shootingLogbookPane.setManaged(true);
+                    shootingLogbookPane.setVisible(true);
+                    shootingLogbookCreationDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getCreationDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), shootingLogbookJfxModel.creationDateProperty()));
+                    shootingLogbookLastSessionDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getSessions().stream()
+                            .map(ShootingSessionJfxModel::getSessionDate)
+                            .max(Comparator.comparing(LocalDate::toEpochDay))
+                            .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))
+                            .orElse(""), shootingLogbookJfxModel.sessionsProperty()));
+                });
     }
 }
