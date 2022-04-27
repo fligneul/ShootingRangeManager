@@ -14,6 +14,9 @@ import javax.inject.Inject;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.DATE_FORMATTER;
 
+/**
+ * History view node
+ */
 public class HistoryNode extends StackPane {
     private static final String FXML_PATH = "history.fxml";
 
@@ -35,6 +38,12 @@ public class HistoryNode extends StackPane {
         displayHistoryButton.disableProperty().bind(historyDatePicker.valueProperty().isNull());
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param historyAttendanceServiceToJfxModel
+     *         service to jfx model for history attendance
+     */
     @Inject
     private void injectDependencies(final HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel) {
         this.historyAttendanceServiceToJfxModel = historyAttendanceServiceToJfxModel;

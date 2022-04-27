@@ -22,6 +22,8 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
 public class LicenseeDetailNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDetailNode.class);
     private static final String FXML_PATH = "licenseeDetail.fxml";
@@ -89,6 +91,14 @@ public class LicenseeDetailNode extends VBox {
                 .ifPresent(is -> this.profileImage.setImage(new Image(is)));
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     * @param licenseeSelectionService
+     *         service for the current selected licensee
+     */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
                                    final LicenseeSelectionService licenseeSelectionService) {
@@ -131,25 +141,25 @@ public class LicenseeDetailNode extends VBox {
         licenceBlacklistLabel.managedProperty().unbind();
         licenceBlacklistLabel.visibleProperty().unbind();
 
-        licenceNumberTextField.setText("");
-        firstnameTextField.setText("");
-        lastnameTextField.setText("");
-        dateOfBirthTextField.setText("");
-        maidenNameTextField.setText("");
-        placeOfBirthTextField.setText("");
-        departmentOfBirthTextField.setText("");
-        countryOfBirthTextField.setText("");
-        addressTextField.setText("");
-        zipCodeTextField.setText("");
-        cityTextField.setText("");
-        emailTextField.setText("");
-        phoneNumberTextField.setText("");
-        licenceStateTextField.setText("");
-        firstLicenceDateTextField.setText("");
-        seasonTextField.setText("");
-        ageCategoryTextField.setText("");
-        medicalCertificateTextField.setText("");
-        idCardTextField.setText("");
+        licenceNumberTextField.setText(EMPTY);
+        firstnameTextField.setText(EMPTY);
+        lastnameTextField.setText(EMPTY);
+        dateOfBirthTextField.setText(EMPTY);
+        maidenNameTextField.setText(EMPTY);
+        placeOfBirthTextField.setText(EMPTY);
+        departmentOfBirthTextField.setText(EMPTY);
+        countryOfBirthTextField.setText(EMPTY);
+        addressTextField.setText(EMPTY);
+        zipCodeTextField.setText(EMPTY);
+        cityTextField.setText(EMPTY);
+        emailTextField.setText(EMPTY);
+        phoneNumberTextField.setText(EMPTY);
+        licenceStateTextField.setText(EMPTY);
+        firstLicenceDateTextField.setText(EMPTY);
+        seasonTextField.setText(EMPTY);
+        ageCategoryTextField.setText(EMPTY);
+        medicalCertificateTextField.setText(EMPTY);
+        idCardTextField.setText(EMPTY);
         handisportCheckBox.setSelected(false);
         idPhotoCheckBox.setSelected(false);
         licenceBlacklistLabel.setManaged(false);

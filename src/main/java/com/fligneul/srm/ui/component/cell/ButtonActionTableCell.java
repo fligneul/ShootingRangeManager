@@ -11,6 +11,12 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * A generic table cell with a button
+ *
+ * @param <T>
+ *         the table cell type
+ */
 public class ButtonActionTableCell<T> extends TableCell<T, T> {
     private static final double BUTTON_SIZE = 26;
     private static final int ICON_SIZE = 18;
@@ -18,6 +24,18 @@ public class ButtonActionTableCell<T> extends TableCell<T, T> {
     @Nullable
     private final Predicate<T> disableCondition;
 
+    /**
+     * Create a table cell with a button
+     *
+     * @param iconCode
+     *         the ikonli icon code
+     * @param color
+     *         the icon color
+     * @param onAction
+     *         the button action on click
+     * @param disableCondition
+     *         a predicate used to determine the button availability
+     */
     public ButtonActionTableCell(final String iconCode, final Paint color, final Consumer<T> onAction, @Nullable final Predicate<T> disableCondition) {
         this.disableCondition = disableCondition;
 
@@ -33,10 +51,28 @@ public class ButtonActionTableCell<T> extends TableCell<T, T> {
         button.setOnAction((ActionEvent event) -> onAction.accept(getItem()));
     }
 
+    /**
+     * Create a table cell with a button always available
+     *
+     * @param iconCode
+     *         the ikonli icon code
+     * @param color
+     *         the icon color
+     * @param onAction
+     *         the button action on click
+     */
     public ButtonActionTableCell(final String iconCode, final Paint color, final Consumer<T> onAction) {
         this(iconCode, color, onAction, null);
     }
 
+    /**
+     * Update the table cell with the current item
+     *
+     * @param item
+     *         the cell item
+     * @param empty
+     *         {@code true} is the cell is currently empty, {@code false} otherwise
+     */
     @Override
     public void updateItem(T item, boolean empty) {
         super.updateItem(item, empty);

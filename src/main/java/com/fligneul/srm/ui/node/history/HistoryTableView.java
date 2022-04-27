@@ -25,6 +25,9 @@ import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_RED;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EDIT_FA_ICON;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TRASH_FA_ICON;
 
+/**
+ * Presence table view for history view
+ */
 public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(HistoryTableView.class);
     private static final String FXML_PATH = "historyTableView.fxml";
@@ -51,6 +54,12 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param attendanceService
+     *         service to jfx model for history attendance
+     */
     @Inject
     private void injectDependencies(HistoryAttendanceServiceToJfxModel attendanceService) {
         licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));

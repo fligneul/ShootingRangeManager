@@ -129,7 +129,6 @@ public class AttendanceNode extends StackPane {
         weaponComboBox.setConverter(new WeaponConverter());
     }
 
-
     @FXML
     private void saveAttendance() {
         LicenseePresenceJfxModelBuilder builder = new LicenseePresenceJfxModelBuilder()

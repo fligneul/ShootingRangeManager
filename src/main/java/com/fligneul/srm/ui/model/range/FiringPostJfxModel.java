@@ -7,11 +7,16 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Objects;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Firing post model for JavaFX views
+ */
 public class FiringPostJfxModel {
     public static int DEFAULT_ID = -1;
 
     private final int id;
-    private final StringProperty name = new SimpleStringProperty("");
+    private final StringProperty name = new SimpleStringProperty(EMPTY);
     private final BooleanProperty occupied = new SimpleBooleanProperty(false);
 
     public FiringPostJfxModel(int id, String name) {

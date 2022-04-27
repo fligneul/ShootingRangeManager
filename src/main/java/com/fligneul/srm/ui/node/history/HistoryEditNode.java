@@ -34,8 +34,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TIME_FORMATTER;
 
+/**
+ * Presence edit node for history view
+ */
 public class HistoryEditNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(HistoryEditNode.class);
     private static final String FXML_PATH = "historyEdit.fxml";
@@ -54,7 +58,6 @@ public class HistoryEditNode extends VBox {
     private ComboBox<WeaponJfxModel> weaponComboBox;
     @FXML
     private ValidatedTextField<LocalTime> startTimeTextField;
-
 
     private final LocalDate localDate;
     private HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel;
@@ -76,6 +79,20 @@ public class HistoryEditNode extends VBox {
         this(localDate, null);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param historyAttendanceServiceToJfxModel
+     *         service to jfx model for history attendance
+     * @param firingPointService
+     *         service to jfx model for firing point
+     * @param attendanceSelectionService
+     *         selection service for the current licensee
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     * @param weaponService
+     *         service to jfx model for weapon
+     */
     @Inject
     public void injectDependencies(final HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel,
                                    final FiringPointServiceToJfxModel firingPointService,
@@ -113,12 +130,12 @@ public class HistoryEditNode extends VBox {
     private void clearComponents() {
         currentLicenseePresenceJfxModel = null;
 
-        licenseeNumberTextField.setText("");
+        licenseeNumberTextField.setText(EMPTY);
         firingPointComboBox.getSelectionModel().clearSelection();
-        stopTimeTextField.setText("");
+        stopTimeTextField.setText(EMPTY);
         firingPostComboBox.getSelectionModel().clearSelection();
         weaponComboBox.getSelectionModel().clearSelection();
-        startTimeTextField.setText("");
+        startTimeTextField.setText(EMPTY);
     }
 
     private void updateComponents(LicenseePresenceJfxModel licenseePresenceJfxModel) {

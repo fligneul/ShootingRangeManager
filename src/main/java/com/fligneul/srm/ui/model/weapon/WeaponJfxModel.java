@@ -12,13 +12,18 @@ import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Weapon model for JavaFX views
+ */
 public class WeaponJfxModel {
     public static int DEFAULT_ID = -1;
 
     private final int id;
-    private final StringProperty name = new SimpleStringProperty("");
+    private final StringProperty name = new SimpleStringProperty(EMPTY);
     private final IntegerProperty identificationNumber = new SimpleIntegerProperty();
-    private final StringProperty caliber = new SimpleStringProperty("");
+    private final StringProperty caliber = new SimpleStringProperty(EMPTY);
     private final ObjectProperty<LocalDate> buyDate = new SimpleObjectProperty<>(LocalDate.EPOCH);
 
 

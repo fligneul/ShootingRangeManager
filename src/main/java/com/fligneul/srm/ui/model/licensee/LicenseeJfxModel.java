@@ -12,31 +12,36 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Licensee model for JavaFX views
+ */
 public class LicenseeJfxModel {
     public static int DEFAULT_ID = -1;
 
     private final int id;
-    private final StringProperty licenceNumber = new SimpleStringProperty("");
-    private final StringProperty firstName = new SimpleStringProperty("");
-    private final StringProperty lastName = new SimpleStringProperty("");
-    private final StringProperty maidenName = new SimpleStringProperty("");
-    private final StringProperty sex = new SimpleStringProperty("");
+    private final StringProperty licenceNumber = new SimpleStringProperty(EMPTY);
+    private final StringProperty firstName = new SimpleStringProperty(EMPTY);
+    private final StringProperty lastName = new SimpleStringProperty(EMPTY);
+    private final StringProperty maidenName = new SimpleStringProperty(EMPTY);
+    private final StringProperty sex = new SimpleStringProperty(EMPTY);
     private final ObjectProperty<LocalDate> dateOfBirth = new SimpleObjectProperty<>(LocalDate.EPOCH);
-    private final StringProperty placeOfBirth = new SimpleStringProperty("");
-    private final StringProperty departmentOfBirth = new SimpleStringProperty("");
-    private final StringProperty countryOfBirth = new SimpleStringProperty("");
-    private final StringProperty address = new SimpleStringProperty("");
-    private final StringProperty zipCode = new SimpleStringProperty("");
-    private final StringProperty city = new SimpleStringProperty("");
-    private final StringProperty email = new SimpleStringProperty("");
-    private final StringProperty phoneNumber = new SimpleStringProperty("");
-    private final StringProperty licenceState = new SimpleStringProperty("");
+    private final StringProperty placeOfBirth = new SimpleStringProperty(EMPTY);
+    private final StringProperty departmentOfBirth = new SimpleStringProperty(EMPTY);
+    private final StringProperty countryOfBirth = new SimpleStringProperty(EMPTY);
+    private final StringProperty address = new SimpleStringProperty(EMPTY);
+    private final StringProperty zipCode = new SimpleStringProperty(EMPTY);
+    private final StringProperty city = new SimpleStringProperty(EMPTY);
+    private final StringProperty email = new SimpleStringProperty(EMPTY);
+    private final StringProperty phoneNumber = new SimpleStringProperty(EMPTY);
+    private final StringProperty licenceState = new SimpleStringProperty(EMPTY);
     private final ObjectProperty<LocalDate> medicalCertificateDate = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDate> idCardDate = new SimpleObjectProperty<>();
     private final BooleanProperty idPhoto = new SimpleBooleanProperty(false);
     private final ObjectProperty<LocalDate> firstLicenceDate = new SimpleObjectProperty<>();
-    private final StringProperty season = new SimpleStringProperty("");
-    private final StringProperty ageCategory = new SimpleStringProperty("");
+    private final StringProperty season = new SimpleStringProperty(EMPTY);
+    private final StringProperty ageCategory = new SimpleStringProperty(EMPTY);
     private final BooleanProperty handisport = new SimpleBooleanProperty(false);
     private final BooleanProperty blacklisted = new SimpleBooleanProperty(false);
 

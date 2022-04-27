@@ -18,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
 /**
  * Configuration node for the first start of the application
  */
@@ -44,6 +46,16 @@ public class FirstStartNode extends VBox {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param authenticationService
+     *         selection service for the current licensee
+     * @param firstStartService
+     *         service for the first start of the application
+     * @param shutdownService
+     *         application shutdown service
+     */
     @Inject
     public void injectDependencies(final AuthenticationService authenticationService,
                                    final FirstStartService firstStartService,
@@ -95,6 +107,6 @@ public class FirstStartNode extends VBox {
 
     private void clearError() {
         firstStartErrorLabel.setManaged(false);
-        firstStartErrorLabel.setText("");
+        firstStartErrorLabel.setText(EMPTY);
     }
 }

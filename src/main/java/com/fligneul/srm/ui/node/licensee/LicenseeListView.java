@@ -13,6 +13,11 @@ import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * List view for displaying licensee
+ */
 public class LicenseeListView extends ListView<LicenseeJfxModel> {
     private static final String FXML_PATH = "licenseeListView.fxml";
 
@@ -27,7 +32,7 @@ public class LicenseeListView extends ListView<LicenseeJfxModel> {
                     protected void updateItem(LicenseeJfxModel item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty || item == null) {
-                            setText("");
+                            setText(EMPTY);
                         } else {
                             setText(item.getLicenceNumber() + " " + item.getFirstName() + " " + item.getLastName());
                         }
@@ -37,11 +42,19 @@ public class LicenseeListView extends ListView<LicenseeJfxModel> {
         });
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     * @param licenseeSelectionService
+     *         service for the current selected licensee
+     */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
                                    final LicenseeSelectionService licenseeSelectionService) {
         SortedList<LicenseeJfxModel> licenseeJfxModels = new SortedList<>(licenseeServiceToJfxModel.getLicenseeList());
-        licenseeJfxModels.setComparator(Comparator.comparing(licenseeJfxModel -> Optional.ofNullable(licenseeJfxModel.getLastName()).orElse("")));
+        licenseeJfxModels.setComparator(Comparator.comparing(licenseeJfxModel -> Optional.ofNullable(licenseeJfxModel.getLastName()).orElse(EMPTY)));
         setItems(licenseeJfxModels);
 
         getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> licenseeSelectionService.setSelected(newV));

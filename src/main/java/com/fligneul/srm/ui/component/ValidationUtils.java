@@ -1,19 +1,22 @@
 package com.fligneul.srm.ui.component;
 
-import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
-import javafx.collections.ObservableList;
 import javafx.util.converter.LocalTimeStringConverter;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Optional;
 import java.util.function.Function;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TIME_FORMATTER;
+
+/**
+ * Validation utility class
+ */
 public class ValidationUtils {
-    public static final LocalTimeStringConverter TIME_STRING_CONVERTER = new LocalTimeStringConverter(DateTimeFormatter.ofPattern("HH:mm"), DateTimeFormatter.ofPattern("HH:mm"));
+    private static final LocalTimeStringConverter TIME_STRING_CONVERTER = new LocalTimeStringConverter(TIME_FORMATTER, TIME_FORMATTER);
 
-
+    /**
+     * @return a validation function for a required not blank string
+     */
     public static Function<String, String> validateRequiredString() {
         return value -> {
             if (value == null || value.isBlank()) {
@@ -24,6 +27,9 @@ public class ValidationUtils {
         };
     }
 
+    /**
+     * @return a validation function for a required not null integer
+     */
     public static Function<String, Integer> validateRequiredInteger() {
         return value -> {
             if (value == null || value.isBlank()) {
@@ -38,6 +44,9 @@ public class ValidationUtils {
         };
     }
 
+    /**
+     * @return a validation function for a required not null {@link LocalTime}
+     */
     public static Function<String, LocalTime> validateRequiredTime() {
         return value -> {
             if (value == null || value.isBlank()) {
@@ -52,11 +61,4 @@ public class ValidationUtils {
         };
     }
 
-    public static Function<String, String> validateLicenceNumber(final ObservableList<LicenseeJfxModel> licenseeList) {
-        return value -> Optional.ofNullable(validateRequiredString().apply(value))
-                .map(licenceNb -> licenseeList.stream().map(LicenseeJfxModel::getLicenceNumber).anyMatch(v -> v.equals(licenceNb)))
-                .filter(Boolean.TRUE::equals)
-                .map(any -> value)
-                .orElse(null);
-    }
 }

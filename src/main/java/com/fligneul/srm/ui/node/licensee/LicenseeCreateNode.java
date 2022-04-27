@@ -22,6 +22,11 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Licensee creation node
+ */
 public class LicenseeCreateNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeCreateNode.class);
     private static final String FXML_PATH = "licenseeCreate.fxml";
@@ -118,6 +123,12 @@ public class LicenseeCreateNode extends VBox {
         this(null);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel) {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
@@ -126,25 +137,25 @@ public class LicenseeCreateNode extends VBox {
     private void clearComponents() {
         currentLicenseeJfxModel = null;
 
-        licenceNumberTextField.setText("");
-        firstnameTextField.setText("");
-        lastnameTextField.setText("");
-        dateOfBirthPicker.getEditor().setText("");
-        maidenNameTextField.setText("");
-        placeOfBirthTextField.setText("");
-        departmentOfBirthTextField.setText("");
-        countryOfBirthTextField.setText("");
-        addressTextField.setText("");
-        zipCodeTextField.setText("");
-        cityTextField.setText("");
-        emailTextField.setText("");
-        phoneNumberTextField.setText("");
-        licenceStateTextField.setText("");
-        firstLicenceDatePicker.getEditor().setText("");
-        seasonTextField.setText("");
-        ageCategoryTextField.setText("");
-        medicalCertificateDatePicker.getEditor().setText("");
-        idCardDatePicker.getEditor().setText("");
+        licenceNumberTextField.setText(EMPTY);
+        firstnameTextField.setText(EMPTY);
+        lastnameTextField.setText(EMPTY);
+        dateOfBirthPicker.getEditor().setText(EMPTY);
+        maidenNameTextField.setText(EMPTY);
+        placeOfBirthTextField.setText(EMPTY);
+        departmentOfBirthTextField.setText(EMPTY);
+        countryOfBirthTextField.setText(EMPTY);
+        addressTextField.setText(EMPTY);
+        zipCodeTextField.setText(EMPTY);
+        cityTextField.setText(EMPTY);
+        emailTextField.setText(EMPTY);
+        phoneNumberTextField.setText(EMPTY);
+        licenceStateTextField.setText(EMPTY);
+        firstLicenceDatePicker.getEditor().setText(EMPTY);
+        seasonTextField.setText(EMPTY);
+        ageCategoryTextField.setText(EMPTY);
+        medicalCertificateDatePicker.getEditor().setText(EMPTY);
+        idCardDatePicker.getEditor().setText(EMPTY);
         handisportCheckBox.setSelected(false);
         blacklistCheckBox.setSelected(false);
         idPhotoCheckBox.setSelected(false);
