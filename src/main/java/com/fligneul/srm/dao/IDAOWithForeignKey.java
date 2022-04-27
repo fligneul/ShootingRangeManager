@@ -1,5 +1,6 @@
 package com.fligneul.srm.dao;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -18,7 +19,7 @@ public interface IDAOWithForeignKey<T> extends IDAO<T> {
      *         the model to save
      * @return an Optional of the saved item if successful, empty otherwise
      */
-    default Optional<T> save(final T item) {
+    default Optional<T> save(@Nonnull final T item) {
         // Should use the save with the foreign key
         return Optional.empty();
     }
@@ -30,5 +31,5 @@ public interface IDAOWithForeignKey<T> extends IDAO<T> {
      *         the model to save
      * @return an Optional of the saved item if successful, empty otherwise
      */
-    Optional<T> save(int foreignId, final T item);
+    Optional<T> save(int foreignId, @Nonnull final T item);
 }

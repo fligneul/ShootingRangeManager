@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.jooq.exception.DataAccessException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,12 +20,23 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * DAO for firing point table
+ */
 public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(FiringPointDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
     private FiringPostDAO firingPostDAO;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     * @param firingPostDAO
+     *         DAO for firing post table
+     */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
                                    final FiringPostDAO firingPostDAO) {
@@ -32,8 +44,15 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
         this.firingPostDAO = firingPostDAO;
     }
 
+    /**
+     * Save a firing point and return the saved value
+     *
+     * @param item
+     *         the model to save
+     * @return the saved object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<FiringPointJfxModel> save(final FiringPointJfxModel item) {
+    public Optional<FiringPointJfxModel> save(@Nonnull final FiringPointJfxModel item) {
         try {
             Optional<FiringPointJfxModel> optFiringPoint = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.FIRINGPOINT)
@@ -52,6 +71,13 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return a firing point by its id
+     *
+     * @param id
+     *         the id of the desired item
+     * @return the corresponding {@link FiringPointJfxModel}, {@code Optional.empty()} if an error occurred
+     */
     @Override
     public Optional<FiringPointJfxModel> getById(int id) {
         try {
@@ -62,6 +88,11 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return all firing point in DB
+     *
+     * @return a list of all {@link FiringPointJfxModel}
+     */
     @Override
     public List<FiringPointJfxModel> getAll() {
         try {
@@ -74,8 +105,16 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
         return new ArrayList<>();
     }
 
+
+    /**
+     * Update a firing point and return the updated value
+     *
+     * @param item
+     *         updated item to save
+     * @return the updated object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<FiringPointJfxModel> update(final FiringPointJfxModel item) {
+    public Optional<FiringPointJfxModel> update(@Nonnull final FiringPointJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .update(Tables.FIRINGPOINT)
@@ -92,8 +131,14 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Delete the provided firing point in DB
+     *
+     * @param item
+     *         item to be deleted
+     */
     @Override
-    public void delete(final FiringPointJfxModel item) {
+    public void delete(@Nonnull final FiringPointJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .delete(Tables.FIRINGPOINT)

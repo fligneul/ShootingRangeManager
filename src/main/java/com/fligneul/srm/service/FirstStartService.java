@@ -20,6 +20,14 @@ public class FirstStartService {
     private DatabaseConnectionService databaseConnectionService;
     private UserDAO userDAO;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     * @param userDAO
+     *         DAO for user table
+     */
     @Inject
     private void injectDependencies(final DatabaseConnectionService databaseConnectionService,
                                     final UserDAO userDAO) {
@@ -27,6 +35,15 @@ public class FirstStartService {
         this.userDAO = userDAO;
     }
 
+    /**
+     * Create the first user of the application
+     *
+     * @param username
+     *         username
+     * @param passwd
+     *         user password
+     * @return {@code true} id the creation is successful, {@code false} otherwise
+     */
     public boolean createFirstUser(final String username, char[] passwd) {
         try {
             databaseConnectionService.initConnection(username, passwd);

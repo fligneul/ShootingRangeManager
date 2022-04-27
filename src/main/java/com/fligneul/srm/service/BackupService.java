@@ -22,9 +22,17 @@ public class BackupService {
     private DatabaseConnectionService databaseConnectionService;
     private AuthenticationService authenticationService;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     * @param authenticationService
+     *         user authentication service
+     */
     @Inject
-    private void injectDependencies(DatabaseConnectionService databaseConnectionService,
-                                    AuthenticationService authenticationService) {
+    private void injectDependencies(final DatabaseConnectionService databaseConnectionService,
+                                    final AuthenticationService authenticationService) {
         this.databaseConnectionService = databaseConnectionService;
         this.authenticationService = authenticationService;
     }
@@ -52,7 +60,7 @@ public class BackupService {
      *
      * @param destinationFile
      *         the desired backup file
-     * @return {@code true} if the backup is successful, false otherwise
+     * @return {@code true} if the backup is successful, {@code false} otherwise
      */
     public boolean backupDatabase(final File destinationFile) {
         try (ZipFile backupFile = new ZipFile(destinationFile)) {
@@ -69,11 +77,11 @@ public class BackupService {
 
     /**
      * Restore DB from provided file
-     * Warning : the application must be restarted after this method
+     * Warning: the application must be restarted after this method
      *
      * @param backupFile
      *         DB backup file
-     * @return {@code true} if the restoration is successful, false otherwise
+     * @return {@code true} if the restoration is successful, {@code false} otherwise
      */
     public boolean restoreDatabase(final File backupFile) {
         try (ZipFile restoreFile = new ZipFile(backupFile)) {
