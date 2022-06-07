@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.jooq.exception.DataAccessException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -27,6 +28,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * DAO for attendance table
+ */
 public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(AttendanceDAO.class);
 
@@ -36,6 +40,20 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
     private FiringPostDAO firingPostDAO;
     private WeaponDAO weaponDAO;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     * @param licenseeDAO
+     *         DAO for licensee table
+     * @param firingPointDAO
+     *         DAO for firing point table
+     * @param firingPostDAO
+     *         DAO for firing post table
+     * @param weaponDAO
+     *         DAO for weapon table
+     */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
                                    final LicenseeDAO licenseeDAO,
@@ -49,7 +67,15 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         this.weaponDAO = weaponDAO;
     }
 
-    public Optional<LicenseePresenceJfxModel> save(final LicenseePresenceJfxModel item) {
+    /**
+     * Save a licensee presence and return the saved value
+     *
+     * @param item
+     *         the model to save
+     * @return the saved object, {@code Optional.empty()} if an error occurred
+     */
+    @Override
+    public Optional<LicenseePresenceJfxModel> save(@Nonnull final LicenseePresenceJfxModel item) {
         try {
             Optional<LicenseePresenceJfxModel> opt = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.ATTENDANCE)
@@ -73,6 +99,14 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return a licensee presence by its id
+     *
+     * @param id
+     *         the id of the desired item
+     * @return the corresponding {@link LicenseePresenceJfxModel}, {@code Optional.empty()} if an error occurred
+     */
+    @Override
     public Optional<LicenseePresenceJfxModel> getById(final int id) {
         try {
             return internalGet(Tables.ATTENDANCE.ID.eq(id)).findFirst();
@@ -82,7 +116,14 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         return Optional.empty();
     }
 
-    public List<LicenseePresenceJfxModel> getByDate(LocalDate localDate) {
+    /**
+     * Return all licensee presence for the provided date
+     *
+     * @param localDate
+     *         the requested date
+     * @return a list of all {@link LicenseePresenceJfxModel} of the provided date
+     */
+    public List<LicenseePresenceJfxModel> getByDate(final LocalDate localDate) {
         try {
             return internalGet(
                     Tables.ATTENDANCE.STARTDATE.greaterOrEqual(localDate.atTime(LocalTime.MIDNIGHT))
@@ -94,6 +135,12 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         return new ArrayList<>();
     }
 
+    /**
+     * Return all licensee presence in DB
+     *
+     * @return a list of all {@link LicenseePresenceJfxModel}
+     */
+    @Override
     public List<LicenseePresenceJfxModel> getAll() {
         try {
             return internalGet().collect(Collectors.toList());
@@ -104,7 +151,15 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         return new ArrayList<>();
     }
 
-    public Optional<LicenseePresenceJfxModel> update(final LicenseePresenceJfxModel item) {
+    /**
+     * Update a licensee presence and return the updated value
+     *
+     * @param item
+     *         updated item to save
+     * @return the updated object, {@code Optional.empty()} if an error occurred
+     */
+    @Override
+    public Optional<LicenseePresenceJfxModel> update(@Nonnull final LicenseePresenceJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .update(Tables.ATTENDANCE)
@@ -125,11 +180,18 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         return Optional.empty();
     }
 
-    public void delete(final LicenseePresenceJfxModel obj) {
+    /**
+     * Delete the provided licensee presence in DB
+     *
+     * @param item
+     *         item to be deleted
+     */
+    @Override
+    public void delete(@Nonnull final LicenseePresenceJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .delete(Tables.ATTENDANCE)
-                    .where(Tables.ATTENDANCE.ID.eq(obj.getId()))
+                    .where(Tables.ATTENDANCE.ID.eq(item.getId()))
                     .execute();
 
             databaseConnectionService.getConnection().commit();
@@ -138,7 +200,7 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         }
     }
 
-    private Stream<LicenseePresenceJfxModel> internalGet(Condition... conditions) throws DataAccessException {
+    private Stream<LicenseePresenceJfxModel> internalGet(final Condition... conditions) throws DataAccessException {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.ATTENDANCE)
@@ -150,7 +212,7 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
                 .map(this::convertToJfxModel);
     }
 
-    private LicenseePresenceJfxModel convertToJfxModel(AttendanceRecord attendanceRecord) {
+    private LicenseePresenceJfxModel convertToJfxModel(final AttendanceRecord attendanceRecord) {
         LicenseePresenceJfxModelBuilder builder = new LicenseePresenceJfxModelBuilder()
                 .setId(attendanceRecord.getId())
                 .setLicensee(licenseeDAO.getById(attendanceRecord.getLicenseeid()).orElseThrow())

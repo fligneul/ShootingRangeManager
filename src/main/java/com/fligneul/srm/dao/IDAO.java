@@ -1,5 +1,6 @@
 package com.fligneul.srm.dao;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public interface IDAO<T> {
      *         the model to save
      * @return an Optional of the saved item if successful, empty otherwise
      */
-    Optional<T> save(final T item);
+    Optional<T> save(@Nonnull final T item);
 
     /**
      * Return the JFX model of a saved data by its id
@@ -43,7 +44,7 @@ public interface IDAO<T> {
      *         updated item to save
      * @return an Optional of the updated item if successful, empty otherwise
      */
-    Optional<T> update(final T item);
+    Optional<T> update(@Nonnull final T item);
 
     /**
      * Delete the provided item from the DB
@@ -51,6 +52,6 @@ public interface IDAO<T> {
      * @param item
      *         item to be deleted
      */
-    void delete(final T item);
+    void delete(@Nonnull final T item);
 
 }

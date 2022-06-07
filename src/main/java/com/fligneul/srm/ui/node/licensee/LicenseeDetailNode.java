@@ -2,12 +2,18 @@ package com.fligneul.srm.ui.node.licensee;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
+import com.fligneul.srm.ui.node.logbook.ShootingLogbookCreateNode;
+import com.fligneul.srm.ui.node.logbook.ShootingLogbookNode;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
+import com.fligneul.srm.ui.node.utils.NodeUtils;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -81,11 +87,19 @@ public class LicenseeDetailNode extends VBox {
     private TextField idCardTextField;
     @FXML
     private CheckBox idPhotoCheckBox;
+    @FXML
+    private Button openOrCreateShootingLogbookButton;
+
 
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
     private LicenseeSelectionService licenseeSelectionService;
+    private ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel;
 
     private LicenseeJfxModel currentLicenseeJfxModel;
+
+    private final ChangeListener<ShootingLogbookJfxModel> shootingLogbookJfxModelChangeListener = (obs, oldV, newV) -> {
+        NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, newV == null);
+    };
 
     public LicenseeDetailNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -101,12 +115,16 @@ public class LicenseeDetailNode extends VBox {
      *         service to jfx model for licensee
      * @param licenseeSelectionService
      *         service for the current selected licensee
+                   * @param shootingLogbookServiceToJfxModel
+           *         service to jfx model for shooting logbook
      */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
-                                   final LicenseeSelectionService licenseeSelectionService) {
+                                   final LicenseeSelectionService licenseeSelectionService,
+                                   final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel) {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
         this.licenseeSelectionService = licenseeSelectionService;
+        this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
 
         licenseeSelectionService.selectedObs()
                 .distinctUntilChanged()
@@ -117,6 +135,9 @@ public class LicenseeDetailNode extends VBox {
     }
 
     private void clearComponents() {
+        if (currentLicenseeJfxModel != null) {
+            currentLicenseeJfxModel.shootingLogbookProperty().removeListener(shootingLogbookJfxModelChangeListener);
+        }
         currentLicenseeJfxModel = null;
         setVisible(false);
 
@@ -167,9 +188,14 @@ public class LicenseeDetailNode extends VBox {
         idPhotoCheckBox.setSelected(false);
         licenceBlacklistLabel.setManaged(false);
         licenceBlacklistLabel.setVisible(false);
+        openOrCreateShootingLogbookButton.setDisable(true);
+        NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, true);
     }
 
     private void updateComponents(final LicenseeJfxModel licenseeJfxModel) {
+        if (currentLicenseeJfxModel != null) {
+            currentLicenseeJfxModel.shootingLogbookProperty().removeListener(shootingLogbookJfxModelChangeListener);
+        }
         currentLicenseeJfxModel = licenseeJfxModel;
         setVisible(true);
 
@@ -197,6 +223,10 @@ public class LicenseeDetailNode extends VBox {
         idPhotoCheckBox.selectedProperty().bind(licenseeJfxModel.idPhotoProperty());
         licenceBlacklistLabel.managedProperty().bind(licenseeJfxModel.blacklistedProperty());
         licenceBlacklistLabel.visibleProperty().bind(licenseeJfxModel.blacklistedProperty());
+        openOrCreateShootingLogbookButton.setDisable(false);
+
+        licenseeJfxModel.shootingLogbookProperty().addListener(shootingLogbookJfxModelChangeListener);
+        NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, licenseeJfxModel.getShootingLogbook() == null);
     }
 
     @FXML
@@ -213,5 +243,12 @@ public class LicenseeDetailNode extends VBox {
     @FXML
     private void editLicensee() {
         DialogUtils.showCustomDialog("Modification d'un licencié", new LicenseeCreateNode(currentLicenseeJfxModel));
+    }
+
+    @FXML
+    private void openOrCreateShootingLogbook() {
+        shootingLogbookServiceToJfxModel.getShootingLogbookList().stream().filter(logbook -> logbook.getLicenseeId() == currentLicenseeJfxModel.getId()).findFirst()
+                .ifPresentOrElse(shootingLogbookJfxModel -> DialogUtils.showCustomDialog("Carnet de tir", new ShootingLogbookNode(shootingLogbookJfxModel, shootingLogbookServiceToJfxModel::saveShootingLogbook)),
+                        () -> DialogUtils.showCustomDialog("Carnet de tir", new ShootingLogbookCreateNode(currentLicenseeJfxModel.getId())));
     }
 }

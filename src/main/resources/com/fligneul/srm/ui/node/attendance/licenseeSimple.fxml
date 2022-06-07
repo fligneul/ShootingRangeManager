@@ -39,13 +39,11 @@
 
             <Label text="Date de naissance" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
             <TextField fx:id="dateOfBirthTextField" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-            <Label text="Nom de jeune fille" GridPane.columnIndex="3" GridPane.halignment="RIGHT"
-                   GridPane.rowIndex="2"/>
+            <Label text="Nom de jeune fille" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
             <TextField fx:id="maidenNameTextField" editable="false" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
 
             <Label text="Handisport" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
-            <CheckBox fx:id="handisportCheckBox" disable="true" mnemonicParsing="false" style="-fx-opacity: 1;"
-                      GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <CheckBox fx:id="handisportCheckBox" disable="true" mnemonicParsing="false" style="-fx-opacity: 1;" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
 
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0"/>
@@ -70,25 +68,49 @@
                         <Font size="14.0"/>
                     </font>
                 </Label>
-                <Label fx:id="licenceBlacklistLabel" managed="false" text="Tireur interdit de tir" textFill="RED"
-                       GridPane.columnSpan="2147483647" GridPane.halignment="CENTER"
-                       GridPane.rowIndex="1">
+                <Label fx:id="licenceBlacklistLabel" managed="false" text="Tireur interdit de tir" textFill="RED" GridPane.columnSpan="2147483647"
+                       GridPane.halignment="CENTER" GridPane.rowIndex="1">
                     <font>
                         <Font name="System Bold" size="14.0"/>
                     </font>
                 </Label>
                 <Label text="Etat de la licence" GridPane.rowIndex="2"/>
-                <TextField fx:id="licenceStateTextField" editable="false" GridPane.columnIndex="1"
-                           GridPane.rowIndex="2"/>
+                <TextField fx:id="licenceStateTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Label text="Date d'origine" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                <TextField fx:id="firstLicenceDateTextField" editable="false" GridPane.columnIndex="3"
-                           GridPane.rowIndex="2"/>
+                <TextField fx:id="firstLicenceDateTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
                 <Label text="Saison" GridPane.rowIndex="3"/>
                 <TextField fx:id="seasonTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <Label text="Catégorie d'âge" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-                <TextField fx:id="ageCategoryTextField" editable="false" GridPane.columnIndex="3"
-                           GridPane.rowIndex="3"/>
-                <Label fx:id="licenceErrorLabel" text="Certains documents sont manquant, veuillez contacter le secrétariat" textFill="RED" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4" GridPane.halignment="CENTER"/>
+                <TextField fx:id="ageCategoryTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                <Label fx:id="licenceErrorLabel" text="Certains documents sont manquant, veuillez contacter le secrétariat" textFill="RED"
+                       GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4" GridPane.halignment="CENTER"/>
+            </children>
+            <VBox.margin>
+                <Insets bottom="10.0" top="10.0"/>
+            </VBox.margin>
+        </GridPane>
+        <GridPane hgap="10.0" vgap="5.0" fx:id="shootingLogbookPane">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+                <ColumnConstraints halignment="RIGHT" minWidth="10.0" prefWidth="120.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label text="Carnet de tir" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+                    <font>
+                        <Font size="14.0"/>
+                    </font>
+                </Label>
+                <Label text="Date de création" GridPane.rowIndex="2"/>
+                <TextField fx:id="shootingLogbookCreationDateTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Dernier contrôle de tir" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <TextField fx:id="shootingLogbookLastSessionDateTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
             </children>
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0"/>

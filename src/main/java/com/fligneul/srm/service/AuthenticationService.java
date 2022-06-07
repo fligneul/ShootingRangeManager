@@ -28,21 +28,30 @@ public class AuthenticationService {
     private UserDAO userDAO;
     private RoleService roleService;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     * @param userDAO
+     *         DAO for user table
+     * @param roleService
+     *         DAO for firing point table
+     */
     @Inject
-    private void injectDependencies(DatabaseConnectionService databaseConnectionService,
-                                    UserDAO userDAO,
-                                    RoleService roleService) {
+    private void injectDependencies(final DatabaseConnectionService databaseConnectionService,
+                                    final UserDAO userDAO,
+                                    final RoleService roleService) {
         this.databaseConnectionService = databaseConnectionService;
         this.userDAO = userDAO;
         this.roleService = roleService;
     }
 
     /**
-     * Mocked authentication;
-     * Use {@code azerty} username to login
+     * User authentication
      *
      * @param username
-     *         user name
+     *         username
      * @param passwd
      *         user password
      * @return the error message if the authentication fail
@@ -56,11 +65,11 @@ public class AuthenticationService {
                     .ifPresentOrElse(user -> {
                         authenticatedSubject.onNext(true);
                         userAuthenticatedSubject.onNext(Optional.of(user.getName()));
-                        roleService.send(user.getRole());
+                        roleService.publish(user.getRole());
                     }, () -> {
                         authenticatedSubject.onNext(false);
                         userAuthenticatedSubject.onNext(Optional.empty());
-                        roleService.send(ERole.NONE);
+                        roleService.publish(ERole.NONE);
                         message.set("Connexion refusée");
                     });
             return Optional.ofNullable(message.get());
@@ -79,7 +88,7 @@ public class AuthenticationService {
     public void disconnect() {
         authenticatedSubject.onNext(false);
         userAuthenticatedSubject.onNext(Optional.empty());
-        roleService.send(ERole.NONE);
+        roleService.publish(ERole.NONE);
         databaseConnectionService.closeConnection();
     }
 

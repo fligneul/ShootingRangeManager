@@ -1,5 +1,6 @@
 package com.fligneul.srm.ui.model.licensee;
 
+import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -44,6 +45,7 @@ public class LicenseeJfxModel {
     private final StringProperty ageCategory = new SimpleStringProperty(EMPTY);
     private final BooleanProperty handisport = new SimpleBooleanProperty(false);
     private final BooleanProperty blacklisted = new SimpleBooleanProperty(false);
+    private final ObjectProperty<ShootingLogbookJfxModel> shootingLogbook = new SimpleObjectProperty<>();
 
     protected LicenseeJfxModel(int id, @NotBlank String firstName, @NotBlank String lastName, @NotNull LocalDate dateOfBirth) {
         this.id = id;
@@ -330,6 +332,18 @@ public class LicenseeJfxModel {
 
     public void setBlacklisted(final boolean blacklisted) {
         this.blacklisted.set(blacklisted);
+    }
+
+    public ShootingLogbookJfxModel getShootingLogbook() {
+        return shootingLogbook.get();
+    }
+
+    public ObjectProperty<ShootingLogbookJfxModel> shootingLogbookProperty() {
+        return shootingLogbook;
+    }
+
+    public void setShootingLogbook(ShootingLogbookJfxModel shootingLogbook) {
+        this.shootingLogbook.set(shootingLogbook);
     }
 
     @Override
