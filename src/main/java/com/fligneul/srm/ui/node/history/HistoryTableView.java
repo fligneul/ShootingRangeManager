@@ -1,7 +1,7 @@
 package com.fligneul.srm.ui.node.history;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
-import com.fligneul.srm.ui.component.cell.ButtonActionTableCell;
+import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;

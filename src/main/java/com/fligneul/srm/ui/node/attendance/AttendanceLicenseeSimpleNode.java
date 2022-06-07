@@ -28,29 +28,29 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     private static final String FXML_PATH = "licenseeSimple.fxml";
 
     @FXML
-    private TextField licenceNumberTextField;
+    protected TextField licenceNumberTextField;
     @FXML
-    private TextField firstnameTextField;
+    protected TextField firstnameTextField;
     @FXML
-    private TextField lastnameTextField;
+    protected TextField lastnameTextField;
     @FXML
-    private TextField dateOfBirthTextField;
+    protected TextField dateOfBirthTextField;
     @FXML
-    private TextField maidenNameTextField;
+    protected TextField maidenNameTextField;
     @FXML
-    private CheckBox handisportCheckBox;
+    protected CheckBox handisportCheckBox;
     @FXML
-    private Label licenceBlacklistLabel;
+    protected Label licenceBlacklistLabel;
     @FXML
-    private TextField licenceStateTextField;
+    protected TextField licenceStateTextField;
     @FXML
-    private TextField firstLicenceDateTextField;
+    protected TextField firstLicenceDateTextField;
     @FXML
-    private TextField seasonTextField;
+    protected TextField seasonTextField;
     @FXML
-    private TextField ageCategoryTextField;
+    protected TextField ageCategoryTextField;
     @FXML
-    private Label licenceErrorLabel;
+    protected Label licenceErrorLabel;
 
     /**
      * Create the node and load the associated FXML file

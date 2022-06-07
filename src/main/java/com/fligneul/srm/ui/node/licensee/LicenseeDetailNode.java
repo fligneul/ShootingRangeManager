@@ -24,6 +24,9 @@ import java.util.Optional;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 
+/**
+ * Read only view of the licensee information
+ */
 public class LicenseeDetailNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDetailNode.class);
     private static final String FXML_PATH = "licenseeDetail.fxml";

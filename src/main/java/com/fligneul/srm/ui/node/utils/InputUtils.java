@@ -9,10 +9,19 @@ import java.time.temporal.ChronoField;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class for input validation
+ */
 public class InputUtils {
     private static final Logger LOGGER = LogManager.getLogger(InputUtils.class);
     public static final String DEFAULT_TIME_FORMAT = "HH:mm";
 
+    /**
+     * 
+     * @param input
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static String parseLicenceNumber(final String input) throws IllegalArgumentException {
         Pattern p = Pattern.compile("^(\\d+)(\\W(\\d{4})\\W(\\d{4}))?$");
         Matcher m = p.matcher(input);

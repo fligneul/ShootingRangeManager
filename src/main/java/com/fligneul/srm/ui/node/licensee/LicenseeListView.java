@@ -16,7 +16,8 @@ import java.util.Optional;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 
 /**
- * List view for displaying licensee
+ * List view for displaying licensee.
+ * Display is composed of the licence number, the firstname and the lastname
  */
 public class LicenseeListView extends ListView<LicenseeJfxModel> {
     private static final String FXML_PATH = "licenseeListView.fxml";

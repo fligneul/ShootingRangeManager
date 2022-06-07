@@ -56,6 +56,12 @@
         <jsign-maven-plugin.version>4.0</jsign-maven-plugin.version>
         <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+
+        <!-- Unit tests -->
+        <junit-launcher.version>1.8.2</junit-launcher.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <testfx.version>4.0.16-alpha</testfx.version>
+        <mockito.version>4.5.1</mockito.version>
     </properties>
 
     <dependencies>
@@ -203,6 +209,32 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-liquibase</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- Unit test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-launcher.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

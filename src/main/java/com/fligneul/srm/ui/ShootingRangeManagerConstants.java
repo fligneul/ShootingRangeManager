@@ -25,4 +25,7 @@ public class ShootingRangeManagerConstants {
 
     public static final String TRASH_FA_ICON = "fas-trash-alt";
 
+    public static final Runnable NOTHING_TO_DO = () -> {
+    };
+
 }

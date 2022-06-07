@@ -19,6 +19,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
 /**
  * User login node
  */
@@ -102,7 +104,7 @@ public class LoginNode extends VBox {
         Platform.runLater(() -> {
             errorLabel.setVisible(false);
             errorLabel.setManaged(false);
-            errorLabel.setText("");
+            errorLabel.setText(EMPTY);
         });
     }
 

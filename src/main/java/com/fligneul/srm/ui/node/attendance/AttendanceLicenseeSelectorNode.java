@@ -23,11 +23,11 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
     private static final String FXML_PATH = "licenseeSelector.fxml";
 
     @FXML
-    private TextField licenceNumber;
+    protected TextField licenceNumber;
     @FXML
-    private Button validate;
+    protected Button validate;
     @FXML
-    private Label errorLabel;
+    protected Label errorLabel;
 
     private AttendanceSelectionService attendanceSelectionService;
 
@@ -70,7 +70,7 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
                 errorLabel.setVisible(true);
                 errorLabel.setManaged(true);
             }
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             errorLabel.setText("Numéro de licence invalide");
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);

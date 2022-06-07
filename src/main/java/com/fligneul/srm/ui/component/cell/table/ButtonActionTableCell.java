@@ -1,4 +1,4 @@
-package com.fligneul.srm.ui.component.cell;
+package com.fligneul.srm.ui.component.cell.table;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;

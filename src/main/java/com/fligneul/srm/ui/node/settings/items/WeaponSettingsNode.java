@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.node.settings.items;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.cell.list.SimpleListCell;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.settings.dialog.WeaponDialog;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
@@ -9,10 +10,8 @@ import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +19,9 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Weapon configuration node
+ */
 public class WeaponSettingsNode extends StackPane implements ISettingsItemNode {
     private static final Logger LOGGER = LogManager.getLogger(WeaponSettingsNode.class);
 
@@ -33,35 +35,27 @@ public class WeaponSettingsNode extends StackPane implements ISettingsItemNode {
     @FXML
     private Button weaponDeleteButton;
 
-    private WeaponServiceToJfxModel weaponServiceToJfxModel;
+    private WeaponServiceToJfxModel weaponService;
     private final AtomicReference<WeaponJfxModel> selectedWeaponJfx = new AtomicReference<>();
 
     public WeaponSettingsNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param weaponService
+     *         weapon jfx service
+     */
     @Inject
-    private void injectDependencies(WeaponServiceToJfxModel weaponServiceToJfxModel) {
-        this.weaponServiceToJfxModel = weaponServiceToJfxModel;
+    public void injectDependencies(final WeaponServiceToJfxModel weaponService) {
+        this.weaponService = weaponService;
 
-        weaponListView.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<WeaponJfxModel> call(ListView<WeaponJfxModel> param) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(WeaponJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText("");
-                        } else {
-                            setText(item.getName());
-                        }
-                    }
-                };
-            }
-        });
+        weaponListView.setCellFactory(param -> new SimpleListCell<>(WeaponJfxModel::getName));
 
-        weaponListView.setItems(weaponServiceToJfxModel.getWeaponList());
+
+        weaponListView.setItems(weaponService.getWeaponList());
         weaponListView.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) ->
                 Optional.ofNullable(newV).ifPresentOrElse(selectedWeaponJfx::set, () -> selectedWeaponJfx.set(null)));
         ListViewUtils.addClearOnEmptySelection(weaponListView);
@@ -84,7 +78,7 @@ public class WeaponSettingsNode extends StackPane implements ISettingsItemNode {
     private void deleteWeapon() {
         DialogUtils.showConfirmationDialog("Suppression d'une arme", "Supprimer une arme",
                 "Etes-vous sur de vouloir supprimer l'arme \"" + selectedWeaponJfx.get().getName() + "\"",
-                () -> weaponServiceToJfxModel.deleteWeapon(selectedWeaponJfx.get()));
+                () -> weaponService.deleteWeapon(selectedWeaponJfx.get()));
     }
 
     @Override
