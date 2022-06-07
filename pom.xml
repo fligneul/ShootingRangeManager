@@ -40,7 +40,7 @@
         <jooq.version>3.16.5</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
         <commons-csv.version>1.9.0</commons-csv.version>
-        <zip4j.version>2.9.1</zip4j.version>
+        <zip4j.version>2.10.0</zip4j.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
 
         <!-- LOG -->
