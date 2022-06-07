@@ -3,7 +3,9 @@ package com.fligneul.srm.ui.node.attendance;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
+import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.StackPane;
@@ -26,14 +28,16 @@ class AttendanceLicenseeSimpleNodeTest {
 
     private AttendanceLicenseeSimpleNode attendanceLicenseeSimpleNode;
     private final AttendanceSelectionService attendanceSelectionServiceMock = Mockito.mock(AttendanceSelectionService.class);
+    private final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModelMock = Mockito.mock(ShootingLogbookServiceToJfxModel.class);
     private final BehaviorSubject<Optional<LicenseeJfxModel>> selectedObs = BehaviorSubject.createDefault(Optional.empty());
 
     @Start
     private void start(Stage stage) {
         Mockito.when(attendanceSelectionServiceMock.selectedObs()).thenReturn(selectedObs);
+        Mockito.when(shootingLogbookServiceToJfxModelMock.getShootingLogbookList()).thenReturn(FXCollections.emptyObservableList());
 
         attendanceLicenseeSimpleNode = new AttendanceLicenseeSimpleNode();
-        attendanceLicenseeSimpleNode.injectDependencies(attendanceSelectionServiceMock);
+        attendanceLicenseeSimpleNode.injectDependencies(attendanceSelectionServiceMock, shootingLogbookServiceToJfxModelMock);
         stage.setScene(new Scene(new StackPane(attendanceLicenseeSimpleNode), 600, 400));
         stage.show();
     }
