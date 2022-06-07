@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.node.attendance;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.converter.FiringPointConverter;
 import com.fligneul.srm.ui.converter.FiringPostConverter;
+import com.fligneul.srm.ui.converter.StatusConverter;
 import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
@@ -97,6 +98,7 @@ public class AttendanceNode extends StackPane {
         initFiringPointComboBox();
         initFiringPostComboBox();
         initWeaponComboBox();
+        initStatusComboBox();
 
         // Display current date
         attendanceListTitle.setText(FormatterUtils.formatDate(LocalDate.now()));
@@ -140,17 +142,7 @@ public class AttendanceNode extends StackPane {
 
     private void initStatusComboBox() {
         statusComboBox.setItems(statusService.getStatusList());
-        statusComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(StatusJfxModel statusJfxModel) {
-                return Optional.ofNullable(statusJfxModel).map(StatusJfxModel::getName).orElse("");
-            }
-
-            @Override
-            public StatusJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
+        statusComboBox.setConverter(new StatusConverter());
     }
 
     @FXML

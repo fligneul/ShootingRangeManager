@@ -1,8 +1,8 @@
 package com.fligneul.srm.dao.status;
 
 import com.fligneul.srm.dao.IDAO;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.StatusRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.StatusRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModelBuilder;
@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.jooq.exception.DataAccessException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,18 +20,34 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * DAO for status table
+ */
 public class StatusDAO implements IDAO<StatusJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(StatusDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
         this.databaseConnectionService = databaseConnectionService;
     }
 
+    /**
+     * Save a licensee status and return the saved value
+     *
+     * @param item
+     *         the model to save
+     * @return the saved object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<StatusJfxModel> save(final StatusJfxModel item) {
+    public Optional<StatusJfxModel> save(@Nonnull final StatusJfxModel item) {
         try {
             Optional<StatusJfxModel> optLicensee = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.STATUS)
@@ -49,6 +66,13 @@ public class StatusDAO implements IDAO<StatusJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return a licensee status by its id
+     *
+     * @param id
+     *         the id of the desired item
+     * @return the corresponding {@link StatusJfxModel}, {@code Optional.empty()} if an error occurred
+     */
     @Override
     public Optional<StatusJfxModel> getById(final int id) {
         try {
@@ -59,6 +83,11 @@ public class StatusDAO implements IDAO<StatusJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return all licensee status in DB
+     *
+     * @return a list of all {@link StatusJfxModel}
+     */
     @Override
     public List<StatusJfxModel> getAll() {
         try {
@@ -70,8 +99,15 @@ public class StatusDAO implements IDAO<StatusJfxModel> {
         return new ArrayList<>();
     }
 
+    /**
+     * Update a licensee status and return the updated value
+     *
+     * @param item
+     *         updated item to save
+     * @return the updated object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<StatusJfxModel> update(final StatusJfxModel item) {
+    public Optional<StatusJfxModel> update(@Nonnull final StatusJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .update(Tables.STATUS)
@@ -87,12 +123,18 @@ public class StatusDAO implements IDAO<StatusJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Delete the provided licensee status in DB
+     *
+     * @param item
+     *         item to be deleted
+     */
     @Override
-    public void delete(final StatusJfxModel obj) {
+    public void delete(@Nonnull final StatusJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .delete(Tables.STATUS)
-                    .where(Tables.STATUS.ID.eq(obj.getId()))
+                    .where(Tables.STATUS.ID.eq(item.getId()))
                     .execute();
 
             databaseConnectionService.getConnection().commit();

@@ -5,6 +5,7 @@ import com.fligneul.srm.ui.component.ValidatedTextField;
 import com.fligneul.srm.ui.component.ValidationUtils;
 import com.fligneul.srm.ui.converter.FiringPointConverter;
 import com.fligneul.srm.ui.converter.FiringPostConverter;
+import com.fligneul.srm.ui.converter.StatusConverter;
 import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
@@ -26,7 +27,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -131,17 +131,7 @@ public class HistoryEditNode extends VBox {
         weaponComboBox.setConverter(new WeaponConverter());
 
         statusComboBox.setItems(statusService.getStatusList());
-        statusComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(StatusJfxModel statusJfxModel) {
-                return Optional.ofNullable(statusJfxModel).map(StatusJfxModel::getName).orElse("");
-            }
-
-            @Override
-            public StatusJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
+        statusComboBox.setConverter(new StatusConverter());
 
         saveButton.disableProperty().bind(startTimeTextField.isValidProperty().not()
                 .or(firingPointComboBox.getSelectionModel().selectedItemProperty().isNull()));

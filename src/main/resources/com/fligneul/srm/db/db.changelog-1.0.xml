@@ -131,7 +131,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Florian L." id="4">
+    <changeSet author="Florian L." id="5">
         <createTable tableName="status">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true"/>
