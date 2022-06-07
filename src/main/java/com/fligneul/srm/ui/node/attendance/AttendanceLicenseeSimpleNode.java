@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Optional;
 import java.util.Comparator;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
@@ -81,7 +80,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
      * @param attendanceSelectionService
      *         selection service for the current licensee
      * @param shootingLogbookServiceToJfxModel
-     * service to jfx model for shooting logbook
+     *         service to jfx model for shooting logbook
      */
     @Inject
     public void injectDependencies(final AttendanceSelectionService attendanceSelectionService,
@@ -167,7 +166,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
                             .map(ShootingSessionJfxModel::getSessionDate)
                             .max(Comparator.comparing(LocalDate::toEpochDay))
                             .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))
-                            .orElse(""), shootingLogbookJfxModel.sessionsProperty()));
+                            .orElse(EMPTY), shootingLogbookJfxModel.sessionsProperty()));
                 });
     }
 }

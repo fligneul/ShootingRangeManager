@@ -115,8 +115,8 @@ public class LicenseeDetailNode extends VBox {
      *         service to jfx model for licensee
      * @param licenseeSelectionService
      *         service for the current selected licensee
-                   * @param shootingLogbookServiceToJfxModel
-           *         service to jfx model for shooting logbook
+     * @param shootingLogbookServiceToJfxModel
+     *         service to jfx model for shooting logbook
      */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,

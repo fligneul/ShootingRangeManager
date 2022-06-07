@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.fligneul.srm.ui.component.ValidatedDatePicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -29,7 +30,7 @@
             </rowConstraints>
 
             <Label text="Date de création" GridPane.halignment="RIGHT"/>
-            <DatePicker fx:id="creationDatePicker" GridPane.columnIndex="1"/>
+            <ValidatedDatePicker fx:id="creationDatePicker" GridPane.columnIndex="1"/>
             <Label text="Contrôle des connaissances" GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
             <DatePicker fx:id="knowledgeCheckDatePicker" GridPane.columnIndex="3"/>
             <Label text="Liste des séances" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
@@ -55,7 +56,7 @@
             </VBox.margin>
         </GridPane>
         <HBox alignment="CENTER" spacing="20">
-            <Button mnemonicParsing="false" onAction="#saveShootingLogbook" text="Enregistrer"/>
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveShootingLogbook" text="Enregistrer"/>
             <Button mnemonicParsing="false" onAction="#cancel" text="Annuler"/>
             <VBox.margin>
                 <Insets bottom="10.0"/>

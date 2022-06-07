@@ -94,14 +94,18 @@ public class ShootingLogbookServiceToJfxModel {
     }
 
     public void deleteShootingSession(int shootingLogbookId, ShootingSessionJfxModel shootingSessionJfxModel) {
-        if (shootingLogbookId != -1 && shootingSessionJfxModel.getId() != -1) {
-            shootingSessionDAO.delete(shootingSessionJfxModel);
+        if (shootingLogbookId != -1) {
+            if (shootingSessionJfxModel.getId() != -1) {
+                shootingSessionDAO.delete(shootingSessionJfxModel);
+            } else {
+                LOGGER.debug("Shooting session not saved in DB");
+            }
             shootingLogbookJfxModels.stream()
                     .filter(model -> model.getId() == shootingLogbookId)
                     .findFirst()
                     .ifPresent(model -> model.getSessions().removeIf(shootingSessionJfxModel::equals));
         } else {
-            LOGGER.warn("Can't delete an unsaved shooting session");
+            LOGGER.warn("Can't delete a shooting session in an unsaved shooting logbook");
         }
     }
 }
