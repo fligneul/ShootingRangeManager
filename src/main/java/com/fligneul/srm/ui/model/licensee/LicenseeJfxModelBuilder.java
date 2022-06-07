@@ -5,6 +5,9 @@ import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Licensee model builder for JavaFX views
+ */
 public class LicenseeJfxModelBuilder {
     private Integer id;
     private String licenceNumber;

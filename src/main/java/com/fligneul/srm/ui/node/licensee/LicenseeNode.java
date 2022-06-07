@@ -23,6 +23,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+/**
+ * Licensee view node
+ */
 public class LicenseeNode extends StackPane {
     private static final String FXML_PATH = "licensee.fxml";
 
@@ -38,6 +41,14 @@ public class LicenseeNode extends StackPane {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     * @param licenseeSelectionService
+     *         service for the current selected licensee
+     */
     @Inject
     public void injectDependencies(final LicenseeSelectionService licenseeSelectionService,
                                    final LicenseeServiceToJfxModel licenseeServiceToJfxModel) {

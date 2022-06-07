@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.node.settings.items;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.cell.list.SimpleListCell;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
@@ -11,11 +12,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +21,9 @@ import javax.inject.Inject;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Firing point and firing post configuration node
+ */
 public class FiringPointSettingsNode extends StackPane implements ISettingsItemNode {
     private static final Logger LOGGER = LogManager.getLogger(FiringPointSettingsNode.class);
 
@@ -44,34 +45,39 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
     @FXML
     private Button firingPostDeleteButton;
 
-    private FiringPointServiceToJfxModel firingPointServiceToJfxModel;
-    private AtomicReference<FiringPointJfxModel> firingPointJfx = new AtomicReference<>();
+    private FiringPointServiceToJfxModel firingPointService;
+    private final AtomicReference<FiringPointJfxModel> firingPointJfx = new AtomicReference<>();
 
     public FiringPointSettingsNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param firingPointService
+     *         firing point jfx service
+     */
     @Inject
-    private void injectDependencies(FiringPointServiceToJfxModel firingPointServiceToJfxModel) {
-        this.firingPointServiceToJfxModel = firingPointServiceToJfxModel;
+    public void injectDependencies(final FiringPointServiceToJfxModel firingPointService) {
+        this.firingPointService = firingPointService;
 
-        firingPointListView.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<FiringPointJfxModel> call(ListView<FiringPointJfxModel> param) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(FiringPointJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText("");
-                        } else {
-                            setText(item.getName());
-                        }
-                    }
-                };
-            }
-        });
-        firingPointListView.setItems(firingPointServiceToJfxModel.getFiringPointList());
+        initFiringPointListView();
+
+        firingPointEditButton.disableProperty().bind(firingPointListView.getSelectionModel().selectedItemProperty().isNull());
+        firingPointDeleteButton.disableProperty().bind(firingPointListView.getSelectionModel().selectedItemProperty().isNull());
+
+        firingPostListView.setCellFactory(param -> new SimpleListCell<>(FiringPostJfxModel::getName));
+        ListViewUtils.addClearOnEmptySelection(firingPostListView);
+
+        firingPostCreateButton.disableProperty().bind(firingPointListView.getSelectionModel().selectedItemProperty().isNull());
+        firingPostEditButton.disableProperty().bind(firingPostListView.getSelectionModel().selectedItemProperty().isNull());
+        firingPostDeleteButton.disableProperty().bind(firingPostListView.getSelectionModel().selectedItemProperty().isNull());
+    }
+
+    private void initFiringPointListView() {
+        firingPointListView.setCellFactory(param -> new SimpleListCell<>(FiringPointJfxModel::getName));
+        firingPointListView.setItems(firingPointService.getFiringPointList());
         firingPointListView.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
             Optional.ofNullable(newV).ifPresentOrElse(n -> {
                 firingPointJfx.set(n);
@@ -85,38 +91,12 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
             });
         });
         ListViewUtils.addClearOnEmptySelection(firingPointListView);
-
-        firingPointEditButton.disableProperty().bind(firingPointListView.getSelectionModel().selectedItemProperty().isNull());
-        firingPointDeleteButton.disableProperty().bind(firingPointListView.getSelectionModel().selectedItemProperty().isNull());
-
-
-        firingPostListView.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<FiringPostJfxModel> call(ListView<FiringPostJfxModel> param) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(FiringPostJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText("");
-                        } else {
-                            setText(item.getName());
-                        }
-                    }
-                };
-            }
-        });
-        ListViewUtils.addClearOnEmptySelection(firingPostListView);
-
-        firingPostCreateButton.disableProperty().bind(firingPointListView.getSelectionModel().selectedItemProperty().isNull());
-        firingPostEditButton.disableProperty().bind(firingPostListView.getSelectionModel().selectedItemProperty().isNull());
-        firingPostDeleteButton.disableProperty().bind(firingPostListView.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML
     private void createFiringPoint() {
         DialogUtils.showInputTextDialog("Création d'un pas de tir", "Nouveau pas de tir", "Nom", "",
-                name -> firingPointServiceToJfxModel.saveFiringPoint(new FiringPointJfxModel(name)));
+                name -> firingPointService.saveFiringPoint(new FiringPointJfxModel(name)));
     }
 
     @FXML
@@ -125,7 +105,7 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
                 name -> {
                     final FiringPointJfxModel firingPointJfxModel = firingPointListView.getSelectionModel().getSelectedItem();
                     firingPointJfxModel.setName(name);
-                    firingPointServiceToJfxModel.saveFiringPoint(firingPointJfxModel);
+                    firingPointService.saveFiringPoint(firingPointJfxModel);
                 });
     }
 
@@ -133,13 +113,13 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
     private void deleteFiringPoint() {
         DialogUtils.showConfirmationDialog("Suppression d'un pas de tir", "Supprimer un pas de tir",
                 "Etes-vous sur de vouloir supprimer le pas de tir \"" + firingPointListView.getSelectionModel().getSelectedItem().getName() + "\"",
-                () -> firingPointServiceToJfxModel.deleteFiringPoint(firingPointListView.getSelectionModel().getSelectedItem()));
+                () -> firingPointService.deleteFiringPoint(firingPointListView.getSelectionModel().getSelectedItem()));
     }
 
     @FXML
     private void createFiringPost() {
         DialogUtils.showInputTextDialog("Création d'un poste de tir", "Nouveau poste de tir", "Nom", "",
-                name -> firingPointServiceToJfxModel.saveFiringPost(firingPointJfx.get().getId(), new FiringPostJfxModel(name)));
+                name -> firingPointService.saveFiringPost(firingPointJfx.get().getId(), new FiringPostJfxModel(name)));
     }
 
     @FXML
@@ -148,7 +128,7 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
                 name -> {
                     final FiringPostJfxModel firingPostJfxModel = firingPostListView.getSelectionModel().getSelectedItem();
                     firingPostJfxModel.setName(name);
-                    firingPointServiceToJfxModel.saveFiringPost(firingPointJfx.get().getId(), firingPostJfxModel);
+                    firingPointService.saveFiringPost(firingPointJfx.get().getId(), firingPostJfxModel);
                 });
     }
 
@@ -156,7 +136,7 @@ public class FiringPointSettingsNode extends StackPane implements ISettingsItemN
     private void deleteFiringPost() {
         DialogUtils.showConfirmationDialog("Suppression d'un poste de tir", "Supprimer un poste de tir",
                 "Etes-vous sur de vouloir supprimer le poste de tir \"" + firingPostListView.getSelectionModel().getSelectedItem().getName() + "\"",
-                () -> firingPointServiceToJfxModel.deleteFiringPost(firingPointListView.getSelectionModel().getSelectedItem(), firingPostListView.getSelectionModel().getSelectedItem()));
+                () -> firingPointService.deleteFiringPost(firingPointListView.getSelectionModel().getSelectedItem(), firingPostListView.getSelectionModel().getSelectedItem()));
     }
 
     @Override

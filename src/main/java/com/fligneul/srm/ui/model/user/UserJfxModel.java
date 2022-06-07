@@ -5,11 +5,16 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * User model for JavaFX views
+ */
 public class UserJfxModel {
     public static int DEFAULT_ID = -1;
 
     private final int id;
-    private final StringProperty name = new SimpleStringProperty("");
+    private final StringProperty name = new SimpleStringProperty(EMPTY);
     private final ObjectProperty<ERole> role = new SimpleObjectProperty<>();
 
     public UserJfxModel(int id, String name) {

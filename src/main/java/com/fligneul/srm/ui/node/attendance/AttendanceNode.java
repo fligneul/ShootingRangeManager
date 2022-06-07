@@ -1,11 +1,15 @@
 package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.converter.FiringPointConverter;
+import com.fligneul.srm.ui.converter.FiringPostConverter;
+import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
+import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
@@ -18,14 +22,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Attendance main node
+ * Display the selector, basic licensee information, current day history and attendance controls
+ */
 public class AttendanceNode extends StackPane {
     private static final String FXML_PATH = "attendance.fxml";
 
@@ -44,71 +51,48 @@ public class AttendanceNode extends StackPane {
 
     private final AtomicReference<LicenseeJfxModel> currentLicensee = new AtomicReference<>();
 
+    private FiringPointServiceToJfxModel firingPointService;
     private AttendanceServiceToJfxModel attendanceService;
+    private WeaponServiceToJfxModel weaponService;
     private AttendanceSelectionService attendanceSelectionService;
 
+    /**
+     * Create the node and load the associated FXML file
+     */
     public AttendanceNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param attendanceSelectionService
+     *         selection service for the current licensee
+     * @param firingPointService
+     *         firing point jfx service
+     * @param attendanceService
+     *         current day attendance jfx service
+     * @param weaponService
+     *         weapon jfx service
+     */
     @Inject
-    private void injectDependencies(FiringPointServiceToJfxModel firingPointService,
-                                    AttendanceServiceToJfxModel attendanceService,
-                                    AttendanceSelectionService attendanceSelectionService,
-                                    WeaponServiceToJfxModel weaponService) {
-        this.attendanceService = attendanceService;
+    private void injectDependencies(final AttendanceSelectionService attendanceSelectionService,
+                                    final FiringPointServiceToJfxModel firingPointService,
+                                    final AttendanceServiceToJfxModel attendanceService,
+                                    final WeaponServiceToJfxModel weaponService) {
         this.attendanceSelectionService = attendanceSelectionService;
-        firingPointComboBox.setItems(firingPointService.getFiringPointList());
-        firingPointComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(FiringPointJfxModel firingPointJfxModel) {
-                return Optional.ofNullable(firingPointJfxModel).map(FiringPointJfxModel::getName).orElse("");
-            }
+        this.firingPointService = firingPointService;
+        this.attendanceService = attendanceService;
+        this.weaponService = weaponService;
 
-            @Override
-            public FiringPointJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
-        firingPointComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
-            if (newV != null) {
-                firingPostComboBox.setItems(newV.getPosts());
-                firingPostComboBox.setDisable(newV.getPosts().isEmpty());
-                firingPostComboBox.requestFocus();
-                saveButton.setDisable(false);
-            } else {
-                firingPostComboBox.setItems(FXCollections.emptyObservableList());
-                firingPostComboBox.setDisable(true);
-                saveButton.setDisable(true);
-            }
-        });
+        initFiringPointComboBox();
+        initFiringPostComboBox();
+        initWeaponComboBox();
 
-        firingPostComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(FiringPostJfxModel firingPostJfxModel) {
-                return Optional.ofNullable(firingPostJfxModel).map(FiringPostJfxModel::getName).orElse("");
-            }
+        // Display current date
+        attendanceListTitle.setText(FormatterUtils.formatDate(LocalDate.now()));
 
-            @Override
-            public FiringPostJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
-        weaponComboBox.setItems(weaponService.getWeaponList());
-        weaponComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(WeaponJfxModel weaponJfxModel) {
-                return Optional.ofNullable(weaponJfxModel).map(model -> model.getIdentificationNumber() + " - " + model.getName()).orElse("");
-            }
-
-            @Override
-            public WeaponJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
-
-        attendanceListTitle.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-
+        // Display detail node if a licensee is selected
         attendanceSelectionService.selectedObs()
                 .observeOn(JavaFxScheduler.platform())
                 .subscribe(opt -> {
@@ -116,6 +100,33 @@ public class AttendanceNode extends StackPane {
                     licenseeDetailContainer.setVisible(opt.isPresent());
                     licenseeDetailContainer.setManaged(opt.isPresent());
                 });
+
+        // Ensure all required value are set
+        saveButton.disableProperty().bind(firingPointComboBox.getSelectionModel().selectedItemProperty().isNull());
+    }
+
+    private void initFiringPointComboBox() {
+        firingPointComboBox.setItems(firingPointService.getFiringPointList());
+        firingPointComboBox.setConverter(new FiringPointConverter());
+        firingPointComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+            if (newV != null) {
+                firingPostComboBox.setItems(newV.getPosts());
+                firingPostComboBox.setDisable(newV.getPosts().isEmpty());
+                firingPostComboBox.requestFocus();
+            } else {
+                firingPostComboBox.setItems(FXCollections.emptyObservableList());
+                firingPostComboBox.setDisable(true);
+            }
+        });
+    }
+
+    private void initFiringPostComboBox() {
+        firingPostComboBox.setConverter(new FiringPostConverter());
+    }
+
+    private void initWeaponComboBox() {
+        weaponComboBox.setItems(weaponService.getWeaponList());
+        weaponComboBox.setConverter(new WeaponConverter());
     }
 
     @FXML
@@ -129,6 +140,7 @@ public class AttendanceNode extends StackPane {
         Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
 
         attendanceService.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
+        attendanceSelectionService.clearSelected();
     }
 
     @FXML

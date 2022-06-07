@@ -11,8 +11,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
-import java.time.format.DateTimeFormatter;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.DATE_FORMATTER;
+
+/**
+ * History view node
+ */
 public class HistoryNode extends StackPane {
     private static final String FXML_PATH = "history.fxml";
 
@@ -34,6 +38,12 @@ public class HistoryNode extends StackPane {
         displayHistoryButton.disableProperty().bind(historyDatePicker.valueProperty().isNull());
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param historyAttendanceServiceToJfxModel
+     *         service to jfx model for history attendance
+     */
     @Inject
     private void injectDependencies(final HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel) {
         this.historyAttendanceServiceToJfxModel = historyAttendanceServiceToJfxModel;
@@ -43,7 +53,7 @@ public class HistoryNode extends StackPane {
     private void displayHistory() {
         historyAttendanceServiceToJfxModel.setHistoryDate(historyDatePicker.getValue());
         historyTableView.setItems(historyAttendanceServiceToJfxModel.getLicenseePresenceList());
-        historyDate.setText(historyDatePicker.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        historyDate.setText(historyDatePicker.getValue().format(DATE_FORMATTER));
         historyTableView.setDate(historyDatePicker.getValue());
         historyDisplayContainer.setVisible(true);
     }

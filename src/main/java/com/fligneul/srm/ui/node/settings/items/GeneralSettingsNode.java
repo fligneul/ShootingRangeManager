@@ -9,6 +9,9 @@ import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 
+/**
+ * General configuration node
+ */
 public class GeneralSettingsNode extends StackPane implements ISettingsItemNode {
     private static final String FXML_PATH = "generalSettings.fxml";
     private static final String TITLE = "Général";
@@ -22,8 +25,14 @@ public class GeneralSettingsNode extends StackPane implements ISettingsItemNode 
 
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param preferenceService
+     *         application preference service
+     */
     @Inject
-    private void injectDependencies(final PreferenceService preferenceService) {
+    public void injectDependencies(final PreferenceService preferenceService) {
         this.preferenceService = preferenceService;
 
         shootingRangeNameTextField.setText(preferenceService.getShootingRangeName());

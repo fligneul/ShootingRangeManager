@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.fligneul.srm.ui.component.ValidatedDatePicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -21,7 +21,7 @@
             </rowConstraints>
 
             <Label text="Date de création" GridPane.halignment="RIGHT"/>
-            <DatePicker fx:id="creationDatePicker" GridPane.columnIndex="1"/>
+            <ValidatedDatePicker fx:id="creationDatePicker" GridPane.columnIndex="1"/>
 
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" top="10.0"/>

@@ -16,6 +16,11 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Weapon configuration dialog
+ */
 public class WeaponDialog extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(WeaponDialog.class);
     private static final String FXML_PATH = "weaponDialog.fxml";
@@ -33,7 +38,7 @@ public class WeaponDialog extends VBox {
     @FXML
     private DatePicker buyDatePicker;
 
-    private WeaponServiceToJfxModel weaponServiceToJfxModel;
+    private WeaponServiceToJfxModel weaponService;
     private WeaponJfxModel currentWeaponJfxModel;
 
     public WeaponDialog(final WeaponJfxModel weaponJfxModel) {
@@ -52,18 +57,24 @@ public class WeaponDialog extends VBox {
         this(null);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param weaponService
+     *         weapon jfx service
+     */
     @Inject
-    public void injectDependencies(final WeaponServiceToJfxModel weaponServiceToJfxModel) {
-        this.weaponServiceToJfxModel = weaponServiceToJfxModel;
+    public void injectDependencies(final WeaponServiceToJfxModel weaponService) {
+        this.weaponService = weaponService;
     }
 
     private void clearComponents() {
         currentWeaponJfxModel = null;
 
-        nameTextField.setText("");
-        identificationNumberTextField.setText("");
-        caliberTextField.setText("");
-        buyDatePicker.getEditor().setText("");
+        nameTextField.setText(EMPTY);
+        identificationNumberTextField.setText(EMPTY);
+        caliberTextField.setText(EMPTY);
+        buyDatePicker.getEditor().setText(EMPTY);
     }
 
     private void updateComponents(WeaponJfxModel weaponJfxModel) {
@@ -85,7 +96,7 @@ public class WeaponDialog extends VBox {
                 .setCaliber(caliberTextField.getText())
                 .setBuyDate(buyDatePicker.getValue());
 
-        weaponServiceToJfxModel.saveWeapon(builder.createWeaponJfxModel());
+        weaponService.saveWeapon(builder.createWeaponJfxModel());
         clearComponents();
         closeStage();
     }

@@ -19,6 +19,11 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * User login node
+ */
 public class LoginNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LoginNode.class);
     private static final String FXML_PATH = "login.fxml";
@@ -45,6 +50,16 @@ public class LoginNode extends VBox {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param authenticationService
+     *         user authentication service
+     * @param shutdownService
+     *         service graceful shutdown
+     * @param preferenceService
+     *         OS preference service
+     */
     @Inject
     public void injectDependencies(final AuthenticationService authenticationService,
                                    final ShutdownService shutdownService,
@@ -89,7 +104,7 @@ public class LoginNode extends VBox {
         Platform.runLater(() -> {
             errorLabel.setVisible(false);
             errorLabel.setManaged(false);
-            errorLabel.setText("");
+            errorLabel.setText(EMPTY);
         });
     }
 

@@ -1,6 +1,8 @@
 package com.fligneul.srm.ui.node.logbook;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.ValidatedDatePicker;
+import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
 import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import com.fligneul.srm.ui.model.logbook.ShootingSessionJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
@@ -9,33 +11,35 @@ import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_RED;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TRASH_FA_ICON;
+
+/**
+ * Node for shooting logbook edition
+ */
 public class ShootingLogbookNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDetailNode.class);
     private static final String FXML_PATH = "shootingLogbook.fxml";
 
     @FXML
-    private DatePicker creationDatePicker;
+    private ValidatedDatePicker creationDatePicker;
     @FXML
     private DatePicker knowledgeCheckDatePicker;
     @FXML
@@ -52,6 +56,8 @@ public class ShootingLogbookNode extends VBox {
     private TableColumn<ShootingSessionJfxModel, String> shootingSessionWeaponColumn;
     @FXML
     private TableColumn<ShootingSessionJfxModel, ShootingSessionJfxModel> deleteColumn;
+    @FXML
+    private Button saveButton;
 
     private final Consumer<ShootingLogbookJfxModel> onSaveConsumer;
 
@@ -64,11 +70,7 @@ public class ShootingLogbookNode extends VBox {
 
         Optional.ofNullable(shootingLogbookJfxModel).ifPresent(this::updateComponents);
 
-        creationDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (!newV) {
-                creationDatePicker.setValue(creationDatePicker.getConverter().fromString(creationDatePicker.getEditor().getText()));
-            }
-        });
+        saveButton.disableProperty().bind(creationDatePicker.isValidProperty().not());
 
         knowledgeCheckDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
             if (!newV) {
@@ -80,47 +82,20 @@ public class ShootingLogbookNode extends VBox {
         shootingSessionInstructorNameColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getInstructorName()));
         shootingSessionWeaponColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getWeapon().map(WeaponJfxModel::getName).orElse("Personnelle")));
         deleteColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue()));
-
-        deleteColumn.setCellFactory(new Callback<>() {
-            @Override
-            public TableCell<ShootingSessionJfxModel, ShootingSessionJfxModel> call(final TableColumn<ShootingSessionJfxModel, ShootingSessionJfxModel> param) {
-                return new TableCell<>() {
-
-                    private final Button btn = new Button();
-
-                    {
-                        btn.setMinHeight(26);
-                        btn.setMaxHeight(26);
-                        btn.setMinWidth(26);
-                        btn.setMaxWidth(26);
-                        FontIcon fontIcon = new FontIcon("fas-trash-alt");
-                        fontIcon.setIconColor(Paint.valueOf("#e53935"));
-                        fontIcon.setIconSize(18);
-                        btn.setGraphic(fontIcon);
-
-                        btn.setOnAction((ActionEvent event) -> {
-                            ShootingSessionJfxModel shootingSessionJfxModel = getTableView().getItems().get(getIndex());
-                            DialogUtils.showConfirmationDialog("Suppression d'une séance de tir", "Supprimer une séance de tir",
-                                    "Etes-vous sur de vouloir supprimer la séance de tir sélectionnée ?",
-                                    () -> shootingLogbookServiceToJfxModel.deleteShootingSession(currentShootingLogbookJfxModel.getId(), shootingSessionJfxModel));
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(ShootingSessionJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item == null || empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btn);
-                        }
-                    }
-                };
-            }
-        });
+        deleteColumn.setCellFactory(param -> new ButtonActionTableCell<>(TRASH_FA_ICON, COLOR_RED, item -> {
+            DialogUtils.showConfirmationDialog("Suppression d'une séance de tir", "Supprimer une séance de tir",
+                    "Etes-vous sur de vouloir supprimer la séance de tir sélectionnée ?",
+                    () -> shootingLogbookServiceToJfxModel.deleteShootingSession(currentShootingLogbookJfxModel.getId(), item));
+        }));
 
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param shootingLogbookServiceToJfxModel
+     *         service to jfx model for shooting logbook
+     */
     @Inject
     public void injectDependencies(final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel) {
         this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
@@ -130,8 +105,8 @@ public class ShootingLogbookNode extends VBox {
         currentShootingLogbookJfxModel = null;
         createSessionButton.setDisable(true);
 
-        creationDatePicker.getEditor().setText("");
-        knowledgeCheckDatePicker.getEditor().setText("");
+        creationDatePicker.getEditor().setText(EMPTY);
+        knowledgeCheckDatePicker.getEditor().setText(EMPTY);
         whiteTargetLevelCheckBox.setSelected(false);
         shootingSessionTableView.setItems(FXCollections.emptyObservableList());
     }

@@ -55,7 +55,9 @@ public class ShootingRangeManagerMain extends Application {
         MainNode mainNode = new MainNode();
         primaryStage.setTitle(APPLICATION_TITLE);
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(ShootingRangeManagerMain.class.getResourceAsStream(APPLICATION_ICON_PNG))));
-        primaryStage.setScene(new Scene(mainNode, APPLICATION_WIDTH, APPLICATION_HEIGHT));
+        final Scene scene = new Scene(mainNode, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        scene.getStylesheets().add(ShootingRangeManagerMain.class.getResource("/style.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 }

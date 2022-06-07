@@ -14,6 +14,9 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.io.File;
 
+/**
+ * Application backup node
+ */
 public class BackupSettingsNode extends StackPane implements ISettingsItemNode {
     private static final Logger LOGGER = LogManager.getLogger(FiringPointSettingsNode.class);
 
@@ -27,8 +30,17 @@ public class BackupSettingsNode extends StackPane implements ISettingsItemNode {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param backupService
+     *         DB backup service
+     * @param shutdownService
+     *         service for graceful shutdown
+     */
     @Inject
-    private void injectDependencies(final BackupService backupService, final ShutdownService shutdownService) {
+    public void injectDependencies(final BackupService backupService,
+                                   final ShutdownService shutdownService) {
         this.backupService = backupService;
         this.shutdownService = shutdownService;
     }
@@ -46,12 +58,10 @@ public class BackupSettingsNode extends StackPane implements ISettingsItemNode {
         if (file != null) {
             if (backupService.backupDatabase(file)) {
                 LOGGER.info("DB saved in {}, user must login again", file.getPath());
-                DialogUtils.showInformationDialog("Sauvegarde", null, "Sauvegarde effectuée avec succès.\nMerci de vous reconnecter à l'application.", () -> {
-                });
+                DialogUtils.showInformationDialog("Sauvegarde", null, "Sauvegarde effectuée avec succès.\nMerci de vous reconnecter à l'application.");
             } else {
                 LOGGER.error("DB not saved");
-                DialogUtils.showErrorDialog("Sauvegarde", null, "Erreur lors de la sauvegarde de la base de données.\nVeuillez contacter un administrateur.", () -> {
-                });
+                DialogUtils.showErrorDialog("Sauvegarde", null, "Erreur lors de la sauvegarde de la base de données.\nVeuillez contacter un administrateur.");
             }
         }
     }
@@ -69,12 +79,10 @@ public class BackupSettingsNode extends StackPane implements ISettingsItemNode {
             if (file != null) {
                 if (backupService.restoreDatabase(file)) {
                     LOGGER.info("DB restored from {}", file.getPath());
-                    DialogUtils.showInformationDialog("Restauration", null, "Restauration effectuée avec succès.\nL'application va désormais s'arrêter.", () -> {
-                    });
+                    DialogUtils.showInformationDialog("Restauration", null, "Restauration effectuée avec succès.\nL'application va désormais s'arrêter.");
                 } else {
                     LOGGER.error("DB not restored");
-                    DialogUtils.showErrorDialog("Restauration", null, "Erreur lors de la restauration de la sauvegarde.\nVeuillez contacter un administrateur.", () -> {
-                    });
+                    DialogUtils.showErrorDialog("Restauration", null, "Erreur lors de la restauration de la sauvegarde.\nVeuillez contacter un administrateur.");
                 }
                 shutdownService.shutdown();
             }
