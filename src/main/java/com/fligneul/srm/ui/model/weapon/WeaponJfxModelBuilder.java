@@ -3,6 +3,9 @@ package com.fligneul.srm.ui.model.weapon;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Weapon model builder for JavaFX views
+ */
 public class WeaponJfxModelBuilder {
     private Integer id;
     private String name;

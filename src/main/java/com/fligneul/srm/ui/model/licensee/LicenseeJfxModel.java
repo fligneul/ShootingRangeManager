@@ -1,5 +1,6 @@
 package com.fligneul.srm.ui.model.licensee;
 
+import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -7,35 +8,46 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Licensee model for JavaFX views
+ */
 public class LicenseeJfxModel {
     public static int DEFAULT_ID = -1;
 
     private final int id;
-    private final StringProperty licenceNumber = new SimpleStringProperty("");
-    private final StringProperty firstName = new SimpleStringProperty("");
-    private final StringProperty lastName = new SimpleStringProperty("");
-    private final StringProperty maidenName = new SimpleStringProperty("");
-    private final StringProperty sex = new SimpleStringProperty("");
+    private final StringProperty licenceNumber = new SimpleStringProperty(EMPTY);
+    private final StringProperty firstName = new SimpleStringProperty(EMPTY);
+    private final StringProperty lastName = new SimpleStringProperty(EMPTY);
+    private final StringProperty maidenName = new SimpleStringProperty(EMPTY);
+    private final StringProperty sex = new SimpleStringProperty(EMPTY);
     private final ObjectProperty<LocalDate> dateOfBirth = new SimpleObjectProperty<>(LocalDate.EPOCH);
-    private final StringProperty placeOfBirth = new SimpleStringProperty("");
-    private final StringProperty departmentOfBirth = new SimpleStringProperty("");
-    private final StringProperty countryOfBirth = new SimpleStringProperty("");
-    private final StringProperty address = new SimpleStringProperty("");
-    private final StringProperty zipCode = new SimpleStringProperty("");
-    private final StringProperty city = new SimpleStringProperty("");
-    private final StringProperty email = new SimpleStringProperty("");
-    private final StringProperty phoneNumber = new SimpleStringProperty("");
-    private final StringProperty licenceState = new SimpleStringProperty("");
-    private final ObjectProperty<LocalDate> firstLicenceDate = new SimpleObjectProperty<>(LocalDate.EPOCH);
-    private final StringProperty season = new SimpleStringProperty("");
-    private final StringProperty ageCategory = new SimpleStringProperty("");
+    private final StringProperty placeOfBirth = new SimpleStringProperty(EMPTY);
+    private final StringProperty departmentOfBirth = new SimpleStringProperty(EMPTY);
+    private final StringProperty countryOfBirth = new SimpleStringProperty(EMPTY);
+    private final StringProperty address = new SimpleStringProperty(EMPTY);
+    private final StringProperty zipCode = new SimpleStringProperty(EMPTY);
+    private final StringProperty city = new SimpleStringProperty(EMPTY);
+    private final StringProperty email = new SimpleStringProperty(EMPTY);
+    private final StringProperty phoneNumber = new SimpleStringProperty(EMPTY);
+    private final StringProperty licenceState = new SimpleStringProperty(EMPTY);
+    private final ObjectProperty<LocalDate> medicalCertificateDate = new SimpleObjectProperty<>();
+    private final ObjectProperty<LocalDate> idCardDate = new SimpleObjectProperty<>();
+    private final BooleanProperty idPhoto = new SimpleBooleanProperty(false);
+    private final ObjectProperty<LocalDate> firstLicenceDate = new SimpleObjectProperty<>();
+    private final StringProperty season = new SimpleStringProperty(EMPTY);
+    private final StringProperty ageCategory = new SimpleStringProperty(EMPTY);
     private final BooleanProperty handisport = new SimpleBooleanProperty(false);
     private final BooleanProperty blacklisted = new SimpleBooleanProperty(false);
+    private final ObjectProperty<ShootingLogbookJfxModel> shootingLogbook = new SimpleObjectProperty<>();
 
-
-    protected LicenseeJfxModel(int id, String firstName, String lastName, LocalDate dateOfBirth) {
+    protected LicenseeJfxModel(int id, @NotBlank String firstName, @NotBlank String lastName, @NotNull LocalDate dateOfBirth) {
         this.id = id;
         this.firstName.set(firstName);
         this.lastName.set(lastName);
@@ -226,7 +238,43 @@ public class LicenseeJfxModel {
         this.licenceState.set(licenceState);
     }
 
-    public LocalDate getFirstLicenceDate() {
+    public @Null LocalDate getMedicalCertificateDate() {
+        return medicalCertificateDate.get();
+    }
+
+    public ObjectProperty<LocalDate> medicalCertificateDateProperty() {
+        return medicalCertificateDate;
+    }
+
+    public void setMedicalCertificateDate(final LocalDate medicalCertificateDate) {
+        this.medicalCertificateDate.set(medicalCertificateDate);
+    }
+
+    public @Null LocalDate getIdCardDate() {
+        return idCardDate.get();
+    }
+
+    public ObjectProperty<LocalDate> idCardDateProperty() {
+        return idCardDate;
+    }
+
+    public void setIdCardDate(final LocalDate idCardDate) {
+        this.idCardDate.set(idCardDate);
+    }
+
+    public boolean hasIdPhoto() {
+        return idPhoto.get();
+    }
+
+    public BooleanProperty idPhotoProperty() {
+        return idPhoto;
+    }
+
+    public void setIdPhoto(final boolean hasIdPhoto) {
+        this.idPhoto.set(hasIdPhoto);
+    }
+
+    public @Null LocalDate getFirstLicenceDate() {
         return firstLicenceDate.get();
     }
 
@@ -284,6 +332,18 @@ public class LicenseeJfxModel {
 
     public void setBlacklisted(final boolean blacklisted) {
         this.blacklisted.set(blacklisted);
+    }
+
+    public ShootingLogbookJfxModel getShootingLogbook() {
+        return shootingLogbook.get();
+    }
+
+    public ObjectProperty<ShootingLogbookJfxModel> shootingLogbookProperty() {
+        return shootingLogbook;
+    }
+
+    public void setShootingLogbook(ShootingLogbookJfxModel shootingLogbook) {
+        this.shootingLogbook.set(shootingLogbook);
     }
 
     @Override

@@ -1,6 +1,11 @@
 package com.fligneul.srm.ui.node.history;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.ValidatedTextField;
+import com.fligneul.srm.ui.component.ValidationUtils;
+import com.fligneul.srm.ui.converter.FiringPointConverter;
+import com.fligneul.srm.ui.converter.FiringPostConverter;
+import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
@@ -9,7 +14,7 @@ import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
-import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
+import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
 import com.fligneul.srm.ui.service.status.StatusServiceToJfxModel;
@@ -29,9 +34,15 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TIME_FORMATTER;
+
+/**
+ * Presence edit node for history view
+ */
 public class HistoryEditNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(HistoryEditNode.class);
     private static final String FXML_PATH = "historyEdit.fxml";
@@ -51,16 +62,15 @@ public class HistoryEditNode extends VBox {
     @FXML
     private ComboBox<StatusJfxModel> statusComboBox;
     @FXML
-    private TextField startTimeTextField;
-
+    private ValidatedTextField<LocalTime> startTimeTextField;
 
     private final LocalDate localDate;
-    private AttendanceServiceToJfxModel attendanceServiceToJfxModel;
+    private HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel;
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
 
     private LicenseePresenceJfxModel currentLicenseePresenceJfxModel;
 
-    private LocalTimeStringConverter timeStringConverter = new LocalTimeStringConverter(DateTimeFormatter.ofPattern("HH:mm"), DateTimeFormatter.ofPattern("HH:mm"));
+    private final LocalTimeStringConverter timeStringConverter = new LocalTimeStringConverter(TIME_FORMATTER, TIME_FORMATTER);
 
     public HistoryEditNode(final LocalDate localDate, final LicenseePresenceJfxModel licenseePresenceJfxModel) {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -74,65 +84,51 @@ public class HistoryEditNode extends VBox {
         this(localDate, null);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param historyAttendanceServiceToJfxModel
+     *         service to jfx model for history attendance
+     * @param firingPointService
+     *         service to jfx model for firing point
+     * @param attendanceSelectionService
+     *         selection service for the current licensee
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     * @param weaponService
+     *         service to jfx model for weapon
+     * @param statusService
+     *         service to jfx model for status
+     */
     @Inject
-    public void injectDependencies(final AttendanceServiceToJfxModel attendanceServiceToJfxModel,
-                                   FiringPointServiceToJfxModel firingPointService,
-                                   AttendanceSelectionService attendanceSelectionService,
-                                   LicenseeServiceToJfxModel licenseeServiceToJfxModel,
-                                   WeaponServiceToJfxModel weaponService,
-                                   StatusServiceToJfxModel statusService) {
-        this.attendanceServiceToJfxModel = attendanceServiceToJfxModel;
+    public void injectDependencies(final HistoryAttendanceServiceToJfxModel historyAttendanceServiceToJfxModel,
+                                   final FiringPointServiceToJfxModel firingPointService,
+                                   final AttendanceSelectionService attendanceSelectionService,
+                                   final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
+                                   final WeaponServiceToJfxModel weaponService,
+                                   final StatusServiceToJfxModel statusService) {
+        this.historyAttendanceServiceToJfxModel = historyAttendanceServiceToJfxModel;
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
 
-        firingPointComboBox.setItems(firingPointService.getFiringPointList());
-        firingPointComboBox.setConverter(new StringConverter<FiringPointJfxModel>() {
-            @Override
-            public String toString(FiringPointJfxModel firingPointJfxModel) {
-                return Optional.ofNullable(firingPointJfxModel).map(FiringPointJfxModel::getName).orElse("");
-            }
+        startTimeTextField.setValidator(ValidationUtils.validateRequiredTime());
 
-            @Override
-            public FiringPointJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
+        firingPointComboBox.setItems(firingPointService.getFiringPointList());
+        firingPointComboBox.setConverter(new FiringPointConverter());
         firingPointComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
             if (newV != null) {
                 firingPostComboBox.setItems(newV.getPosts());
                 firingPostComboBox.setDisable(newV.getPosts().isEmpty());
                 firingPostComboBox.requestFocus();
-                saveButton.setDisable(false);
             } else {
                 firingPostComboBox.setItems(FXCollections.emptyObservableList());
                 firingPostComboBox.setDisable(true);
-                saveButton.setDisable(true);
             }
         });
 
-        firingPostComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(FiringPostJfxModel firingPostJfxModel) {
-                return Optional.ofNullable(firingPostJfxModel).map(FiringPostJfxModel::getName).orElse("");
-            }
-
-            @Override
-            public FiringPostJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
+        firingPostComboBox.setConverter(new FiringPostConverter());
 
         weaponComboBox.setItems(weaponService.getWeaponList());
-        weaponComboBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(WeaponJfxModel weaponJfxModel) {
-                return Optional.ofNullable(weaponJfxModel).map(model -> model.getIdentificationNumber() + " - " + model.getName()).orElse("");
-            }
-
-            @Override
-            public WeaponJfxModel fromString(String s) {
-                throw new IllegalArgumentException("Should not pass here");
-            }
-        });
+        weaponComboBox.setConverter(new WeaponConverter());
 
         statusComboBox.setItems(statusService.getStatusList());
         statusComboBox.setConverter(new StringConverter<>() {
@@ -147,18 +143,21 @@ public class HistoryEditNode extends VBox {
             }
         });
 
+        saveButton.disableProperty().bind(startTimeTextField.isValidProperty().not()
+                .or(firingPointComboBox.getSelectionModel().selectedItemProperty().isNull()));
+
     }
 
     private void clearComponents() {
         currentLicenseePresenceJfxModel = null;
 
-        licenseeNumberTextField.setText("");
+        licenseeNumberTextField.setText(EMPTY);
         firingPointComboBox.getSelectionModel().clearSelection();
-        stopTimeTextField.setText("");
+        stopTimeTextField.setText(EMPTY);
         firingPostComboBox.getSelectionModel().clearSelection();
         weaponComboBox.getSelectionModel().clearSelection();
         statusComboBox.getSelectionModel().clearSelection();
-        startTimeTextField.setText("");
+        startTimeTextField.setText(EMPTY);
     }
 
     private void updateComponents(LicenseePresenceJfxModel licenseePresenceJfxModel) {
@@ -196,7 +195,7 @@ public class HistoryEditNode extends VBox {
             Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
             Optional.ofNullable(statusComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setStatus);
 
-            attendanceServiceToJfxModel.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
+            historyAttendanceServiceToJfxModel.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
 
             clearComponents();
             closeStage();
@@ -214,7 +213,7 @@ public class HistoryEditNode extends VBox {
         DialogUtils.showConfirmationDialog("Suppression d'un enregistrement", "Supprimer un enregistrement",
                 "Etes-vous sur de vouloir supprimer l'enregistrement sélectionné ?",
                 () -> {
-                    attendanceServiceToJfxModel.deleteLicenseePresence(currentLicenseePresenceJfxModel);
+                    historyAttendanceServiceToJfxModel.deleteLicenseePresence(currentLicenseePresenceJfxModel);
                     clearComponents();
                     closeStage();
                 });

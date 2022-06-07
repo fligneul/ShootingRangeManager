@@ -9,6 +9,9 @@ import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Licensee presence model builder for JavaFX views
+ */
 public class LicenseePresenceJfxModelBuilder {
     private Integer id;
     private LicenseeJfxModel licensee;

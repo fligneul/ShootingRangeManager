@@ -11,6 +11,9 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.time.LocalDateTime;
 
+/**
+ * Licensee presence model for JavaFX views
+ */
 public class LicenseePresenceJfxModel {
     public static int DEFAULT_ID = -1;
 

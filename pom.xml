@@ -30,19 +30,38 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <javafx.version>15.0.1</javafx.version>
-        <guice.version>5.0.1</guice.version>
-        <rxjava3.version>3.1.0</rxjava3.version>
+        <javafx.version>17.0.2</javafx.version>
+        <guice.version>5.1.0</guice.version>
+        <rxjava3.version>3.1.4</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
-        <h2.version>1.4.200</h2.version>
-        <liquibase.version>4.5.0</liquibase.version>
-        <snakeyaml.version>1.29</snakeyaml.version>
-        <jooq.version>3.15.3</jooq.version>
-        <ikonli.version>12.2.0</ikonli.version>
+        <h2.version>2.1.212</h2.version>
+        <liquibase.version>4.9.1</liquibase.version>
+        <snakeyaml.version>1.30</snakeyaml.version>
+        <jooq.version>3.16.5</jooq.version>
+        <ikonli.version>12.3.1</ikonli.version>
         <commons-csv.version>1.9.0</commons-csv.version>
-        <zip4j.version>2.9.0</zip4j.version>
+        <zip4j.version>2.9.1</zip4j.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
 
-        <log4j.version>2.14.1</log4j.version>
+        <!-- LOG -->
+        <log4j.version>2.17.2</log4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
+
+        <!-- MAVEN PLUGIN -->
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
+        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <launch4j-maven-plugin.version>2.1.2</launch4j-maven-plugin.version>
+        <jsign-maven-plugin.version>4.0</jsign-maven-plugin.version>
+        <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+
+        <!-- Unit tests -->
+        <junit-launcher.version>1.8.2</junit-launcher.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <testfx.version>4.0.16-alpha</testfx.version>
+        <mockito.version>4.5.1</mockito.version>
     </properties>
 
     <dependencies>
@@ -103,6 +122,16 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- JOOQ -->
@@ -148,7 +177,19 @@
             <version>${zip4j.version}</version>
         </dependency>
 
+        <!-- Validation -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${validation-api.version}</version>
+        </dependency>
+
         <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -159,6 +200,42 @@
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-liquibase</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- Unit test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-launcher.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>${testfx.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -167,32 +244,37 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>${maven-dependency-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>${maven-jar-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>${maven-assembly-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.akathist.maven.plugins.launch4j</groupId>
                     <artifactId>launch4j-maven-plugin</artifactId>
-                    <version>2.1.2</version>
+                    <version>${launch4j-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>net.jsign</groupId>
                     <artifactId>jsign-maven-plugin</artifactId>
-                    <version>4.0</version>
+                    <version>${jsign-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jooq</groupId>
+                    <artifactId>jooq-codegen-maven</artifactId>
+                    <version>${jooq.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -201,7 +283,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
+                <version>${javafx-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${application.main.class}</mainClass>
                 </configuration>
@@ -243,6 +325,67 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <logging>INFO</logging>
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.extensions.liquibase.LiquibaseDatabase</name>
+                            <properties>
+                                <property>
+                                    <key>rootPath</key>
+                                    <value>${project.basedir}/src/main/resources/com/fligneul/srm/db/</value>
+                                </property>
+                                <property>
+                                    <key>scripts</key>
+                                    <value>
+                                        db.changelog-master.xml
+                                    </value>
+                                </property>
+                                <property>
+                                    <key>includeLiquibaseTables</key>
+                                    <value>false</value>
+                                </property>
+                            </properties>
+                        </database>
+                        <generate>
+                            <deprecated>false</deprecated>
+                        </generate>
+                        <target>
+                            <packageName>com.fligneul.srm.generated.jooq</packageName>
+                            <directory>${project.build.directory}/generated-sources/jooq</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/jooq</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -267,7 +410,8 @@
                                 <configuration>
                                     <headerType>gui</headerType>
                                     <outfile>${project.build.directory}/${application.name}.exe</outfile>
-                                    <jar>${project.build.directory}/${project.build.finalName}.${project.packaging}</jar>
+                                    <jar>${project.build.directory}/${project.build.finalName}.${project.packaging}
+                                    </jar>
                                     <errTitle>${application.name}</errTitle>
                                     <icon>src/main/resources/ShootingRangeManager.ico</icon>
                                     <classPath>
@@ -282,6 +426,9 @@
                                         <minVersion>11</minVersion>
                                         <jdkPreference>preferJre</jdkPreference>
                                         <runtimeBits>64/32</runtimeBits>
+                                        <opts>
+                                            <opt>-Dsrm.data.dir="%ProgramData%/${application.name}"</opt>
+                                        </opts>
                                     </jre>
                                     <splash>
                                         <file>src/main/resources/SplashScreen.bmp</file>
@@ -308,7 +455,6 @@
                     <plugin>
                         <groupId>net.jsign</groupId>
                         <artifactId>jsign-maven-plugin</artifactId>
-                        <version>4.0</version>
                         <executions>
                             <execution>
                                 <goals>

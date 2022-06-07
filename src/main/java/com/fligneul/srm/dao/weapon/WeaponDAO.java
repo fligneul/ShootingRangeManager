@@ -1,8 +1,8 @@
 package com.fligneul.srm.dao.weapon;
 
 import com.fligneul.srm.dao.IDAO;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.WeaponRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.WeaponRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModelBuilder;
@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.jooq.exception.DataAccessException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,18 +20,34 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * DAO for weapon table
+ */
 public class WeaponDAO implements IDAO<WeaponJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(WeaponDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
         this.databaseConnectionService = databaseConnectionService;
     }
 
+    /**
+     * Save a weapon and return the saved value
+     *
+     * @param item
+     *         the model to save
+     * @return the saved object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<WeaponJfxModel> save(final WeaponJfxModel item) {
+    public Optional<WeaponJfxModel> save(@Nonnull final WeaponJfxModel item) {
         try {
             Optional<WeaponJfxModel> optLicensee = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.WEAPON)
@@ -52,6 +69,13 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return a weapon by its id
+     *
+     * @param id
+     *         the id of the desired item
+     * @return the corresponding {@link WeaponJfxModel}, {@code Optional.empty()} if an error occurred
+     */
     @Override
     public Optional<WeaponJfxModel> getById(final int id) {
         try {
@@ -62,6 +86,11 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return all weapon in DB
+     *
+     * @return a list of all {@link WeaponJfxModel}
+     */
     @Override
     public List<WeaponJfxModel> getAll() {
         try {
@@ -73,8 +102,15 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
         return new ArrayList<>();
     }
 
+    /**
+     * Update a weapon and return the updated value
+     *
+     * @param item
+     *         updated item to save
+     * @return the updated object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<WeaponJfxModel> update(final WeaponJfxModel item) {
+    public Optional<WeaponJfxModel> update(@Nonnull final WeaponJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .update(Tables.WEAPON)
@@ -93,12 +129,18 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Delete the provided weapon in DB
+     *
+     * @param item
+     *         item to be deleted
+     */
     @Override
-    public void delete(final WeaponJfxModel obj) {
+    public void delete(@Nonnull final WeaponJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .delete(Tables.WEAPON)
-                    .where(Tables.WEAPON.ID.eq(obj.getId()))
+                    .where(Tables.WEAPON.ID.eq(item.getId()))
                     .execute();
 
             databaseConnectionService.getConnection().commit();

@@ -2,7 +2,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet author="Florian L." id="1">
         <createTable tableName="licensee">
@@ -93,6 +93,45 @@
         </addColumn>
     </changeSet>
     <changeSet author="Florian L." id="3">
+        <addColumn tableName="licensee">
+            <column name="medicalCertificateDate" afterColumn="licenceState" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="idCardDate" afterColumn="medicalCertificateDate" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="idPhoto" afterColumn="idCardDate" type="BOOLEAN"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Florian L." id="4">
+        <createTable tableName="shootingLogbook">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="creationDate" type="DATE"/>
+            <column name="knowledgeCheckDate" type="DATE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="whiteTargetLevel" type="BOOLEAN"/>
+            <column name="licenseeId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_shootingLogbook_licensee_id" references="licensee(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="shootingSession">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="sessionDate" type="DATE"/>
+            <column name="instructorName" type="VARCHAR(100)"/>
+            <column name="shootingLogbookId" type="INT">
+                <constraints foreignKeyName="fk_shootingSession_shootingLogbook_id" references="shootingLogbook(id)"/>
+            </column>
+            <column name="weaponId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_shootingSession_weapon_id" references="weapon(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Florian L." id="4">
         <createTable tableName="status">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true"/>

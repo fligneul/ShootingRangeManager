@@ -1,8 +1,8 @@
 package com.fligneul.srm.dao.range;
 
 import com.fligneul.srm.dao.IDAOWithForeignKey;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.FiringpostRecord;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.FiringpostRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.jooq.exception.DataAccessException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,17 +19,33 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * DAO for firing post table
+ */
 public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(FiringPostDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
         this.databaseConnectionService = databaseConnectionService;
     }
 
-    public Optional<FiringPostJfxModel> save(final int foreignId, final FiringPostJfxModel item) {
+    /**
+     * Save a firing post and return the saved value
+     *
+     * @param item
+     *         the model to save
+     * @return the saved object, {@code Optional.empty()} if an error occurred
+     */
+    public Optional<FiringPostJfxModel> save(final int foreignId, @Nonnull final FiringPostJfxModel item) {
         try {
             Optional<FiringPostJfxModel> optFiringPost = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.FIRINGPOST)
@@ -48,6 +65,13 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return a firing post by its id
+     *
+     * @param id
+     *         the id of the desired item
+     * @return the corresponding {@link FiringPostJfxModel}, {@code Optional.empty()} if an error occurred
+     */
     @Override
     public Optional<FiringPostJfxModel> getById(final int id) {
         try {
@@ -58,6 +82,11 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return all firing post in DB
+     *
+     * @return a list of all {@link FiringPostJfxModel}
+     */
     @Override
     public List<FiringPostJfxModel> getAll() {
         try {
@@ -69,6 +98,13 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
         return new ArrayList<>();
     }
 
+    /**
+     * Return all firing post associated with the provided firing point in DB
+     *
+     * @param pointId
+     *         the firing point id
+     * @return a list of all {@link FiringPostJfxModel} associated with the provided firing point
+     */
     public List<FiringPostJfxModel> getAllByPointId(int pointId) {
         try {
             return internalGet(Tables.FIRINGPOST.FIRINGPOINTID.eq(pointId))
@@ -80,8 +116,15 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
         return new ArrayList<>();
     }
 
+    /**
+     * Update a firing post and return the updated value
+     *
+     * @param item
+     *         updated item to save
+     * @return the updated object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<FiringPostJfxModel> update(final FiringPostJfxModel item) {
+    public Optional<FiringPostJfxModel> update(@Nonnull final FiringPostJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .update(Tables.FIRINGPOST)
@@ -97,8 +140,14 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Delete the provided firing post in DB
+     *
+     * @param item
+     *         item to be deleted
+     */
     @Override
-    public void delete(final FiringPostJfxModel item) {
+    public void delete(@Nonnull final FiringPostJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .delete(Tables.FIRINGPOST)

@@ -11,6 +11,6 @@
         <TableColumn fx:id="firingPostColumn" prefWidth="85" text="Poste de tir" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="weaponColumn" prefWidth="70" text="Arme" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="stopTimeColumn" prefWidth="55" text="Fin" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="exitColumn" style="-fx-alignment: center;"/>
+        <TableColumn fx:id="exitColumn" style="-fx-alignment: center-left;"/>
     </columns>
 </fx:root>

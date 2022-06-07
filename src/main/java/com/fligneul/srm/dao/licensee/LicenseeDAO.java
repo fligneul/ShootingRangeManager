@@ -1,8 +1,9 @@
 package com.fligneul.srm.dao.licensee;
 
 import com.fligneul.srm.dao.IDAO;
-import com.fligneul.srm.jooq.Tables;
-import com.fligneul.srm.jooq.tables.records.LicenseeRecord;
+import com.fligneul.srm.dao.logbook.ShootingLogbookDAO;
+import com.fligneul.srm.generated.jooq.Tables;
+import com.fligneul.srm.generated.jooq.tables.records.LicenseeRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
 import org.jooq.exception.DataAccessException;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,18 +21,37 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * DAO for licensee table
+ */
 public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
+    private ShootingLogbookDAO shootingLogbookDAO;
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param databaseConnectionService
+     *         connection service to the DB
+     */
     @Inject
-    public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
+    public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
+                                   final ShootingLogbookDAO shootingLogbookDAO) {
         this.databaseConnectionService = databaseConnectionService;
+        this.shootingLogbookDAO = shootingLogbookDAO;
     }
 
+    /**
+     * Save a licensee and return the saved value
+     *
+     * @param item
+     *         the model to save
+     * @return the saved object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<LicenseeJfxModel> save(final LicenseeJfxModel item) {
+    public Optional<LicenseeJfxModel> save(@Nonnull final LicenseeJfxModel item) {
         try {
             Optional<LicenseeJfxModel> optLicensee = Optional.ofNullable(databaseConnectionService.getContext()
                             .insertInto(Tables.LICENSEE)
@@ -48,6 +69,9 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                             .set(Tables.LICENSEE.EMAIL, item.getEmail())
                             .set(Tables.LICENSEE.PHONENUMBER, item.getPhoneNumber())
                             .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState())
+                            .set(Tables.LICENSEE.MEDICALCERTIFICATEDATE, item.getMedicalCertificateDate())
+                            .set(Tables.LICENSEE.IDCARDDATE, item.getIdCardDate())
+                            .set(Tables.LICENSEE.IDPHOTO, item.hasIdPhoto())
                             .set(Tables.LICENSEE.FIRSTLICENCEDATE, item.getFirstLicenceDate())
                             .set(Tables.LICENSEE.SEASON, item.getSeason())
                             .set(Tables.LICENSEE.AGECATEGORY, item.getAgeCategory())
@@ -67,6 +91,13 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return a licensee by its id
+     *
+     * @param id
+     *         the id of the desired item
+     * @return the corresponding {@link LicenseeJfxModel}, {@code Optional.empty()} if an error occurred
+     */
     @Override
     public Optional<LicenseeJfxModel> getById(final int id) {
         try {
@@ -77,6 +108,11 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         return Optional.empty();
     }
 
+    /**
+     * Return all licensee in DB
+     *
+     * @return a list of all {@link LicenseeJfxModel}
+     */
     @Override
     public List<LicenseeJfxModel> getAll() {
         try {
@@ -88,47 +124,63 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         return new ArrayList<>();
     }
 
+    /**
+     * Update a licensee and return the updated value
+     *
+     * @param item
+     *         updated item to save
+     * @return the updated object, {@code Optional.empty()} if an error occurred
+     */
     @Override
-    public Optional<LicenseeJfxModel> update(final LicenseeJfxModel licensee) {
+    public Optional<LicenseeJfxModel> update(@Nonnull final LicenseeJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .update(Tables.LICENSEE)
-                    .set(Tables.LICENSEE.LICENCENUMBER, licensee.getLicenceNumber())
-                    .set(Tables.LICENSEE.FIRSTNAME, licensee.getFirstName())
-                    .set(Tables.LICENSEE.LASTNAME, licensee.getLastName())
-                    .set(Tables.LICENSEE.MAIDENNAME, licensee.getMaidenName())
-                    .set(Tables.LICENSEE.DATEOFBIRTH, licensee.getDateOfBirth())
-                    .set(Tables.LICENSEE.PLACEOFBIRTH, licensee.getPlaceOfBirth())
-                    .set(Tables.LICENSEE.DEPARTMENTOFBIRTH, licensee.getDepartmentOfBirth())
-                    .set(Tables.LICENSEE.COUNTRYOFBIRTH, licensee.getCountryOfBirth())
-                    .set(Tables.LICENSEE.ADDRESS, licensee.getAddress())
-                    .set(Tables.LICENSEE.ZIPCODE, licensee.getZipCode())
-                    .set(Tables.LICENSEE.CITY, licensee.getCity())
-                    .set(Tables.LICENSEE.EMAIL, licensee.getEmail())
-                    .set(Tables.LICENSEE.PHONENUMBER, licensee.getPhoneNumber())
-                    .set(Tables.LICENSEE.LICENCESTATE, licensee.getLicenceState())
-                    .set(Tables.LICENSEE.FIRSTLICENCEDATE, licensee.getFirstLicenceDate())
-                    .set(Tables.LICENSEE.SEASON, licensee.getSeason())
-                    .set(Tables.LICENSEE.AGECATEGORY, licensee.getAgeCategory())
-                    .set(Tables.LICENSEE.HANDISPORT, licensee.isHandisport())
-                    .set(Tables.LICENSEE.BLACKLISTED, licensee.isBlacklisted())
-                    .where(Tables.LICENSEE.ID.eq(licensee.getId()))
+                    .set(Tables.LICENSEE.LICENCENUMBER, item.getLicenceNumber())
+                    .set(Tables.LICENSEE.FIRSTNAME, item.getFirstName())
+                    .set(Tables.LICENSEE.LASTNAME, item.getLastName())
+                    .set(Tables.LICENSEE.MAIDENNAME, item.getMaidenName())
+                    .set(Tables.LICENSEE.DATEOFBIRTH, item.getDateOfBirth())
+                    .set(Tables.LICENSEE.PLACEOFBIRTH, item.getPlaceOfBirth())
+                    .set(Tables.LICENSEE.DEPARTMENTOFBIRTH, item.getDepartmentOfBirth())
+                    .set(Tables.LICENSEE.COUNTRYOFBIRTH, item.getCountryOfBirth())
+                    .set(Tables.LICENSEE.ADDRESS, item.getAddress())
+                    .set(Tables.LICENSEE.ZIPCODE, item.getZipCode())
+                    .set(Tables.LICENSEE.CITY, item.getCity())
+                    .set(Tables.LICENSEE.EMAIL, item.getEmail())
+                    .set(Tables.LICENSEE.PHONENUMBER, item.getPhoneNumber())
+                    .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState())
+                    .set(Tables.LICENSEE.MEDICALCERTIFICATEDATE, item.getMedicalCertificateDate())
+                    .set(Tables.LICENSEE.IDCARDDATE, item.getIdCardDate())
+                    .set(Tables.LICENSEE.IDPHOTO, item.hasIdPhoto())
+                    .set(Tables.LICENSEE.FIRSTLICENCEDATE, item.getFirstLicenceDate())
+                    .set(Tables.LICENSEE.SEASON, item.getSeason())
+                    .set(Tables.LICENSEE.AGECATEGORY, item.getAgeCategory())
+                    .set(Tables.LICENSEE.HANDISPORT, item.isHandisport())
+                    .set(Tables.LICENSEE.BLACKLISTED, item.isBlacklisted())
+                    .where(Tables.LICENSEE.ID.eq(item.getId()))
                     .execute();
 
             databaseConnectionService.getConnection().commit();
-            return this.getById(licensee.getId());
+            return this.getById(item.getId());
         } catch (DataAccessException | SQLException e) {
             LOGGER.error("Error during licensee update", e);
         }
         return Optional.empty();
     }
 
+    /**
+     * Delete the provided licensee in DB
+     *
+     * @param item
+     *         item to be deleted
+     */
     @Override
-    public void delete(final LicenseeJfxModel obj) {
+    public void delete(@Nonnull final LicenseeJfxModel item) {
         try {
             databaseConnectionService.getContext()
                     .delete(Tables.LICENSEE)
-                    .where(Tables.LICENSEE.ID.eq(obj.getId()))
+                    .where(Tables.LICENSEE.ID.eq(item.getId()))
                     .execute();
 
             databaseConnectionService.getConnection().commit();
@@ -168,11 +220,15 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         Optional.ofNullable(licenseeRecord.getEmail()).ifPresent(builder::setEmail);
         Optional.ofNullable(licenseeRecord.getPhonenumber()).ifPresent(builder::setPhoneNumber);
         Optional.ofNullable(licenseeRecord.getLicencestate()).ifPresent(builder::setLicenceState);
+        Optional.ofNullable(licenseeRecord.getMedicalcertificatedate()).ifPresent(builder::setMedicalCertificateDate);
+        Optional.ofNullable(licenseeRecord.getIdcarddate()).ifPresent(builder::setIdCardDate);
+        Optional.ofNullable(licenseeRecord.getIdphoto()).ifPresent(builder::setIdPhoto);
         Optional.ofNullable(licenseeRecord.getFirstlicencedate()).ifPresent(builder::setFirstLicenceDate);
         Optional.ofNullable(licenseeRecord.getSeason()).ifPresent(builder::setSeason);
         Optional.ofNullable(licenseeRecord.getAgecategory()).ifPresent(builder::setAgeCategory);
         Optional.ofNullable(licenseeRecord.getHandisport()).ifPresent(builder::setHandisport);
         Optional.ofNullable(licenseeRecord.getBlacklisted()).ifPresent(builder::setBlacklisted);
+        shootingLogbookDAO.getByLicenseeId(licenseeRecord.getId()).ifPresent(builder::setShootingLogbook);
 
         return builder.createLicenseeJfxModel();
     }

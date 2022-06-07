@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.node.utils.InputUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -14,19 +15,25 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
+/**
+ * Licensee selector node for attendance
+ */
 public class AttendanceLicenseeSelectorNode extends StackPane {
     private static final Logger LOGGER = LogManager.getLogger(AttendanceLicenseeSelectorNode.class);
     private static final String FXML_PATH = "licenseeSelector.fxml";
 
     @FXML
-    private TextField licenceNumber;
+    protected TextField licenceNumber;
     @FXML
-    private Button validate;
+    protected Button validate;
     @FXML
-    private Label errorLabel;
+    protected Label errorLabel;
 
     private AttendanceSelectionService attendanceSelectionService;
 
+    /**
+     * Create the node and load the associated FXML file
+     */
     public AttendanceLicenseeSelectorNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
 
@@ -39,6 +46,12 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
         Platform.runLater(() -> licenceNumber.requestFocus());
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param attendanceSelectionService
+     *         selection service for the current licensee
+     */
     @Inject
     public void injectDependencies(final AttendanceSelectionService attendanceSelectionService) {
         this.attendanceSelectionService = attendanceSelectionService;
@@ -50,14 +63,14 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
         try {
-            if (attendanceSelectionService.searchAndSelect(licenceNumber.getText().split("\\|")[0])) {
+            if (attendanceSelectionService.searchAndSelect(InputUtils.parseLicenceNumber(licenceNumber.getText()))) {
                 licenceNumber.clear();
             } else {
                 errorLabel.setText("Aucun licencié enregistré avec ce numéro de licence");
                 errorLabel.setVisible(true);
                 errorLabel.setManaged(true);
             }
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             errorLabel.setText("Numéro de licence invalide");
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);

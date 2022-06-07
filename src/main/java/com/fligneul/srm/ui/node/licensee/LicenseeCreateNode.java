@@ -1,6 +1,9 @@
 package com.fligneul.srm.ui.node.licensee;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.ValidatedDatePicker;
+import com.fligneul.srm.ui.component.ValidatedTextField;
+import com.fligneul.srm.ui.component.ValidationUtils;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
@@ -19,10 +22,17 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Licensee creation node
+ */
 public class LicenseeCreateNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeCreateNode.class);
     private static final String FXML_PATH = "licenseeCreate.fxml";
 
+    @FXML
+    private Button saveButton;
     @FXML
     private Button editButton;
     @FXML
@@ -32,11 +42,11 @@ public class LicenseeCreateNode extends VBox {
     @FXML
     private TextField licenceNumberTextField;
     @FXML
-    private TextField firstnameTextField;
+    private ValidatedTextField<String> firstnameTextField;
     @FXML
-    private TextField lastnameTextField;
+    private ValidatedTextField<String> lastnameTextField;
     @FXML
-    private DatePicker dateOfBirthPicker;
+    private ValidatedDatePicker dateOfBirthPicker;
     @FXML
     private TextField maidenNameTextField;
     @FXML
@@ -67,6 +77,12 @@ public class LicenseeCreateNode extends VBox {
     private TextField seasonTextField;
     @FXML
     private TextField ageCategoryTextField;
+    @FXML
+    private DatePicker medicalCertificateDatePicker;
+    @FXML
+    private DatePicker idCardDatePicker;
+    @FXML
+    private CheckBox idPhotoCheckBox;
 
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
 
@@ -80,23 +96,39 @@ public class LicenseeCreateNode extends VBox {
 
         Optional.ofNullable(licenseeJfxModel).ifPresent(this::updateComponents);
 
-        dateOfBirthPicker.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (!newV) {
-                dateOfBirthPicker.setValue(dateOfBirthPicker.getConverter().fromString(dateOfBirthPicker.getEditor().getText()));
-            }
-        });
-
         firstLicenceDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
             if (!newV) {
                 firstLicenceDatePicker.setValue(firstLicenceDatePicker.getConverter().fromString(firstLicenceDatePicker.getEditor().getText()));
             }
         });
+
+        medicalCertificateDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
+            if (!newV) {
+                medicalCertificateDatePicker.setValue(medicalCertificateDatePicker.getConverter().fromString(medicalCertificateDatePicker.getEditor().getText()));
+            }
+        });
+
+        idCardDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
+            if (!newV) {
+                idCardDatePicker.setValue(idCardDatePicker.getConverter().fromString(idCardDatePicker.getEditor().getText()));
+            }
+        });
+
+        firstnameTextField.setValidator(ValidationUtils.validateRequiredString());
+        lastnameTextField.setValidator(ValidationUtils.validateRequiredString());
+        saveButton.disableProperty().bind(firstnameTextField.isValidProperty().not().or(lastnameTextField.isValidProperty().not()).or(dateOfBirthPicker.isValidProperty().not()));
     }
 
     public LicenseeCreateNode() {
         this(null);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param licenseeServiceToJfxModel
+     *         service to jfx model for licensee
+     */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel) {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
@@ -105,25 +137,28 @@ public class LicenseeCreateNode extends VBox {
     private void clearComponents() {
         currentLicenseeJfxModel = null;
 
-        licenceNumberTextField.setText("");
-        firstnameTextField.setText("");
-        lastnameTextField.setText("");
-        dateOfBirthPicker.getEditor().setText("");
-        maidenNameTextField.setText("");
-        placeOfBirthTextField.setText("");
-        departmentOfBirthTextField.setText("");
-        countryOfBirthTextField.setText("");
-        addressTextField.setText("");
-        zipCodeTextField.setText("");
-        cityTextField.setText("");
-        emailTextField.setText("");
-        phoneNumberTextField.setText("");
-        licenceStateTextField.setText("");
-        firstLicenceDatePicker.getEditor().setText("");
-        seasonTextField.setText("");
-        ageCategoryTextField.setText("");
+        licenceNumberTextField.setText(EMPTY);
+        firstnameTextField.setText(EMPTY);
+        lastnameTextField.setText(EMPTY);
+        dateOfBirthPicker.getEditor().setText(EMPTY);
+        maidenNameTextField.setText(EMPTY);
+        placeOfBirthTextField.setText(EMPTY);
+        departmentOfBirthTextField.setText(EMPTY);
+        countryOfBirthTextField.setText(EMPTY);
+        addressTextField.setText(EMPTY);
+        zipCodeTextField.setText(EMPTY);
+        cityTextField.setText(EMPTY);
+        emailTextField.setText(EMPTY);
+        phoneNumberTextField.setText(EMPTY);
+        licenceStateTextField.setText(EMPTY);
+        firstLicenceDatePicker.getEditor().setText(EMPTY);
+        seasonTextField.setText(EMPTY);
+        ageCategoryTextField.setText(EMPTY);
+        medicalCertificateDatePicker.getEditor().setText(EMPTY);
+        idCardDatePicker.getEditor().setText(EMPTY);
         handisportCheckBox.setSelected(false);
         blacklistCheckBox.setSelected(false);
+        idPhotoCheckBox.setSelected(false);
     }
 
     private void updateComponents(LicenseeJfxModel licenseeJfxModel) {
@@ -146,8 +181,11 @@ public class LicenseeCreateNode extends VBox {
         firstLicenceDatePicker.setValue(licenseeJfxModel.getFirstLicenceDate());
         seasonTextField.setText(licenseeJfxModel.getSeason());
         ageCategoryTextField.setText(licenseeJfxModel.getAgeCategory());
+        medicalCertificateDatePicker.setValue(licenseeJfxModel.getMedicalCertificateDate());
+        idCardDatePicker.setValue(licenseeJfxModel.getIdCardDate());
         handisportCheckBox.setSelected(licenseeJfxModel.isHandisport());
         blacklistCheckBox.setSelected(licenseeJfxModel.isBlacklisted());
+        idPhotoCheckBox.setSelected(licenseeJfxModel.hasIdPhoto());
     }
 
     @FXML
@@ -155,11 +193,12 @@ public class LicenseeCreateNode extends VBox {
         final LicenseeJfxModelBuilder builder = new LicenseeJfxModelBuilder();
 
         builder.setId((currentLicenseeJfxModel != null ? currentLicenseeJfxModel.getId() : -1))
-                .setFirstName(firstnameTextField.getText())
-                .setLastName(lastnameTextField.getText())
+                .setFirstName(firstnameTextField.getValidValue())
+                .setLastName(lastnameTextField.getValidValue())
                 .setDateOfBirth(dateOfBirthPicker.getValue())
                 .setHandisport(handisportCheckBox.isSelected())
-                .setBlacklisted(blacklistCheckBox.isSelected());
+                .setBlacklisted(blacklistCheckBox.isSelected())
+                .setIdPhoto(idPhotoCheckBox.isSelected());
 
         Optional.ofNullable(licenceNumberTextField.getText()).ifPresent(builder::setLicenceNumber);
         Optional.ofNullable(maidenNameTextField.getText()).ifPresent(builder::setMaidenName);
@@ -175,6 +214,8 @@ public class LicenseeCreateNode extends VBox {
         Optional.ofNullable(firstLicenceDatePicker.getValue()).ifPresent(builder::setFirstLicenceDate);
         Optional.ofNullable(seasonTextField.getText()).ifPresent(builder::setSeason);
         Optional.ofNullable(ageCategoryTextField.getText()).ifPresent(builder::setAgeCategory);
+        Optional.ofNullable(medicalCertificateDatePicker.getValue()).ifPresent(builder::setMedicalCertificateDate);
+        Optional.ofNullable(idCardDatePicker.getValue()).ifPresent(builder::setIdCardDate);
 
         licenseeServiceToJfxModel.saveLicensee(builder.createLicenseeJfxModel());
         clearComponents();

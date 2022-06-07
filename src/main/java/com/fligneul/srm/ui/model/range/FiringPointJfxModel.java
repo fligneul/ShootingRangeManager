@@ -9,11 +9,16 @@ import javafx.collections.ObservableList;
 
 import java.util.Objects;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * Firing point model for JavaFX views
+ */
 public class FiringPointJfxModel {
     public static int DEFAULT_ID = -1;
 
     private final int id;
-    private final StringProperty name = new SimpleStringProperty("");
+    private final StringProperty name = new SimpleStringProperty(EMPTY);
     private final ListProperty<FiringPostJfxModel> posts = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public FiringPointJfxModel(int id, String name) {

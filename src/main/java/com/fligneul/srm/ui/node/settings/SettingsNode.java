@@ -16,6 +16,10 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
+/**
+ * Setting node
+ * Display a listview of all available setting categories and the setting detail on click
+ */
 public class SettingsNode extends StackPane {
     private static final Logger LOGGER = LogManager.getLogger(SettingsNode.class);
 
@@ -36,8 +40,17 @@ public class SettingsNode extends StackPane {
         });
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param injector
+     *         GUICE injector
+     * @param userViewService
+     *         view available for current user
+     */
     @Inject
-    private void injectDependencies(final Injector injector, final UserViewService userViewService) {
+    public void injectDependencies(final Injector injector,
+                                   final UserViewService userViewService) {
         userViewService.getAccessibleSettingsNode()
                 .subscribe(nodes -> {
                     ObservableList<ISettingsItemNode> settingsItemNodes = FXCollections.observableArrayList();

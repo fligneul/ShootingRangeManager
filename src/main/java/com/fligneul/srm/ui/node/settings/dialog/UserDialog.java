@@ -15,6 +15,11 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * User configuration dialog
+ */
 public class UserDialog extends GridPane {
     private static final Logger LOGGER = LogManager.getLogger(UserDialog.class);
     private static final String FXML_PATH = "userDialog.fxml";
@@ -36,8 +41,14 @@ public class UserDialog extends GridPane {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param userService
+     *         user registered service
+     */
     @Inject
-    private void injectDependencies(UserService userService) {
+    public void injectDependencies(final UserService userService) {
         this.userService = userService;
     }
 
@@ -70,7 +81,7 @@ public class UserDialog extends GridPane {
 
     private void clearError() {
         errorLabel.setManaged(false);
-        errorLabel.setText("");
+        errorLabel.setText(EMPTY);
     }
 
 }

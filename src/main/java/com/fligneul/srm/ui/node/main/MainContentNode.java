@@ -44,9 +44,17 @@ public class MainContentNode extends AnchorPane {
         });
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param authenticationService
+     *         user authentication service
+     * @param roleService
+     *         user role service
+     */
     @Inject
-    public void injectDependencies(AuthenticationService authenticationService,
-                                   RoleService roleService) {
+    public void injectDependencies(final AuthenticationService authenticationService,
+                                   final RoleService roleService) {
         this.authenticationService = authenticationService;
 
         compositeDisposable.add(roleService.getRoleObs().distinctUntilChanged()

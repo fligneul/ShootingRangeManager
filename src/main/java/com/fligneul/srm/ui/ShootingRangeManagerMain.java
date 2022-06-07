@@ -21,8 +21,8 @@ import java.util.Objects;
 public class ShootingRangeManagerMain extends Application {
     private static final String APPLICATION_TITLE = "Shooting Range Manager";
     private static final String APPLICATION_ICON_PNG = "/ShootingRangeManager.png";
-    private static final int APPLICATION_WIDTH = 1280;
-    private static final int APPLICATION_HEIGHT = 720;
+    private static final int APPLICATION_WIDTH = 1200;
+    private static final int APPLICATION_HEIGHT = 675;
 
     private static final AbstractModule[] MODULES = new AbstractModule[]{
             new DatabaseModule(),
@@ -55,7 +55,9 @@ public class ShootingRangeManagerMain extends Application {
         MainNode mainNode = new MainNode();
         primaryStage.setTitle(APPLICATION_TITLE);
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(ShootingRangeManagerMain.class.getResourceAsStream(APPLICATION_ICON_PNG))));
-        primaryStage.setScene(new Scene(mainNode, APPLICATION_WIDTH, APPLICATION_HEIGHT));
+        final Scene scene = new Scene(mainNode, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        scene.getStylesheets().add(ShootingRangeManagerMain.class.getResource("/style.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 }

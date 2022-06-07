@@ -2,6 +2,7 @@ package com.fligneul.srm.ui.node.settings.items;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.service.UserService;
+import com.fligneul.srm.ui.component.cell.list.SimpleListCell;
 import com.fligneul.srm.ui.model.user.UserJfxModel;
 import com.fligneul.srm.ui.node.settings.dialog.UserDialog;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
@@ -11,14 +12,14 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
 
 import javax.inject.Inject;
 
+/**
+ * User configuration node
+ */
 public class UsersSettingsNode extends StackPane implements ISettingsItemNode {
     private static final String FXML_PATH = "usersSettings.fxml";
     private static final String TITLE = "Utilisateurs";
@@ -32,29 +33,20 @@ public class UsersSettingsNode extends StackPane implements ISettingsItemNode {
     public UsersSettingsNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
 
-        userListView.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<UserJfxModel> call(ListView<UserJfxModel> param) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(UserJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText("");
-                        } else {
-                            setText(item.getName());
-                        }
-                    }
-                };
-            }
-        });
+        userListView.setCellFactory(param -> new SimpleListCell<>(UserJfxModel::getName));
         ListViewUtils.addClearOnEmptySelection(userListView);
-        userDeleteButton.disableProperty().bind(userListView.getSelectionModel().selectedItemProperty().isNull());
 
+        userDeleteButton.disableProperty().bind(userListView.getSelectionModel().selectedItemProperty().isNull());
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param userService
+     *         user registered service
+     */
     @Inject
-    private void injectDependencies(UserService userService) {
+    public void injectDependencies(final UserService userService) {
         this.userService = userService;
 
         userService.getUserObs()

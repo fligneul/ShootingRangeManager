@@ -14,6 +14,11 @@ import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
+
+/**
+ * User account setting
+ */
 public class AccountSettingsNode extends StackPane implements ISettingsItemNode {
     private static final String FXML_PATH = "accountSettings.fxml";
     private static final String TITLE = "Mon compte";
@@ -47,8 +52,14 @@ public class AccountSettingsNode extends StackPane implements ISettingsItemNode 
 
     }
 
+    /**
+     * Inject GUICE dependencies
+     *
+     * @param userService
+     *         user registered service
+     */
     @Inject
-    private void injectDependencies(UserService userService) {
+    public void injectDependencies(final UserService userService) {
         this.userService = userService;
     }
 
@@ -65,20 +76,20 @@ public class AccountSettingsNode extends StackPane implements ISettingsItemNode 
             } else {
                 clearError();
                 displayInfo("Mot de passe mis à jour");
-                passwordField.setText("");
-                passwordConfirmField.setText("");
+                passwordField.setText(EMPTY);
+                passwordConfirmField.setText(EMPTY);
             }
         }
     }
 
     private void clearInfo() {
         infoLabel.setManaged(false);
-        infoLabel.setText("");
+        infoLabel.setText(EMPTY);
     }
 
     private void clearError() {
         errorLabel.setManaged(false);
-        errorLabel.setText("");
+        errorLabel.setText(EMPTY);
     }
 
     private void displayInfo(final String infoMessage) {
