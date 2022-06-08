@@ -3,16 +3,19 @@ package com.fligneul.srm.ui.node.attendance;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.converter.FiringPointConverter;
 import com.fligneul.srm.ui.converter.FiringPostConverter;
+import com.fligneul.srm.ui.converter.StatusConverter;
 import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
+import com.fligneul.srm.ui.service.status.StatusServiceToJfxModel;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.collections.FXCollections;
@@ -45,6 +48,8 @@ public class AttendanceNode extends StackPane {
     @FXML
     private ComboBox<WeaponJfxModel> weaponComboBox;
     @FXML
+    private ComboBox<StatusJfxModel> statusComboBox;
+    @FXML
     private Label attendanceListTitle;
     @FXML
     private Button saveButton;
@@ -55,6 +60,7 @@ public class AttendanceNode extends StackPane {
     private AttendanceServiceToJfxModel attendanceService;
     private WeaponServiceToJfxModel weaponService;
     private AttendanceSelectionService attendanceSelectionService;
+    private StatusServiceToJfxModel statusService;
 
     /**
      * Create the node and load the associated FXML file
@@ -74,20 +80,25 @@ public class AttendanceNode extends StackPane {
      *         current day attendance jfx service
      * @param weaponService
      *         weapon jfx service
+     * @param statusService
+     *         status jfx service
      */
     @Inject
     private void injectDependencies(final AttendanceSelectionService attendanceSelectionService,
                                     final FiringPointServiceToJfxModel firingPointService,
                                     final AttendanceServiceToJfxModel attendanceService,
-                                    final WeaponServiceToJfxModel weaponService) {
+                                    final WeaponServiceToJfxModel weaponService,
+                                    final StatusServiceToJfxModel statusService) {
         this.attendanceSelectionService = attendanceSelectionService;
         this.firingPointService = firingPointService;
         this.attendanceService = attendanceService;
         this.weaponService = weaponService;
+        this.statusService = statusService;
 
         initFiringPointComboBox();
         initFiringPostComboBox();
         initWeaponComboBox();
+        initStatusComboBox();
 
         // Display current date
         attendanceListTitle.setText(FormatterUtils.formatDate(LocalDate.now()));
@@ -129,6 +140,11 @@ public class AttendanceNode extends StackPane {
         weaponComboBox.setConverter(new WeaponConverter());
     }
 
+    private void initStatusComboBox() {
+        statusComboBox.setItems(statusService.getStatusList());
+        statusComboBox.setConverter(new StatusConverter());
+    }
+
     @FXML
     private void saveAttendance() {
         LicenseePresenceJfxModelBuilder builder = new LicenseePresenceJfxModelBuilder()
@@ -138,6 +154,7 @@ public class AttendanceNode extends StackPane {
 
         Optional.ofNullable(firingPostComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setFiringPost);
         Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
+        Optional.ofNullable(statusComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setStatus);
 
         attendanceService.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
         attendanceSelectionService.clearSelected();

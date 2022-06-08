@@ -131,4 +131,17 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet author="Florian L." id="5">
+        <createTable tableName="status">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+        <addColumn tableName="attendance">
+            <column name="statusId" afterColumn="weaponId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_attendance_status_id" references="status(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

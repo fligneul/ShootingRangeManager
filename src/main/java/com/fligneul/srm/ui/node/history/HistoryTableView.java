@@ -4,6 +4,7 @@ import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
@@ -35,6 +36,8 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     @FXML
     private TableColumn<LicenseePresenceJfxModel, String> licenseeColumn;
     @FXML
+    private TableColumn<LicenseePresenceJfxModel, String> statusColumn;
+    @FXML
     private TableColumn<LicenseePresenceJfxModel, String> startTimeColumn;
     @FXML
     private TableColumn<LicenseePresenceJfxModel, String> firingPointColumn;
@@ -63,6 +66,7 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     @Inject
     private void injectDependencies(HistoryAttendanceServiceToJfxModel attendanceService) {
         licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
+        statusColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStatus()).map(StatusJfxModel::getName).orElse("-")));
         startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate().format(DateTimeFormatter.ofPattern("HH:mm"))));
         firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
         firingPostColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPost()).map(FiringPostJfxModel::getName).orElse("-")));

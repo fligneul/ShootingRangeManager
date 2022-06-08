@@ -4,7 +4,8 @@
 <?import javafx.scene.control.TableView?>
 <fx:root prefWidth="500.0" type="TableView" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <columns>
-        <TableColumn fx:id="licenseeColumn" prefWidth="200" text="Licencié" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="licenseeColumn" prefWidth="170" text="Licencié" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="statusColumn" prefWidth="120" text="Statut" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="startTimeColumn" prefWidth="55" text="Début" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="firingPointColumn" prefWidth="150" text="Pas de tir" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="firingPostColumn" prefWidth="150" text="Poste de tir" style="-fx-alignment: center-left;"/>

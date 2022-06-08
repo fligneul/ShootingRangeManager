@@ -3,7 +3,9 @@ package com.fligneul.srm.di.module;
 import com.fligneul.srm.ui.node.settings.items.AccountSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.FiringPointSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.GeneralSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.StatusSettingsNode;
 import com.fligneul.srm.ui.node.settings.items.UsersSettingsNode;
+import com.fligneul.srm.ui.node.settings.items.WeaponSettingsNode;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
@@ -11,6 +13,7 @@ import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
+import com.fligneul.srm.ui.service.status.StatusServiceToJfxModel;
 import com.fligneul.srm.ui.service.user.UserViewService;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
 import com.google.inject.AbstractModule;
@@ -26,6 +29,7 @@ public class UIModule extends AbstractModule {
         bind(UserViewService.class).in(Singleton.class);
 
         bind(WeaponServiceToJfxModel.class).in(Singleton.class);
+        bind(StatusServiceToJfxModel.class).in(Singleton.class);
         bind(FiringPointServiceToJfxModel.class).in(Singleton.class);
         bind(LicenseeServiceToJfxModel.class).in(Singleton.class);
         bind(AttendanceServiceToJfxModel.class).in(Singleton.class);
@@ -39,5 +43,7 @@ public class UIModule extends AbstractModule {
         bind(FiringPointSettingsNode.class).in(Singleton.class);
         bind(AccountSettingsNode.class).in(Singleton.class);
         bind(UsersSettingsNode.class).in(Singleton.class);
+        bind(WeaponSettingsNode.class).in(Singleton.class);
+        bind(StatusSettingsNode.class).in(Singleton.class);
     }
 }

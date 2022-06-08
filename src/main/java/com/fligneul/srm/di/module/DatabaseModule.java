@@ -6,6 +6,7 @@ import com.fligneul.srm.dao.logbook.ShootingLogbookDAO;
 import com.fligneul.srm.dao.logbook.ShootingSessionDAO;
 import com.fligneul.srm.dao.range.FiringPointDAO;
 import com.fligneul.srm.dao.range.FiringPostDAO;
+import com.fligneul.srm.dao.status.StatusDAO;
 import com.fligneul.srm.dao.user.UserDAO;
 import com.fligneul.srm.dao.weapon.WeaponDAO;
 import com.fligneul.srm.service.DatabaseConnectionService;
@@ -30,6 +31,7 @@ public class DatabaseModule extends AbstractModule {
         bind(ShootingSessionDAO.class).in(Singleton.class);
         bind(ShootingLogbookDAO.class).in(Singleton.class);
         bind(LicenseeDAO.class).in(Singleton.class);
+        bind(StatusDAO.class).in(Singleton.class);
         bind(AttendanceDAO.class).in(Singleton.class);
     }
 }

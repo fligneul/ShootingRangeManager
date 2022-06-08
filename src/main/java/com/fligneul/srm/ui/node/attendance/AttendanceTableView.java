@@ -4,6 +4,7 @@ import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
@@ -31,6 +32,8 @@ public class AttendanceTableView extends TableView<LicenseePresenceJfxModel> {
 
     @FXML
     private TableColumn<LicenseePresenceJfxModel, String> licenseeColumn;
+    @FXML
+    private TableColumn<LicenseePresenceJfxModel, String> statusColumn;
     @FXML
     private TableColumn<LicenseePresenceJfxModel, String> startTimeColumn;
     @FXML
@@ -62,6 +65,7 @@ public class AttendanceTableView extends TableView<LicenseePresenceJfxModel> {
         setItems(attendanceService.getLicenseePresenceList());
 
         licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
+        statusColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStatus()).map(StatusJfxModel::getName).orElse(EMPTY_HYPHEN)));
         startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatTime(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate())));
         firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
         firingPostColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPost()).map(FiringPostJfxModel::getName).orElse(EMPTY_HYPHEN)));

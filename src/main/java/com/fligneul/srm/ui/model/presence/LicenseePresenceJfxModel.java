@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.model.presence;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -23,6 +24,7 @@ public class LicenseePresenceJfxModel {
     private final ObjectProperty<FiringPointJfxModel> firingPoint = new SimpleObjectProperty<>();
     private final ObjectProperty<FiringPostJfxModel> firingPost = new SimpleObjectProperty<>();
     private final ObjectProperty<WeaponJfxModel> weapon = new SimpleObjectProperty<>();
+    private final ObjectProperty<StatusJfxModel> status = new SimpleObjectProperty<>();
 
     protected LicenseePresenceJfxModel(int id, LicenseeJfxModel licensee, LocalDateTime startDate, FiringPointJfxModel firingPoint) {
         this.id = id;
@@ -98,4 +100,17 @@ public class LicenseePresenceJfxModel {
     public void setWeapon(WeaponJfxModel weapon) {
         this.weapon.set(weapon);
     }
+
+    public StatusJfxModel getStatus() {
+        return status.get();
+    }
+
+    public ReadOnlyObjectProperty<StatusJfxModel> statusProperty() {
+        return status;
+    }
+
+    public void setStatus(StatusJfxModel status) {
+        this.status.set(status);
+    }
+
 }
