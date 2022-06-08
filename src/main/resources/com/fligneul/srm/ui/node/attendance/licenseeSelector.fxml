@@ -17,9 +17,14 @@
         <Label contentDisplay="CENTER" text="Veuillez entrer ou scanner un numéro de licence"/>
         <HBox spacing="5.0" alignment="CENTER">
             <TextField fx:id="licenceNumber"/>
-            <Button fx:id="validate" onAction="#searchLicensee" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false">
+            <Button fx:id="validateButton" onAction="#searchByLicenceNumber" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false">
                 <graphic>
                     <FontIcon iconColor="#757575" iconLiteral="fas-search" iconSize="20"/>
+                </graphic>
+            </Button>
+            <Button fx:id="searchOrRegisterButton" onAction="#searchOrRegister" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false">
+                <graphic>
+                    <FontIcon iconColor="#757575" iconLiteral="fas-user-plus" iconSize="20"/>
                 </graphic>
             </Button>
         </HBox>

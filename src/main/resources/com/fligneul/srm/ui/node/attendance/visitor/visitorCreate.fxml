@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.fligneul.srm.ui.component.ValidatedDatePicker?>
+<?import com.fligneul.srm.ui.component.ValidatedTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<fx:root prefWidth="500.0" type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <children>
+        <GridPane hgap="10.0" vgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="110.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="150.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+
+            <Label text="Création d'une fiche visiteur" alignment="CENTER" GridPane.halignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="0"/>
+
+            <Label text="Prénom" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+            <ValidatedTextField fx:id="firstnameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Nom" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+            <ValidatedTextField fx:id="lastnameTextField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+            <Label text="Date de naissance" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
+            <ValidatedDatePicker fx:id="dateOfBirthPicker" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Email" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
+            <ValidatedTextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Label text="Téléphone portable" GridPane.halignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <ValidatedTextField fx:id="phoneNumberTextField" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+        </GridPane>
+    </children>
+    <padding>
+        <Insets right="10.0"/>
+    </padding>
+</fx:root>
