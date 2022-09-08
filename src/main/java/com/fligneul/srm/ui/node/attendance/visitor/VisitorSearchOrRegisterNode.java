@@ -1,23 +1,24 @@
 package com.fligneul.srm.ui.node.attendance.visitor;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.component.ValidatedDatePicker;
+import com.fligneul.srm.ui.component.ValidatedTextField;
+import com.fligneul.srm.ui.component.ValidationUtils;
+import com.fligneul.srm.ui.component.cell.list.SimpleListCell;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.node.attendance.AttendanceLicenseeSelectorNode;
 import com.fligneul.srm.ui.node.utils.ListViewUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import com.google.common.collect.Iterables;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,11 +37,13 @@ public class VisitorSearchOrRegisterNode extends StackPane {
     private static final int MAX_LICENSEE_RESULT = 5;
 
     @FXML
-    private TextField firstname;
+    private ValidatedTextField<String> firstname;
     @FXML
-    private TextField lastname;
+    private ValidatedTextField<String> lastname;
     @FXML
-    private DatePicker birthDate;
+    private ValidatedDatePicker birthDate;
+    @FXML
+    private Button searchButton;
     @FXML
     private VBox candidateContainer;
     @FXML
@@ -53,6 +56,8 @@ public class VisitorSearchOrRegisterNode extends StackPane {
     private VisitorCreateNode visitorCreateNode;
     @FXML
     private Button createVisitorButton;
+    @FXML
+    private Button saveButton;
     @FXML
     private VBox visitorCreationContainer;
 
@@ -70,25 +75,18 @@ public class VisitorSearchOrRegisterNode extends StackPane {
         noCandidateLabel.visibleProperty().bind(candidateListView.visibleProperty().not());
         noCandidateLabel.managedProperty().bind(noCandidateLabel.visibleProperty());
 
-        candidateListView.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<LicenseeJfxModel> call(ListView<LicenseeJfxModel> param) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(LicenseeJfxModel item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setText("");
-                        } else {
-                            setText(item.getFirstName() + " " + item.getLastName());
-                        }
-                    }
-                };
-            }
-        });
+        firstname.setValidator(ValidationUtils.validateRequiredString());
+        lastname.setValidator(ValidationUtils.validateRequiredString());
+
+        searchButton.disableProperty().bind(firstname.isValidProperty().not().or(lastname.isValidProperty().not()).or(birthDate.isValidProperty().not()));
+
+        candidateListView.setCellFactory(param -> new SimpleListCell<>(licenseeJfxModel -> licenseeJfxModel.getFirstName() + " " + licenseeJfxModel.getLastName()));
+
         ListViewUtils.addClearOnEmptySelection(candidateListView);
 
         validateCandidateButton.disableProperty().bind(candidateListView.getSelectionModel().selectedItemProperty().isNull());
+        createVisitorButton.disableProperty().bind(candidateListView.getSelectionModel().selectedItemProperty().isNotNull());
+        saveButton.disableProperty().bind(visitorCreateNode.isValid().not());
     }
 
     /**
@@ -129,26 +127,37 @@ public class VisitorSearchOrRegisterNode extends StackPane {
 
     @FXML
     private void saveLicensee() {
-        extracted();
+        licenseeServiceToJfxModel.saveLicensee(visitorCreateNode.getCurrentLicenseeJfxModel());
+        attendanceSelectionService.select(Iterables.getLast(licenseeServiceToJfxModel.getLicenseeList()));
+        closeDialog();
     }
 
     @FXML
     private void cancel() {
-        extracted();
+        closeDialog();
     }
 
-    private void extracted() {
+    private void closeDialog() {
         Stage stage = (Stage) getScene().getWindow();
         stage.close();
     }
 
     @FXML
     private void validateCandidate() {
-        extracted();
+        attendanceSelectionService.select(candidateListView.getSelectionModel().getSelectedItem());
+        closeDialog();
     }
 
     @FXML
     private void createVisitor() {
+        searchButton.disableProperty().unbind();
+        searchButton.setDisable(true);
+        validateCandidateButton.disableProperty().unbind();
+        validateCandidateButton.setDisable(true);
+        createVisitorButton.disableProperty().unbind();
+        createVisitorButton.setDisable(true);
+        candidateListView.setDisable(true);
+
         visitorCreationContainer.setVisible(true);
         visitorCreationContainer.setManaged(true);
 

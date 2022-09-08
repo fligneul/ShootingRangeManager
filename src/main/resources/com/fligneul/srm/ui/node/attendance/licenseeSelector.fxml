@@ -24,7 +24,7 @@
             </Button>
             <Button fx:id="searchOrRegisterButton" onAction="#searchOrRegister" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false">
                 <graphic>
-                    <FontIcon iconColor="#757575" iconLiteral="fas-user-plus" iconSize="20"/>
+                    <FontIcon iconColor="#757575" iconLiteral="fas-user" iconSize="20"/>
                 </graphic>
             </Button>
         </HBox>

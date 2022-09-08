@@ -7,7 +7,9 @@ import com.fligneul.srm.ui.component.ValidationUtils;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class VisitorCreateNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(VisitorCreateNode.class);
@@ -27,21 +30,17 @@ public class VisitorCreateNode extends VBox {
     @FXML
     protected ValidatedDatePicker dateOfBirthPicker;
     @FXML
-    protected ValidatedTextField<String> emailTextField;
+    protected TextField emailTextField;
     @FXML
-    protected ValidatedTextField<String> phoneNumberTextField;
+    protected TextField phoneNumberTextField;
 
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
-
-    private LicenseeJfxModel currentLicenseeJfxModel;
 
     public VisitorCreateNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
 
         firstnameTextField.setValidator(ValidationUtils.validateRequiredString());
         lastnameTextField.setValidator(ValidationUtils.validateRequiredString());
-        emailTextField.setValidator(ValidationUtils.validateRequiredEmail());
-        phoneNumberTextField.setValidator(ValidationUtils.validateRequiredPhoneNumber());
     }
 
     @Inject
@@ -50,7 +49,7 @@ public class VisitorCreateNode extends VBox {
     }
 
     private void clearComponents() {
-        currentLicenseeJfxModel = null;
+
     }
 
     @FXML
@@ -77,5 +76,28 @@ public class VisitorCreateNode extends VBox {
         firstnameTextField.setText(firstname);
         lastnameTextField.setText(lastname);
         dateOfBirthPicker.setValue(birthDate);
+    }
+
+    public LicenseeJfxModel getCurrentLicenseeJfxModel() {
+        LicenseeJfxModelBuilder builder = new LicenseeJfxModelBuilder();
+        builder.setFirstName(firstnameTextField.getValidValue());
+        builder.setLastName(lastnameTextField.getValidValue());
+        builder.setDateOfBirth(dateOfBirthPicker.getValue());
+
+        Optional.ofNullable(phoneNumberTextField.getText())
+                .map(ValidationUtils.validateRequiredPhoneNumber())
+                .ifPresent(
+                        builder::setPhoneNumber);
+        Optional.ofNullable(emailTextField.getText())
+                .map(ValidationUtils.validateRequiredEmail())
+                .ifPresent(
+                        builder::setEmail);
+        return builder.createLicenseeJfxModel();
+    }
+
+    public BooleanBinding isValid() {
+        return firstnameTextField.isValidProperty()
+                .and(lastnameTextField.isValidProperty())
+                .and(dateOfBirthPicker.isValidProperty());
     }
 }

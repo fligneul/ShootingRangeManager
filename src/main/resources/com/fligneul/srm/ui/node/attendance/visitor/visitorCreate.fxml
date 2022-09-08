@@ -4,6 +4,7 @@
 <?import com.fligneul.srm.ui.component.ValidatedTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -12,7 +13,7 @@
     <children>
         <GridPane hgap="10.0" vgap="10.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="110.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="120.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
@@ -34,9 +35,9 @@
             <ValidatedDatePicker fx:id="dateOfBirthPicker" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
             <Label text="Email" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
-            <ValidatedTextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             <Label text="Téléphone portable" GridPane.halignment="RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-            <ValidatedTextField fx:id="phoneNumberTextField" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+            <TextField fx:id="phoneNumberTextField" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
         </GridPane>
     </children>
     <padding>

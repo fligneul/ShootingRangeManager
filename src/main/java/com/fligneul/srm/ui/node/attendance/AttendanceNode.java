@@ -113,7 +113,8 @@ public class AttendanceNode extends StackPane {
                 });
 
         // Ensure all required value are set
-        saveButton.disableProperty().bind(firingPointComboBox.getSelectionModel().selectedItemProperty().isNull());
+        saveButton.disableProperty().bind(firingPointComboBox.getSelectionModel().selectedItemProperty().isNull()
+                .or(statusComboBox.getSelectionModel().selectedItemProperty().isNull()));
     }
 
     private void initFiringPointComboBox() {
@@ -143,6 +144,7 @@ public class AttendanceNode extends StackPane {
     private void initStatusComboBox() {
         statusComboBox.setItems(statusService.getStatusList());
         statusComboBox.setConverter(new StatusConverter());
+        statusComboBox.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -158,10 +160,21 @@ public class AttendanceNode extends StackPane {
 
         attendanceService.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
         attendanceSelectionService.clearSelected();
+        clearUserInput();
     }
 
     @FXML
     private void clearAttendance() {
         attendanceSelectionService.clearSelected();
+        clearUserInput();
+    }
+
+    private void clearUserInput() {
+        firingPointComboBox.getSelectionModel().clearSelection();
+        firingPostComboBox.getSelectionModel().clearSelection();
+        weaponComboBox.getSelectionModel().clearSelection();
+        statusComboBox.getSelectionModel().clearSelection();
+
+        statusComboBox.getSelectionModel().selectFirst();
     }
 }
