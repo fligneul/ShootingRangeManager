@@ -74,7 +74,7 @@ class AttendanceTableViewTest {
         WaitForAsyncUtils.waitForFxEvents();
 
         FxAssert.verifyThat(attendanceTableView, TableViewMatchers.hasNumRows(2));
-        FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(0, "FIRSTNAME_1 LASTNAME_1", "12:30", "TEST_1", "-", "-", "14:30"));
-        FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(1, "FIRSTNAME_2 LASTNAME_2", "15:30", "TEST_2", "TEST_2_1", "TEST_WEAPON", "-"));
+        FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(0, "FIRSTNAME_1 LASTNAME_1", "-", "12:30", "TEST_1", "-", "-", "14:30"));
+        FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(1, "FIRSTNAME_2 LASTNAME_2", "-", "15:30", "TEST_2", "TEST_2_1", "TEST_WEAPON", "-"));
     }
 }
