@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -18,15 +19,25 @@
     </padding>
     <HBox>
         <VBox alignment="TOP_CENTER" maxWidth="250.0" minWidth="250.0" spacing="10.0">
+            <padding>
+                <Insets right="5.0" bottom="5.0"/>
+            </padding>
             <Label text="Liste des licenciés">
                 <font>
                     <Font size="16.0"/>
                 </font>
             </Label>
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <FontIcon iconColor="#757575" iconLiteral="fas-search" iconSize="18"/>
+                <TextField fx:id="licenseeFilterTextField" HBox.hgrow="ALWAYS"/>
+                <Button maxHeight="24.0" maxWidth="24.0" minHeight="24.0" minWidth="24.0" mnemonicParsing="false"
+                        onAction="#clearFilter">
+                    <graphic>
+                        <FontIcon iconColor="#757575" iconLiteral="fas-times" iconSize="20"/>
+                    </graphic>
+                </Button>
+            </HBox>
             <LicenseeListView fx:id="licenseeListView" VBox.vgrow="ALWAYS">
-                <VBox.margin>
-                    <Insets right="5.0"/>
-                </VBox.margin>
             </LicenseeListView>
             <HBox alignment="CENTER" spacing="40.0">
                 <children>
@@ -43,9 +54,6 @@
                         </graphic>
                     </Button>
                 </children>
-                <VBox.margin>
-                    <Insets bottom="5.0"/>
-                </VBox.margin>
             </HBox>
         </VBox>
         <Separator orientation="VERTICAL"/>
