@@ -144,4 +144,34 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Florian L." id="6">
+        <createTable tableName="targetHolder">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+            <column name="firingPointId" type="INT">
+                <constraints foreignKeyName="fk_targetHolder_firingPoint_id" references="firingPoint(id)"
+                             deleteCascade="true"/>
+            </column>
+        </createTable>
+        <createTable tableName="caliber">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+            <column name="firingPointId" type="INT">
+                <constraints foreignKeyName="fk_caliber_firingPoint_id" references="firingPoint(id)"
+                             deleteCascade="true"/>
+            </column>
+        </createTable>
+        <addColumn tableName="attendance">
+            <column name="targetHolderId" afterColumn="weaponId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_attendance_targetHolder_id" references="targetHolder(id)"/>
+            </column>
+            <column name="caliberId" afterColumn="weaponId" type="INT">
+                <constraints nullable="true" foreignKeyName="fk_attendance_caliber_id" references="caliber(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

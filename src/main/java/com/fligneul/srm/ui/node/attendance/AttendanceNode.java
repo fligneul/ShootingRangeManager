@@ -1,14 +1,18 @@
 package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.converter.CaliberConverter;
 import com.fligneul.srm.ui.converter.FiringPointConverter;
 import com.fligneul.srm.ui.converter.FiringPostConverter;
 import com.fligneul.srm.ui.converter.StatusConverter;
+import com.fligneul.srm.ui.converter.TargetHolderConverter;
 import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
@@ -49,6 +53,10 @@ public class AttendanceNode extends StackPane {
     private ComboBox<WeaponJfxModel> weaponComboBox;
     @FXML
     private ComboBox<StatusJfxModel> statusComboBox;
+    @FXML
+    private ComboBox<TargetHolderJfxModel> targetHolderComboBox;
+    @FXML
+    private ComboBox<CaliberJfxModel> caliberComboBox;
     @FXML
     private Label attendanceListTitle;
     @FXML
@@ -99,6 +107,8 @@ public class AttendanceNode extends StackPane {
         initFiringPostComboBox();
         initWeaponComboBox();
         initStatusComboBox();
+        initTargetHolderComboBox();
+        initCaliberComboBox();
 
         // Display current date
         attendanceListTitle.setText(FormatterUtils.formatDate(LocalDate.now()));
@@ -124,9 +134,17 @@ public class AttendanceNode extends StackPane {
                 firingPostComboBox.setItems(newV.getPosts());
                 firingPostComboBox.setDisable(newV.getPosts().isEmpty());
                 firingPostComboBox.requestFocus();
+                targetHolderComboBox.setItems(newV.getTargetHolders());
+                targetHolderComboBox.setDisable(newV.getTargetHolders().isEmpty());
+                caliberComboBox.setItems(newV.getCalibers());
+                caliberComboBox.setDisable(newV.getCalibers().isEmpty());
             } else {
                 firingPostComboBox.setItems(FXCollections.emptyObservableList());
                 firingPostComboBox.setDisable(true);
+                targetHolderComboBox.setItems(FXCollections.emptyObservableList());
+                targetHolderComboBox.setDisable(true);
+                caliberComboBox.setItems(FXCollections.emptyObservableList());
+                caliberComboBox.setDisable(true);
             }
         });
     }
@@ -145,6 +163,14 @@ public class AttendanceNode extends StackPane {
         statusComboBox.setConverter(new StatusConverter());
     }
 
+    private void initTargetHolderComboBox() {
+        targetHolderComboBox.setConverter(new TargetHolderConverter());
+    }
+
+    private void initCaliberComboBox() {
+        caliberComboBox.setConverter(new CaliberConverter());
+    }
+
     @FXML
     private void saveAttendance() {
         LicenseePresenceJfxModelBuilder builder = new LicenseePresenceJfxModelBuilder()
@@ -155,6 +181,8 @@ public class AttendanceNode extends StackPane {
         Optional.ofNullable(firingPostComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setFiringPost);
         Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
         Optional.ofNullable(statusComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setStatus);
+        Optional.ofNullable(targetHolderComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setTargetHolder);
+        Optional.ofNullable(caliberComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setCaliber);
 
         attendanceService.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
         attendanceSelectionService.clearSelected();

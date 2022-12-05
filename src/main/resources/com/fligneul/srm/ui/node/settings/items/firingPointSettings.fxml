@@ -29,19 +29,19 @@
         </Label>
         <Separator/>
         <GridPane alignment="CENTER" hgap="10" vgap="10.0" VBox.vgrow="ALWAYS">
-            <Label text="Liste des pas de tir" GridPane.columnIndex="1">
+            <Label text="Liste des pas de tir" GridPane.columnIndex="0">
                 <font>
                     <Font size="14.0"/>
                 </font>
             </Label>
-            <ListView fx:id="firingPointListView" GridPane.columnIndex="1" GridPane.rowIndex="1"
+            <ListView fx:id="firingPointListView" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.rowSpan="5"
                       GridPane.vgrow="ALWAYS">
                 <placeholder>
                     <Label text="Aucun pas de tir enregistré"/>
                 </placeholder>
             </ListView>
-            <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="1" GridPane.halignment="CENTER"
-                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+            <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="0" GridPane.halignment="CENTER"
+                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="6">
                 <children>
                     <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false"
                             onAction="#createFiringPoint">
@@ -64,8 +64,8 @@
                 </children>
             </HBox>
             <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true"
-                       style="-fx-opacity: 0.7;" GridPane.columnIndex="2" GridPane.halignment="CENTER"
-                       GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                       style="-fx-opacity: 0.7;" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                       GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.rowSpan="5">
                 <viewport>
                     <Rectangle2D minX="30.0" minY="30.0"/>
                 </viewport>
@@ -73,18 +73,18 @@
                     <Image url="@../../../../image/arrow-right-solid.png"/>
                 </image>
             </ImageView>
-            <Label text="Liste des postes de tir" GridPane.columnIndex="3">
+            <Label text="Liste des postes de tir" GridPane.columnIndex="2">
                 <font>
                     <Font size="14.0"/>
                 </font>
             </Label>
-            <ListView fx:id="firingPostListView" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+            <ListView fx:id="firingPostListView" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                 <placeholder>
                     <Label text="Veuillez sélectionner un pas de tir"/>
                 </placeholder>
             </ListView>
-            <HBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER"
-                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+            <VBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER"
+                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                 <children>
                     <Button fx:id="firingPostCreateButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
                             minWidth="30.0" mnemonicParsing="false" onAction="#createFiringPost">
@@ -105,18 +105,85 @@
                         </graphic>
                     </Button>
                 </children>
-            </HBox>
+            </VBox>
+            <Label text="Liste des supports de cible" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+            <ListView fx:id="targetHolderListView" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
+                <placeholder>
+                    <Label text="Veuillez sélectionner un pas de tir"/>
+                </placeholder>
+            </ListView>
+            <VBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER"
+                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
+                <children>
+                    <Button fx:id="targetHolderCreateButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#createTargetHolder">
+                        <graphic>
+                            <FontIcon iconColor="#43a047" iconLiteral="fas-plus" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="targetHolderEditButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#editTargetHolder">
+                        <graphic>
+                            <FontIcon iconColor="#757575" iconLiteral="fas-edit" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="targetHolderDeleteButton" disable="true" maxHeight="30.0" maxWidth="30.0"
+                            minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#deleteTargetHolder">
+                        <graphic>
+                            <FontIcon iconColor="#e53935" iconLiteral="fas-trash-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                </children>
+            </VBox>
+            <Label text="Liste des calibres autorisés" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                <font>
+                    <Font size="14.0"/>
+                </font>
+            </Label>
+            <ListView fx:id="caliberListView" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
+                <placeholder>
+                    <Label text="Veuillez sélectionner un pas de tir"/>
+                </placeholder>
+            </ListView>
+            <VBox alignment="CENTER" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER"
+                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="5">
+                <children>
+                    <Button fx:id="caliberCreateButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#createCaliber">
+                        <graphic>
+                            <FontIcon iconColor="#43a047" iconLiteral="fas-plus" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="caliberEditButton" maxHeight="30.0" maxWidth="30.0" minHeight="30.0"
+                            minWidth="30.0" mnemonicParsing="false" onAction="#editCaliber">
+                        <graphic>
+                            <FontIcon iconColor="#757575" iconLiteral="fas-edit" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                    <Button fx:id="caliberDeleteButton" disable="true" maxHeight="30.0" maxWidth="30.0"
+                            minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#deleteCaliber">
+                        <graphic>
+                            <FontIcon iconColor="#e53935" iconLiteral="fas-trash-alt" iconSize="20"/>
+                        </graphic>
+                    </Button>
+                </children>
+            </VBox>
             <columnConstraints>
-                <ColumnConstraints minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
                 <ColumnConstraints percentWidth="40.0"/>
                 <ColumnConstraints percentWidth="10.0"/>
-                <ColumnConstraints percentWidth="40.0"/>
-                <ColumnConstraints minWidth="10.0" percentWidth="5.0" prefWidth="100.0"/>
+                <ColumnConstraints percentWidth="45.0"/>
+                <ColumnConstraints percentWidth="5.0"/>
             </columnConstraints>
             <VBox.margin>
-                <Insets top="5.0"/>
+                <Insets top="10" bottom="10" left="20" right="20"/>
             </VBox.margin>
             <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>

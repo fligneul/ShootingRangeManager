@@ -15,13 +15,12 @@
         <GridPane hgap="10.0" vgap="5.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="140.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0"/>
                 <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="110.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
-                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="150.0"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
@@ -39,11 +38,8 @@
 
             <Label text="Date de naissance" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
             <TextField fx:id="dateOfBirthTextField" editable="false" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-            <Label text="Nom de jeune fille" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
-            <TextField fx:id="maidenNameTextField" editable="false" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
-
-            <Label text="Handisport" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
-            <CheckBox fx:id="handisportCheckBox" disable="true" mnemonicParsing="false" style="-fx-opacity: 1;" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <Label text="Handisport" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
+            <CheckBox fx:id="handisportCheckBox" disable="true" mnemonicParsing="false" style="-fx-opacity: 1;" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
 
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0"/>
@@ -74,7 +70,7 @@
                         <Font name="System Bold" size="14.0"/>
                     </font>
                 </Label>
-                <Label text="Etat de la licence" GridPane.rowIndex="2"/>
+                <Label text="Etat" GridPane.rowIndex="2"/>
                 <TextField fx:id="licenceStateTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Label text="Date d'origine" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                 <TextField fx:id="firstLicenceDateTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="2"/>

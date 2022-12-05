@@ -43,8 +43,6 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     @FXML
     protected TextField dateOfBirthTextField;
     @FXML
-    protected TextField maidenNameTextField;
-    @FXML
     protected CheckBox handisportCheckBox;
     @FXML
     protected Label licenceBlacklistLabel;
@@ -100,7 +98,6 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         firstnameTextField.textProperty().unbind();
         lastnameTextField.textProperty().unbind();
         dateOfBirthTextField.textProperty().unbind();
-        maidenNameTextField.textProperty().unbind();
         licenceStateTextField.textProperty().unbind();
         firstLicenceDateTextField.textProperty().unbind();
         seasonTextField.textProperty().unbind();
@@ -117,7 +114,6 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         firstnameTextField.setText(EMPTY);
         lastnameTextField.setText(EMPTY);
         dateOfBirthTextField.setText(EMPTY);
-        maidenNameTextField.setText(EMPTY);
         licenceStateTextField.setText(EMPTY);
         firstLicenceDateTextField.setText(EMPTY);
         seasonTextField.setText(EMPTY);
@@ -140,7 +136,6 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         firstnameTextField.textProperty().bind(licenseeJfxModel.firstNameProperty());
         lastnameTextField.textProperty().bind(licenseeJfxModel.lastNameProperty());
         dateOfBirthTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.dateOfBirthProperty()));
-        maidenNameTextField.textProperty().bind(licenseeJfxModel.maidenNameProperty());
         licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
         firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getFirstLicenceDate()), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
