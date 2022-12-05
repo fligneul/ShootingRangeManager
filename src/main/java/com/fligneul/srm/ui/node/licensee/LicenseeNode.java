@@ -8,6 +8,7 @@ import com.fligneul.srm.ui.node.utils.ListViewUtils;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import org.apache.commons.csv.CSVFormat;
@@ -29,6 +30,8 @@ import java.util.Optional;
 public class LicenseeNode extends StackPane {
     private static final String FXML_PATH = "licensee.fxml";
 
+    @FXML
+    private TextField licenseeFilterTextField;
     @FXML
     private LicenseeListView licenseeListView;
     @FXML
@@ -56,6 +59,8 @@ public class LicenseeNode extends StackPane {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
 
         ListViewUtils.addClearOnEmptySelection(licenseeListView);
+
+        licenseeFilterTextField.textProperty().addListener((obs, oldV, newV) -> licenseeListView.setFilter(newV));
     }
 
     @FXML
@@ -110,5 +115,10 @@ public class LicenseeNode extends StackPane {
                 e.printStackTrace();
             }
         }
+    }
+
+    @FXML
+    private void clearFilter() {
+        licenseeFilterTextField.clear();
     }
 }

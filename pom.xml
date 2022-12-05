@@ -30,27 +30,28 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <javafx.version>17.0.2</javafx.version>
+        <javafx.version>18.0.2</javafx.version>
         <guice.version>5.1.0</guice.version>
-        <rxjava3.version>3.1.4</rxjava3.version>
+        <rxjava3.version>3.1.5</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
-        <h2.version>2.1.212</h2.version>
-        <liquibase.version>4.9.1</liquibase.version>
-        <snakeyaml.version>1.30</snakeyaml.version>
-        <jooq.version>3.16.5</jooq.version>
+        <h2.version>2.1.214</h2.version>
+        <liquibase.version>4.12.0</liquibase.version>
+        <snakeyaml.version>1.32</snakeyaml.version>
+        <jooq.version>3.16.10</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
         <commons-csv.version>1.9.0</commons-csv.version>
-        <zip4j.version>2.9.1</zip4j.version>
+        <zip4j.version>2.11.2</zip4j.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <commons-text.version>1.9</commons-text.version>
         <commons-validator.version>1.4.1</commons-validator.version>
 
         <!-- LOG -->
-        <log4j.version>2.17.2</log4j.version>
-        <slf4j.version>1.7.36</slf4j.version>
+        <log4j.version>2.19.0</log4j.version>
+        <slf4j.version>2.0.1</slf4j.version>
 
         <!-- MAVEN PLUGIN -->
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
@@ -60,10 +61,10 @@
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
 
         <!-- Unit tests -->
-        <junit-launcher.version>1.8.2</junit-launcher.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <junit-launcher.version>1.9.0</junit-launcher.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
         <testfx.version>4.0.16-alpha</testfx.version>
-        <mockito.version>4.5.1</mockito.version>
+        <mockito.version>4.8.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -111,6 +112,10 @@
                     <groupId>org.openjfx</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>rxjava</artifactId>
+                    <groupId>io.reactivex.rxjava3</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -133,6 +138,14 @@
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>commons-lang3</artifactId>
+                    <groupId>org.apache.commons</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>snakeyaml</artifactId>
+                    <groupId>org.yaml</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -141,6 +154,12 @@
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
             <version>${jooq.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>reactive-streams</artifactId>
+                    <groupId>org.reactivestreams</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
@@ -151,6 +170,16 @@
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta-extensions-liquibase</artifactId>
             <version>${jooq.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>liquibase-core</artifactId>
+                    <groupId>org.liquibase</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>h2</artifactId>
+                    <groupId>com.h2database</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
@@ -218,13 +247,25 @@
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
             <version>${log4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-liquibase</artifactId>
             <version>${log4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>liquibase-core</artifactId>
+                    <groupId>org.liquibase</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Unit test -->
@@ -261,6 +302,15 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <forkCount>0</forkCount>
+                        <useSystemClassLoader>false</useSystemClassLoader>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
