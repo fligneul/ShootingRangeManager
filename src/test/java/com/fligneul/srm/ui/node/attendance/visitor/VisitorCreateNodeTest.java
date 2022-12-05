@@ -44,8 +44,6 @@ class VisitorCreateNodeTest {
         FxAssert.verifyThat(visitorCreateNode.firstnameTextField, PseudoClassMatchers.withPseudoClass("error"));
         FxAssert.verifyThat(visitorCreateNode.lastnameTextField, PseudoClassMatchers.withPseudoClass("error"));
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker, PseudoClassMatchers.withPseudoClass("error"));
-        FxAssert.verifyThat(visitorCreateNode.emailTextField, PseudoClassMatchers.withPseudoClass("error"));
-        FxAssert.verifyThat(visitorCreateNode.phoneNumberTextField, PseudoClassMatchers.withPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.firstnameTextField).write("TEST_FIRSTNAME");
         FxAssert.verifyThat(visitorCreateNode.firstnameTextField, PseudoClassMatchers.withoutPseudoClass("error"));
@@ -55,12 +53,6 @@ class VisitorCreateNodeTest {
 
         fxRobot.clickOn(visitorCreateNode.dateOfBirthPicker).write("01/01/2000");
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker, PseudoClassMatchers.withoutPseudoClass("error"));
-
-        fxRobot.clickOn(visitorCreateNode.emailTextField).write("test@test.com");
-        FxAssert.verifyThat(visitorCreateNode.emailTextField, PseudoClassMatchers.withoutPseudoClass("error"));
-
-        fxRobot.clickOn(visitorCreateNode.phoneNumberTextField).write("0123456789");
-        FxAssert.verifyThat(visitorCreateNode.phoneNumberTextField, PseudoClassMatchers.withoutPseudoClass("error"));
     }
 }
 
