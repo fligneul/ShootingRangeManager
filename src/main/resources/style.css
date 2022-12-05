@@ -3,6 +3,18 @@
 	-fx-focus-color: red;
 }
 
+.text-field:error {
+	-fx-text-box-border: #FF0000;
+	-fx-focus-color: #FF0000;
+	-fx-background-color: #FF000066;
+}
+
+.text-field:warning {
+	-fx-text-box-border: #FFA500;
+	-fx-focus-color: #FFA500;
+    -fx-background-color: #FFA50066;
+}
+
 .validated-text-field:error:focused {
 	-fx-focus-color: #d35244;
 	-fx-faint-focus-color: #d3524422;
