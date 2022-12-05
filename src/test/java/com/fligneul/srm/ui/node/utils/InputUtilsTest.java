@@ -17,6 +17,7 @@ public class InputUtilsTest {
         assertEquals("01234567", InputUtils.parseLicenceNumber("01234567|2021/2022"));
         assertEquals("01234567", InputUtils.parseLicenceNumber("01234567-2021/2022"));
         assertEquals("01234567", InputUtils.parseLicenceNumber("01234567*2021§2022"));
+        assertEquals("01234567", InputUtils.parseLicenceNumber("01234567-2022"));
 
 
         // Invalid format
