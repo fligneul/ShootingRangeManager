@@ -51,7 +51,8 @@ class VisitorCreateNodeTest {
         fxRobot.clickOn(visitorCreateNode.lastnameTextField).write("TEST_LASTNAME");
         FxAssert.verifyThat(visitorCreateNode.lastnameTextField, PseudoClassMatchers.withoutPseudoClass("error"));
 
-        fxRobot.clickOn(visitorCreateNode.dateOfBirthPicker.getEditor()).write("01/01/2000");
+        fxRobot.clickOn(visitorCreateNode.dateOfBirthPicker.getEditor());
+        visitorCreateNode.dateOfBirthPicker.getEditor().setText("01/01/2000");
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker, PseudoClassMatchers.withoutPseudoClass("error"));
     }
 }
