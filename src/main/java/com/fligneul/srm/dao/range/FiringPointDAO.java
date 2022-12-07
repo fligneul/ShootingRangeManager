@@ -28,6 +28,8 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
 
     private DatabaseConnectionService databaseConnectionService;
     private FiringPostDAO firingPostDAO;
+    private TargetHolderDAO targetHolderDAO;
+    private CaliberDAO caliberDAO;
 
     /**
      * Inject GUICE dependencies
@@ -36,12 +38,20 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
      *         connection service to the DB
      * @param firingPostDAO
      *         DAO for firing post table
+     * @param targetHolderDAO
+     *         DAO for target holder table
+     * @param caliberDAO
+     *         DAO for calibers table
      */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
-                                   final FiringPostDAO firingPostDAO) {
+                                   final FiringPostDAO firingPostDAO,
+                                   final TargetHolderDAO targetHolderDAO,
+                                   final CaliberDAO caliberDAO) {
         this.databaseConnectionService = databaseConnectionService;
         this.firingPostDAO = firingPostDAO;
+        this.targetHolderDAO = targetHolderDAO;
+        this.caliberDAO = caliberDAO;
     }
 
     /**
@@ -62,7 +72,7 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
                     .map(this::convertToJfxModel);
             databaseConnectionService.getConnection().commit();
 
-            optFiringPoint.ifPresentOrElse(saved -> LOGGER.debug("Firing post {} saved with id {}", saved.getName(), saved.getId()),
+            optFiringPoint.ifPresentOrElse(saved -> LOGGER.debug("Firing point {} saved with id {}", saved.getName(), saved.getId()),
                     () -> LOGGER.error("Error during {} save", item.getName()));
             return optFiringPoint;
         } catch (DataAccessException | SQLException e) {
@@ -124,6 +134,8 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
 
             databaseConnectionService.getConnection().commit();
             item.getPosts().forEach(firingPostDAO::update);
+            item.getTargetHolders().forEach(targetHolderDAO::update);
+            item.getCalibers().forEach(caliberDAO::update);
             return this.getById(item.getId());
         } catch (DataAccessException | SQLException e) {
             LOGGER.error("Error firing point update", e);
@@ -164,6 +176,11 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
     }
 
     private FiringPointJfxModel convertToJfxModel(FiringpointRecord firingPointRecord) {
-        return new FiringPointJfxModel(firingPointRecord.getId(), firingPointRecord.getName(), FXCollections.observableList(firingPostDAO.getAllByPointId(firingPointRecord.getId())));
+        return new FiringPointJfxModel(
+                firingPointRecord.getId(),
+                firingPointRecord.getName(),
+                FXCollections.observableList(firingPostDAO.getAllByPointId(firingPointRecord.getId())),
+                FXCollections.observableList(targetHolderDAO.getAllByPointId(firingPointRecord.getId())),
+                FXCollections.observableList(caliberDAO.getAllByPointId(firingPointRecord.getId())));
     }
 }

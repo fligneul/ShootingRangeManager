@@ -29,15 +29,19 @@
                 <Separator prefWidth="200.0"/>
 
                 <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                    <GridPane hgap="10" maxWidth="450" vgap="10">
+                    <GridPane hgap="10" maxWidth="450" vgap="10" alignment="CENTER">
                         <Label text="Statut" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
                         <ComboBox fx:id="statusComboBox" prefWidth="125.0" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                         <Label text="Pas de tir" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
                         <ComboBox fx:id="firingPointComboBox" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <Label text="Poste de tir" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
                         <ComboBox fx:id="firingPostComboBox" disable="true" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                        <Label text="Arme du club" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
-                        <ComboBox fx:id="weaponComboBox" prefWidth="125.0" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Label text="Arme du club" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="weaponComboBox" prefWidth="125.0" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <Label text="Porte cible" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="targetHolderComboBox" disable="true" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Calibre" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="caliberComboBox" disable="true" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
                     </GridPane>
 
                     <HBox alignment="BOTTOM_CENTER" spacing="10.0">
@@ -54,9 +58,9 @@
 
         </VBox>
         <Separator orientation="VERTICAL" prefHeight="200.0"/>
-        <VBox alignment="CENTER" minWidth="600.0" spacing="5">
+        <VBox alignment="CENTER" minWidth="710.0" spacing="5">
             <Label fx:id="attendanceListTitle" text="Date" VBox.vgrow="NEVER"/>
-            <AttendanceTableView fx:id="attendanceListView" prefWidth="600.0" VBox.vgrow="ALWAYS"/>
+            <AttendanceTableView fx:id="attendanceListView" prefWidth="710.0" VBox.vgrow="ALWAYS"/>
         </VBox>
     </HBox>
 </fx:root>

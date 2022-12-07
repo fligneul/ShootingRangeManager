@@ -1,8 +1,10 @@
 package com.fligneul.srm.ui.model.presence;
 
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import javafx.beans.property.ObjectProperty;
@@ -25,6 +27,8 @@ public class LicenseePresenceJfxModel {
     private final ObjectProperty<FiringPostJfxModel> firingPost = new SimpleObjectProperty<>();
     private final ObjectProperty<WeaponJfxModel> weapon = new SimpleObjectProperty<>();
     private final ObjectProperty<StatusJfxModel> status = new SimpleObjectProperty<>();
+    private final ObjectProperty<TargetHolderJfxModel> targetHolder = new SimpleObjectProperty<>();
+    private final ObjectProperty<CaliberJfxModel> caliber = new SimpleObjectProperty<>();
 
     protected LicenseePresenceJfxModel(int id, LicenseeJfxModel licensee, LocalDateTime startDate, FiringPointJfxModel firingPoint) {
         this.id = id;
@@ -111,6 +115,30 @@ public class LicenseePresenceJfxModel {
 
     public void setStatus(StatusJfxModel status) {
         this.status.set(status);
+    }
+
+    public TargetHolderJfxModel getTargetHolder() {
+        return targetHolder.get();
+    }
+
+    public ReadOnlyObjectProperty<TargetHolderJfxModel> targetHolderProperty() {
+        return targetHolder;
+    }
+
+    public void setTargetHolder(TargetHolderJfxModel targetHolder) {
+        this.targetHolder.set(targetHolder);
+    }
+
+    public CaliberJfxModel getCaliber() {
+        return caliber.get();
+    }
+
+    public ReadOnlyObjectProperty<CaliberJfxModel> caliberProperty() {
+        return caliber;
+    }
+
+    public void setCaliber(CaliberJfxModel caliberJfxModel) {
+        this.caliber.set(caliberJfxModel);
     }
 
 }

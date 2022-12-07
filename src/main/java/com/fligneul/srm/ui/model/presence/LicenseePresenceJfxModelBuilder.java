@@ -1,8 +1,10 @@
 package com.fligneul.srm.ui.model.presence;
 
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 
@@ -21,6 +23,8 @@ public class LicenseePresenceJfxModelBuilder {
     private FiringPostJfxModel firingPost;
     private WeaponJfxModel weapon;
     private StatusJfxModel status;
+    private TargetHolderJfxModel targetHolder;
+    private CaliberJfxModel caliber;
 
 
     public LicenseePresenceJfxModelBuilder setId(int id) {
@@ -63,6 +67,16 @@ public class LicenseePresenceJfxModelBuilder {
         return this;
     }
 
+    public LicenseePresenceJfxModelBuilder setTargetHolder(TargetHolderJfxModel targetHolder) {
+        this.targetHolder = targetHolder;
+        return this;
+    }
+
+    public LicenseePresenceJfxModelBuilder setCaliber(CaliberJfxModel caliber) {
+        this.caliber = caliber;
+        return this;
+    }
+
     public LicenseePresenceJfxModel createLicenseePresenceJfxModel() {
         LicenseePresenceJfxModel model = new LicenseePresenceJfxModel(Optional.ofNullable(id).orElse(LicenseePresenceJfxModel.DEFAULT_ID), licensee, startDate, firingPoint);
 
@@ -70,6 +84,8 @@ public class LicenseePresenceJfxModelBuilder {
         Optional.ofNullable(firingPost).ifPresent(model::setFiringPost);
         Optional.ofNullable(weapon).ifPresent(model::setWeapon);
         Optional.ofNullable(status).ifPresent(model::setStatus);
+        Optional.ofNullable(targetHolder).ifPresent(model::setTargetHolder);
+        Optional.ofNullable(caliber).ifPresent(model::setCaliber);
 
         return model;
     }

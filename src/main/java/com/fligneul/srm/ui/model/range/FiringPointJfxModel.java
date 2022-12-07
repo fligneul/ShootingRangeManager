@@ -20,6 +20,8 @@ public class FiringPointJfxModel {
     private final int id;
     private final StringProperty name = new SimpleStringProperty(EMPTY);
     private final ListProperty<FiringPostJfxModel> posts = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<TargetHolderJfxModel> targetHolders = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<CaliberJfxModel> calibers = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public FiringPointJfxModel(int id, String name) {
         this.id = id;
@@ -30,9 +32,11 @@ public class FiringPointJfxModel {
         this(DEFAULT_ID, name);
     }
 
-    public FiringPointJfxModel(int id, String name, ObservableList<FiringPostJfxModel> posts) {
+    public FiringPointJfxModel(int id, String name, ObservableList<FiringPostJfxModel> posts, ObservableList<TargetHolderJfxModel> targetHolders, ObservableList<CaliberJfxModel> calibers) {
         this(id, name);
         this.posts.set(posts);
+        this.targetHolders.set(targetHolders);
+        this.calibers.set(calibers);
     }
 
     public int getId() {
@@ -63,16 +67,40 @@ public class FiringPointJfxModel {
         this.posts.set(posts);
     }
 
+    public ObservableList<TargetHolderJfxModel> getTargetHolders() {
+        return targetHolders.get();
+    }
+
+    public ListProperty<TargetHolderJfxModel> targetHoldersProperty() {
+        return targetHolders;
+    }
+
+    public void setTargetHolders(ObservableList<TargetHolderJfxModel> targetHolders) {
+        this.targetHolders.set(targetHolders);
+    }
+
+    public ObservableList<CaliberJfxModel> getCalibers() {
+        return calibers.get();
+    }
+
+    public ListProperty<CaliberJfxModel> calibersProperty() {
+        return calibers;
+    }
+
+    public void setCalibers(ObservableList<CaliberJfxModel> calibers) {
+        this.calibers.set(calibers);
+    }
+
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final FiringPointJfxModel that = (FiringPointJfxModel) o;
-        return getId() == that.getId() && getName().equals(that.getName()) && getPosts().equals(that.getPosts());
+        FiringPointJfxModel that = (FiringPointJfxModel) o;
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(posts, that.posts) && Objects.equals(targetHolders, that.targetHolders) && Objects.equals(calibers, that.calibers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getPosts());
+        return Objects.hash(id, name, posts, targetHolders, calibers);
     }
 }

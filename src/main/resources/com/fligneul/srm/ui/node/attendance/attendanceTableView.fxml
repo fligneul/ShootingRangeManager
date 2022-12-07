@@ -10,6 +10,8 @@
         <TableColumn fx:id="firingPointColumn" prefWidth="85" text="Pas de tir" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="firingPostColumn" prefWidth="85" text="Poste de tir" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="weaponColumn" prefWidth="70" text="Arme" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="targetHolderColumn" prefWidth="60" text="Support" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="caliberColumn" prefWidth="60" text="Calibre" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="stopTimeColumn" prefWidth="55" text="Fin" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="exitColumn" style="-fx-alignment: center-left;"/>
     </columns>

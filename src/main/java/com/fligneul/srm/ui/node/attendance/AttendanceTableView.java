@@ -3,7 +3,9 @@ package com.fligneul.srm.ui.node.attendance;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
@@ -43,6 +45,10 @@ public class AttendanceTableView extends TableView<LicenseePresenceJfxModel> {
     @FXML
     private TableColumn<LicenseePresenceJfxModel, String> weaponColumn;
     @FXML
+    private TableColumn<LicenseePresenceJfxModel, String> targetHolderColumn;
+    @FXML
+    private TableColumn<LicenseePresenceJfxModel, String> caliberColumn;
+    @FXML
     private TableColumn<LicenseePresenceJfxModel, String> stopTimeColumn;
     @FXML
     private TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> exitColumn;
@@ -70,6 +76,8 @@ public class AttendanceTableView extends TableView<LicenseePresenceJfxModel> {
         firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
         firingPostColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPost()).map(FiringPostJfxModel::getName).orElse(EMPTY_HYPHEN)));
         weaponColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getWeapon()).map(WeaponJfxModel::getName).orElse(EMPTY_HYPHEN)));
+        targetHolderColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getTargetHolder()).map(TargetHolderJfxModel::getName).orElse(EMPTY_HYPHEN)));
+        caliberColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getCaliber()).map(CaliberJfxModel::getName).orElse(EMPTY_HYPHEN)));
         stopTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatTime(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStopDate(), EMPTY_HYPHEN)));
         exitColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue()));
 

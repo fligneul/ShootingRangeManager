@@ -2,8 +2,10 @@ package com.fligneul.srm.dao.attendance;
 
 import com.fligneul.srm.dao.IDAO;
 import com.fligneul.srm.dao.licensee.LicenseeDAO;
+import com.fligneul.srm.dao.range.CaliberDAO;
 import com.fligneul.srm.dao.range.FiringPointDAO;
 import com.fligneul.srm.dao.range.FiringPostDAO;
+import com.fligneul.srm.dao.range.TargetHolderDAO;
 import com.fligneul.srm.dao.status.StatusDAO;
 import com.fligneul.srm.dao.weapon.WeaponDAO;
 import com.fligneul.srm.generated.jooq.Tables;
@@ -11,7 +13,9 @@ import com.fligneul.srm.generated.jooq.tables.records.AttendanceRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +44,8 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
     private LicenseeDAO licenseeDAO;
     private FiringPointDAO firingPointDAO;
     private FiringPostDAO firingPostDAO;
+    private TargetHolderDAO targetHolderDAO;
+    private CaliberDAO caliberDAO;
     private WeaponDAO weaponDAO;
     private StatusDAO statusDAO;
 
@@ -56,8 +62,12 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
      *         DAO for firing post table
      * @param weaponDAO
      *         DAO for weapon table
-                   * @param statusDAO
-           *         DAO for status table
+     * @param statusDAO
+     *         DAO for status table
+     * @param targetHolderDAO
+     *         DAO for target holder table
+     * @param caliberDAO
+     *         DAO for caliber table
      */
     @Inject
     public void injectDependencies(final DatabaseConnectionService databaseConnectionService,
@@ -65,13 +75,17 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
                                    final FiringPointDAO firingPointDAO,
                                    final FiringPostDAO firingPostDAO,
                                    final WeaponDAO weaponDAO,
-                                   final StatusDAO statusDAO) {
+                                   final StatusDAO statusDAO,
+                                   final TargetHolderDAO targetHolderDAO,
+                                   final CaliberDAO caliberDAO) {
         this.databaseConnectionService = databaseConnectionService;
         this.licenseeDAO = licenseeDAO;
         this.firingPointDAO = firingPointDAO;
         this.firingPostDAO = firingPostDAO;
         this.weaponDAO = weaponDAO;
         this.statusDAO = statusDAO;
+        this.targetHolderDAO = targetHolderDAO;
+        this.caliberDAO = caliberDAO;
     }
 
     /**
@@ -93,6 +107,8 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
                             .set(Tables.ATTENDANCE.FIRINGPOSTID, Optional.ofNullable(item.getFiringPost()).map(FiringPostJfxModel::getId).orElse(null))
                             .set(Tables.ATTENDANCE.WEAPONID, Optional.ofNullable(item.getWeapon()).map(WeaponJfxModel::getId).orElse(null))
                             .set(Tables.ATTENDANCE.STATUSID, Optional.ofNullable(item.getStatus()).map(StatusJfxModel::getId).orElse(null))
+                            .set(Tables.ATTENDANCE.TARGETHOLDERID, Optional.ofNullable(item.getTargetHolder()).map(TargetHolderJfxModel::getId).orElse(null))
+                            .set(Tables.ATTENDANCE.CALIBERID, Optional.ofNullable(item.getCaliber()).map(CaliberJfxModel::getId).orElse(null))
                             .returning()
                             .fetchOne())
                     .map(this::convertToJfxModel);
@@ -178,6 +194,8 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
                     .set(Tables.ATTENDANCE.FIRINGPOSTID, Optional.ofNullable(item.getFiringPost()).map(FiringPostJfxModel::getId).orElse(null))
                     .set(Tables.ATTENDANCE.WEAPONID, Optional.ofNullable(item.getWeapon()).map(WeaponJfxModel::getId).orElse(null))
                     .set(Tables.ATTENDANCE.STATUSID, Optional.ofNullable(item.getStatus()).map(StatusJfxModel::getId).orElse(null))
+                    .set(Tables.ATTENDANCE.TARGETHOLDERID, Optional.ofNullable(item.getTargetHolder()).map(TargetHolderJfxModel::getId).orElse(null))
+                    .set(Tables.ATTENDANCE.CALIBERID, Optional.ofNullable(item.getCaliber()).map(CaliberJfxModel::getId).orElse(null))
                     .where(Tables.ATTENDANCE.ID.eq(item.getId()))
                     .execute();
             databaseConnectionService.getConnection().commit();
@@ -232,6 +250,8 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         Optional.ofNullable(attendanceRecord.getFiringpostid()).ifPresent(firingPostId -> builder.setFiringPost(firingPostDAO.getById(firingPostId).orElseThrow()));
         Optional.ofNullable(attendanceRecord.getWeaponid()).ifPresent(weaponId -> builder.setWeapon(weaponDAO.getById(weaponId).orElseThrow()));
         Optional.ofNullable(attendanceRecord.getStatusid()).ifPresent(statusId -> builder.setStatus(statusDAO.getById(statusId).orElseThrow()));
+        Optional.ofNullable(attendanceRecord.getTargetholderid()).ifPresent(targetSupportId -> builder.setTargetHolder(targetHolderDAO.getById(targetSupportId).orElseThrow()));
+        Optional.ofNullable(attendanceRecord.getCaliberid()).ifPresent(caliberId -> builder.setCaliber(caliberDAO.getById(caliberId).orElseThrow()));
 
         return builder.createLicenseePresenceJfxModel();
     }

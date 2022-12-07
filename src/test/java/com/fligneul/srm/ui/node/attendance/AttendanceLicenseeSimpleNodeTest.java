@@ -52,7 +52,6 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceNumberTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.firstnameTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.lastnameTextField, TextInputControlMatchers.hasText(""));
-        FxAssert.verifyThat(attendanceLicenseeSimpleNode.maidenNameTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.dateOfBirthTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceStateTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.seasonTextField, TextInputControlMatchers.hasText(""));
@@ -67,7 +66,6 @@ class AttendanceLicenseeSimpleNodeTest {
                 .setFirstName("FIRSTNAME_1")
                 .setLastName("LASTNAME_1")
                 .setDateOfBirth(LocalDate.EPOCH)
-                .setMaidenName("MAIDEN_NAME_1")
                 .setHandisport(true)
                 .setLicenceState("LICENCE_STATE_1")
                 .setFirstLicenceDate(LocalDate.of(1990, 1, 1))
@@ -81,7 +79,6 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceNumberTextField, TextInputControlMatchers.hasText("123"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.firstnameTextField, TextInputControlMatchers.hasText("FIRSTNAME_1"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.lastnameTextField, TextInputControlMatchers.hasText("LASTNAME_1"));
-        FxAssert.verifyThat(attendanceLicenseeSimpleNode.maidenNameTextField, TextInputControlMatchers.hasText("MAIDEN_NAME_1"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.dateOfBirthTextField, TextInputControlMatchers.hasText("01/01/1970"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceStateTextField, TextInputControlMatchers.hasText("LICENCE_STATE_1"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.seasonTextField, TextInputControlMatchers.hasText("SEASON_1"));
