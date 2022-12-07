@@ -5,6 +5,7 @@ import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.status.StatusJfxModelBuilder;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModelBuilder;
 import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import javafx.collections.FXCollections;
@@ -67,6 +68,7 @@ class AttendanceTableViewTest {
                         .setFiringPoint(new FiringPointJfxModel("TEST_2"))
                         .setFiringPost(new FiringPostJfxModel("TEST_2_1"))
                         .setWeapon((new WeaponJfxModelBuilder()).setName("TEST_WEAPON").setIdentificationNumber(42).createWeaponJfxModel())
+                        .setStatus(new StatusJfxModelBuilder().setName("TEST_STATUS").createStatusJfxModel())
                         .setStartDate(LocalDateTime.of(2022, 4, 30, 15, 30, 15))
                         .createLicenseePresenceJfxModel()
         );
@@ -75,6 +77,6 @@ class AttendanceTableViewTest {
 
         FxAssert.verifyThat(attendanceTableView, TableViewMatchers.hasNumRows(2));
         FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(0, "FIRSTNAME_1 LASTNAME_1", "-", "12:30", "TEST_1", "-", "-", "14:30"));
-        FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(1, "FIRSTNAME_2 LASTNAME_2", "-", "15:30", "TEST_2", "TEST_2_1", "TEST_WEAPON", "-"));
+        FxAssert.verifyThat(attendanceTableView, TableViewMatchers.containsRowAtIndex(1, "FIRSTNAME_2 LASTNAME_2", "TEST_STATUS", "15:30", "TEST_2", "TEST_2_1", "TEST_WEAPON", "-"));
     }
 }

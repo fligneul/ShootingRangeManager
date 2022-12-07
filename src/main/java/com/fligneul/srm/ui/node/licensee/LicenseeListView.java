@@ -61,7 +61,7 @@ public class LicenseeListView extends ListView<LicenseeJfxModel> {
         filteredLicenseeJfxModels = new FilteredList<>(licenseeServiceToJfxModel.getLicenseeList());
 
         SortedList<LicenseeJfxModel> sortedLicenseeJfxModels = new SortedList<>(filteredLicenseeJfxModels);
-        sortedLicenseeJfxModels.setComparator(Comparator.comparing(licenseeJfxModel -> Optional.ofNullable(licenseeJfxModel.getLastName()).orElse(EMPTY)));
+        sortedLicenseeJfxModels.setComparator(Comparator.comparing(licenseeJfxModel -> Optional.ofNullable(licenseeJfxModel.getLastName()).map(String::toUpperCase).orElse(EMPTY)));
         setItems(sortedLicenseeJfxModels);
 
         getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> licenseeSelectionService.setSelected(newV));

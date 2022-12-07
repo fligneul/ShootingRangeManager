@@ -42,6 +42,8 @@
         <commons-csv.version>1.9.0</commons-csv.version>
         <zip4j.version>2.11.2</zip4j.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
+        <commons-text.version>1.9</commons-text.version>
+        <commons-validator.version>1.4.1</commons-validator.version>
 
         <!-- LOG -->
         <log4j.version>2.19.0</log4j.version>
@@ -211,6 +213,20 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${validation-api.version}</version>
+        </dependency>
+
+        <!-- Commons -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text.version}</version>
+        </dependency>
+
+        <!-- Validatiors -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>${commons-validator.version}</version>
         </dependency>
 
         <!-- Logging -->
