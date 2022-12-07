@@ -1,5 +1,6 @@
 package com.fligneul.srm.ui.node.attendance;
 
+import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
@@ -29,15 +30,19 @@ class AttendanceLicenseeSimpleNodeTest {
     private AttendanceLicenseeSimpleNode attendanceLicenseeSimpleNode;
     private final AttendanceSelectionService attendanceSelectionServiceMock = Mockito.mock(AttendanceSelectionService.class);
     private final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModelMock = Mockito.mock(ShootingLogbookServiceToJfxModel.class);
+    private final PreferenceService preferenceServiceMock = Mockito.mock(PreferenceService.class);
     private final BehaviorSubject<Optional<LicenseeJfxModel>> selectedObs = BehaviorSubject.createDefault(Optional.empty());
+    private final BehaviorSubject<Long> medicalCertificateValidityObs = BehaviorSubject.create();
 
     @Start
     private void start(Stage stage) {
         Mockito.when(attendanceSelectionServiceMock.selectedObs()).thenReturn(selectedObs);
         Mockito.when(shootingLogbookServiceToJfxModelMock.getShootingLogbookList()).thenReturn(FXCollections.emptyObservableList());
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityInfinite()).thenReturn(true);
+        Mockito.when(preferenceServiceMock.medicalCertificateValidityChanged()).thenReturn(medicalCertificateValidityObs);
 
         attendanceLicenseeSimpleNode = new AttendanceLicenseeSimpleNode();
-        attendanceLicenseeSimpleNode.injectDependencies(attendanceSelectionServiceMock, shootingLogbookServiceToJfxModelMock);
+        attendanceLicenseeSimpleNode.injectDependencies(attendanceSelectionServiceMock, shootingLogbookServiceToJfxModelMock, preferenceServiceMock);
         stage.setScene(new Scene(new StackPane(attendanceLicenseeSimpleNode), 600, 400));
         stage.show();
     }
@@ -111,5 +116,53 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.handisportCheckBox, checkBox -> !checkBox.isSelected());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceErrorLabel, NodeMatchers.isInvisible());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceBlacklistLabel, NodeMatchers.isInvisible());
+    }
+
+    @Test
+    void attendanceMedicalCertificateReminderTest() {
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.medicalCertificateValidityTextField, TextInputControlMatchers.hasText(""));
+
+        selectedObs.onNext(Optional.of((new LicenseeJfxModelBuilder())
+                .setFirstName("FIRSTNAME")
+                .setLastName("LASTNAME")
+                .setDateOfBirth(LocalDate.EPOCH)
+                .createLicenseeJfxModel()));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.medicalCertificateValidityTextField, TextInputControlMatchers.hasText("Absent"));
+
+        selectedObs.onNext(Optional.of((new LicenseeJfxModelBuilder())
+                .setFirstName("FIRSTNAME")
+                .setLastName("LASTNAME")
+                .setDateOfBirth(LocalDate.EPOCH)
+                .setMedicalCertificateDate(LocalDate.now().minusMonths(6))
+                .createLicenseeJfxModel()));
+
+        WaitForAsyncUtils.waitForFxEvents();
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.medicalCertificateValidityTextField, TextInputControlMatchers.hasText("Valide"));
+
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityInfinite()).thenReturn(false);
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityAlert()).thenReturn(10);
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityPeriod()).thenReturn(12);
+        medicalCertificateValidityObs.onNext(System.currentTimeMillis());
+
+        WaitForAsyncUtils.waitForFxEvents();
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.medicalCertificateValidityTextField, TextInputControlMatchers.hasText("Valide"));
+
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityInfinite()).thenReturn(false);
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityAlert()).thenReturn(4);
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityPeriod()).thenReturn(12);
+        medicalCertificateValidityObs.onNext(System.currentTimeMillis());
+
+        WaitForAsyncUtils.waitForFxEvents();
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.medicalCertificateValidityTextField, TextInputControlMatchers.hasText("Bientôt expiré"));
+
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityInfinite()).thenReturn(false);
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityAlert()).thenReturn(4);
+        Mockito.when(preferenceServiceMock.getMedicalCertificateValidityPeriod()).thenReturn(5);
+        medicalCertificateValidityObs.onNext(System.currentTimeMillis());
+
+        WaitForAsyncUtils.waitForFxEvents();
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.medicalCertificateValidityTextField, TextInputControlMatchers.hasText("Expiré"));
     }
 }
