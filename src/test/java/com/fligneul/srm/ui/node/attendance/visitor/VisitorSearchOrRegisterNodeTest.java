@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.api.FxRobot;
@@ -116,16 +115,6 @@ class VisitorSearchOrRegisterNodeTest {
         Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.firstnameTextField.getText(), "TEST_FIRSTNAME");
         Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.lastnameTextField.getText(), "TEST_LASTNAME");
         Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.dateOfBirthPicker.getValue(), LocalDate.of(2000, 1, 1));
-
-        LicenseeJfxModel licenseeJfxModel = new LicenseeJfxModelBuilder()
-                .setFirstName("TEST_FIRSTNAME")
-                .setLastName("TEST_LASTNAME")
-                .setDateOfBirth(LocalDate.of(2000, 1, 1))
-                .createLicenseeJfxModel();
-        Mockito.when(licenseeServiceToJfxModelMock.getLicenseeList()).thenReturn(FXCollections.observableArrayList(licenseeJfxModel));
-        fxRobot.clickOn(visitorSearchOrRegisterNode.saveButton);
-        WaitForAsyncUtils.waitForFxEvents();
-        Mockito.verify(licenseeServiceToJfxModelMock, Mockito.timeout(1_000)).saveLicensee(ArgumentMatchers.any());
     }
 }
 
