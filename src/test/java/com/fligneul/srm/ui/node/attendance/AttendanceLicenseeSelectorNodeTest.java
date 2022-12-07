@@ -40,7 +40,7 @@ class AttendanceLicenseeSelectorNodeTest {
 
         // Licensee not found
         fxRobot.clickOn(attendanceLicenseeSelectorNode.licenceNumber).write("123");
-        fxRobot.clickOn(attendanceLicenseeSelectorNode.validate);
+        fxRobot.clickOn(attendanceLicenseeSelectorNode.validateButton);
         WaitForAsyncUtils.waitForFxEvents();
 
         FxAssert.verifyThat(attendanceLicenseeSelectorNode.errorLabel, LabeledMatchers.hasText("Aucun licencié enregistré avec ce numéro de licence"));
@@ -48,14 +48,14 @@ class AttendanceLicenseeSelectorNodeTest {
 
         // Licensee found
         fxRobot.doubleClickOn(attendanceLicenseeSelectorNode.licenceNumber).write("456");
-        fxRobot.clickOn(attendanceLicenseeSelectorNode.validate);
+        fxRobot.clickOn(attendanceLicenseeSelectorNode.validateButton);
         WaitForAsyncUtils.waitForFxEvents();
 
         FxAssert.verifyThat(attendanceLicenseeSelectorNode.errorLabel, NodeMatchers.isInvisible());
 
         // Input error
         fxRobot.doubleClickOn(attendanceLicenseeSelectorNode.licenceNumber).write("abc");
-        fxRobot.clickOn(attendanceLicenseeSelectorNode.validate);
+        fxRobot.clickOn(attendanceLicenseeSelectorNode.validateButton);
         WaitForAsyncUtils.waitForFxEvents();
 
         FxAssert.verifyThat(attendanceLicenseeSelectorNode.errorLabel, LabeledMatchers.hasText("Numéro de licence invalide"));

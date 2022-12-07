@@ -17,13 +17,16 @@ public class InputUtils {
     public static final String DEFAULT_TIME_FORMAT = "HH:mm";
 
     /**
-     * 
+     * Parse the raw barcode to the licence number
+     *
      * @param input
-     * @return
+     *         the barcode
+     * @return the licence number
      * @throws IllegalArgumentException
+     *         if the input format is not valid
      */
     public static String parseLicenceNumber(final String input) throws IllegalArgumentException {
-        Pattern p = Pattern.compile("^(\\d+)(\\W(\\d{4})\\W(\\d{4}))?$");
+        Pattern p = Pattern.compile("^(\\d+)(\\W(\\d{4})(\\W(\\d{4}))?)?$");
         Matcher m = p.matcher(input);
 
         if (!m.find()) {

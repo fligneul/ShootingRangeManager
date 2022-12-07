@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.node.licensee;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import com.fligneul.srm.ui.node.logbook.ShootingLogbookCreateNode;
@@ -11,9 +12,11 @@ import com.fligneul.srm.ui.node.utils.NodeUtils;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
+import io.reactivex.rxjavafx.observers.JavaFxObserver;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -26,6 +29,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
@@ -36,6 +41,9 @@ import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 public class LicenseeDetailNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(LicenseeDetailNode.class);
     private static final String FXML_PATH = "licenseeDetail.fxml";
+    private static final PseudoClass ERROR_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("error");
+    private static final PseudoClass WARNING_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("warning");
+
 
     @FXML
     private Button editButton;
@@ -100,6 +108,7 @@ public class LicenseeDetailNode extends VBox {
     private final ChangeListener<ShootingLogbookJfxModel> shootingLogbookJfxModelChangeListener = (obs, oldV, newV) -> {
         NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, newV == null);
     };
+    private PreferenceService preferenceService;
 
     public LicenseeDetailNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -117,14 +126,18 @@ public class LicenseeDetailNode extends VBox {
      *         service for the current selected licensee
      * @param shootingLogbookServiceToJfxModel
      *         service to jfx model for shooting logbook
+     * @param preferenceService
+     *         application preferences
      */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
                                    final LicenseeSelectionService licenseeSelectionService,
-                                   final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel) {
+                                   final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel,
+                                   final PreferenceService preferenceService) {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
         this.licenseeSelectionService = licenseeSelectionService;
         this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
+        this.preferenceService = preferenceService;
 
         licenseeSelectionService.selectedObs()
                 .distinctUntilChanged()
@@ -183,6 +196,8 @@ public class LicenseeDetailNode extends VBox {
         seasonTextField.setText(EMPTY);
         ageCategoryTextField.setText(EMPTY);
         medicalCertificateTextField.setText(EMPTY);
+        medicalCertificateTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, false);
+        medicalCertificateTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, false);
         idCardTextField.setText(EMPTY);
         handisportCheckBox.setSelected(false);
         idPhotoCheckBox.setSelected(false);
@@ -218,6 +233,27 @@ public class LicenseeDetailNode extends VBox {
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
         medicalCertificateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getMedicalCertificateDate()), licenseeJfxModel.medicalCertificateDateProperty()));
+
+        if (licenseeJfxModel.getMedicalCertificateDate() != null && !preferenceService.getMedicalCertificateValidityInfinite()) {
+            long duration = ChronoUnit.MONTHS.between(licenseeJfxModel.getMedicalCertificateDate(), LocalDate.now());
+            medicalCertificateTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, duration >= preferenceService.getMedicalCertificateValidityAlert() && duration < preferenceService.getMedicalCertificateValidityPeriod());
+            medicalCertificateTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, duration >= preferenceService.getMedicalCertificateValidityPeriod());
+        }
+
+        ChangeListener<Object> medicalValidityListener = (obs, oldV, newV) -> {
+            if (licenseeJfxModel.getMedicalCertificateDate() != null && !preferenceService.getMedicalCertificateValidityInfinite()) {
+                long duration = ChronoUnit.MONTHS.between(licenseeJfxModel.getMedicalCertificateDate(), LocalDate.now());
+                medicalCertificateTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, duration >= preferenceService.getMedicalCertificateValidityAlert() && duration < preferenceService.getMedicalCertificateValidityPeriod());
+                medicalCertificateTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, duration >= preferenceService.getMedicalCertificateValidityPeriod());
+            } else {
+                medicalCertificateTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, false);
+                medicalCertificateTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, false);
+            }
+        };
+
+        licenseeJfxModel.medicalCertificateDateProperty().addListener(medicalValidityListener);
+        JavaFxObserver.toBinding(preferenceService.medicalCertificateValidityChanged()).addListener(medicalValidityListener);
+
         idCardTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getIdCardDate()), licenseeJfxModel.idCardDateProperty()));
         handisportCheckBox.selectedProperty().bind(licenseeJfxModel.handisportProperty());
         idPhotoCheckBox.selectedProperty().bind(licenseeJfxModel.idPhotoProperty());

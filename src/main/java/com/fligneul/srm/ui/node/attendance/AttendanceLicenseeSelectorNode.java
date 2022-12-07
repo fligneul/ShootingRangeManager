@@ -1,6 +1,8 @@
 package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.node.attendance.visitor.VisitorSearchOrRegisterNode;
+import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.node.utils.InputUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import javafx.application.Platform;
@@ -25,7 +27,9 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
     @FXML
     protected TextField licenceNumber;
     @FXML
-    protected Button validate;
+    protected Button validateButton;
+    @FXML
+    protected Button searchOrRegisterButton;
     @FXML
     protected Label errorLabel;
 
@@ -39,7 +43,7 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
 
         licenceNumber.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
-                validate.fire();
+                validateButton.fire();
             }
         });
 
@@ -58,7 +62,7 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
     }
 
     @FXML
-    private void searchLicensee() {
+    private void searchByLicenceNumber() {
         attendanceSelectionService.clearSelected();
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
@@ -75,5 +79,10 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
             errorLabel.setVisible(true);
             errorLabel.setManaged(true);
         }
+    }
+
+    @FXML
+    private void searchOrRegister() {
+        DialogUtils.showCustomDialog("Recherche de licencié", new VisitorSearchOrRegisterNode());
     }
 }

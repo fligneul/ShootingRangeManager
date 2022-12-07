@@ -1,14 +1,17 @@
 package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.logbook.ShootingSessionJfxModel;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
+import io.reactivex.rxjavafx.observers.JavaFxObserver;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,6 +25,7 @@ import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
@@ -33,6 +37,8 @@ import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 public class AttendanceLicenseeSimpleNode extends VBox {
     private static final Logger LOGGER = LogManager.getLogger(AttendanceLicenseeSimpleNode.class);
     private static final String FXML_PATH = "licenseeSimple.fxml";
+    private static final PseudoClass ERROR_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("error");
+    private static final PseudoClass WARNING_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("warning");
 
     @FXML
     protected TextField licenceNumberTextField;
@@ -45,6 +51,8 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     @FXML
     protected CheckBox handisportCheckBox;
     @FXML
+    protected GridPane licenceDetailGrid;
+    @FXML
     protected Label licenceBlacklistLabel;
     @FXML
     protected TextField licenceStateTextField;
@@ -55,6 +63,8 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     @FXML
     protected TextField ageCategoryTextField;
     @FXML
+    protected TextField medicalCertificateValidityTextField;
+    @FXML
     protected Label licenceErrorLabel;
     @FXML
     private GridPane shootingLogbookPane;
@@ -64,6 +74,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     protected TextField shootingLogbookLastSessionDateTextField;
 
     private ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel;
+    private PreferenceService preferenceService;
 
     /**
      * Create the node and load the associated FXML file
@@ -79,16 +90,16 @@ public class AttendanceLicenseeSimpleNode extends VBox {
      *         selection service for the current licensee
      * @param shootingLogbookServiceToJfxModel
      *         service to jfx model for shooting logbook
+     * @param preferenceService
+     *         application preferences
      */
     @Inject
     public void injectDependencies(final AttendanceSelectionService attendanceSelectionService,
-                                   final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel) {
+                                   final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel,
+                                   final PreferenceService preferenceService) {
         this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
-        attendanceSelectionService.selectedObs()
-                .distinctUntilChanged()
-                .observeOn(JavaFxScheduler.platform())
-                .doOnNext(s -> LOGGER.debug("Select licensee " + s.map(LicenseeJfxModel::getLicenceNumber).orElse("null")))
-                .subscribe(optLicensee -> optLicensee.ifPresentOrElse(this::updateComponents, this::clearComponents), LOGGER::error);
+        this.preferenceService = preferenceService;
+        attendanceSelectionService.selectedObs().distinctUntilChanged().observeOn(JavaFxScheduler.platform()).doOnNext(s -> LOGGER.debug("Select licensee " + s.map(LicenseeJfxModel::getLicenceNumber).orElse("null"))).subscribe(optLicensee -> optLicensee.ifPresentOrElse(this::updateComponents, this::clearComponents), LOGGER::error);
     }
 
     private void clearComponents() {
@@ -102,6 +113,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         firstLicenceDateTextField.textProperty().unbind();
         seasonTextField.textProperty().unbind();
         ageCategoryTextField.textProperty().unbind();
+        medicalCertificateValidityTextField.textProperty().unbind();
         handisportCheckBox.selectedProperty().unbind();
         licenceBlacklistLabel.visibleProperty().unbind();
         licenceBlacklistLabel.managedProperty().unbind();
@@ -118,6 +130,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         firstLicenceDateTextField.setText(EMPTY);
         seasonTextField.setText(EMPTY);
         ageCategoryTextField.setText(EMPTY);
+        medicalCertificateValidityTextField.setText(EMPTY);
         handisportCheckBox.setSelected(false);
         licenceBlacklistLabel.setVisible(false);
         licenceBlacklistLabel.setManaged(false);
@@ -144,24 +157,38 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         licenceBlacklistLabel.visibleProperty().bind(licenseeJfxModel.blacklistedProperty());
         licenceBlacklistLabel.managedProperty().bind(licenseeJfxModel.blacklistedProperty());
 
-        BooleanBinding licenceReceiptIncomplete = licenseeJfxModel.medicalCertificateDateProperty().isNull()
-                .or(licenseeJfxModel.idCardDateProperty().isNull())
-                .or(licenseeJfxModel.idPhotoProperty().not());
+        medicalCertificateValidityTextField.textProperty().bind(Bindings.createStringBinding(() -> {
+            if (licenseeJfxModel.getMedicalCertificateDate() == null) {
+                medicalCertificateValidityTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, true);
+                medicalCertificateValidityTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, false);
+                return "Absent";
+            } else {
+                long duration = ChronoUnit.MONTHS.between(licenseeJfxModel.getMedicalCertificateDate(), LocalDate.now());
+                if (!preferenceService.getMedicalCertificateValidityInfinite() && duration >= preferenceService.getMedicalCertificateValidityAlert() && duration < preferenceService.getMedicalCertificateValidityPeriod()) {
+                    medicalCertificateValidityTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, true);
+                    medicalCertificateValidityTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, false);
+                    return "Bientôt expiré";
+                } else if (!preferenceService.getMedicalCertificateValidityInfinite() && duration >= preferenceService.getMedicalCertificateValidityPeriod()) {
+                    medicalCertificateValidityTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, false);
+                    medicalCertificateValidityTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, true);
+                    return "Expiré";
+                } else {
+                    medicalCertificateValidityTextField.pseudoClassStateChanged(WARNING_PSEUDO_CLASS_STATE, false);
+                    medicalCertificateValidityTextField.pseudoClassStateChanged(ERROR_PSEUDO_CLASS_STATE, false);
+                    return "Valide";
+                }
+            }
+        }, licenseeJfxModel.medicalCertificateDateProperty(), JavaFxObserver.toBinding(preferenceService.medicalCertificateValidityChanged())));
+
+        BooleanBinding licenceReceiptIncomplete = licenseeJfxModel.medicalCertificateDateProperty().isNull().or(licenseeJfxModel.idCardDateProperty().isNull()).or(licenseeJfxModel.idPhotoProperty().not());
         licenceErrorLabel.visibleProperty().bind(licenceReceiptIncomplete);
         licenceErrorLabel.managedProperty().bind(licenceReceiptIncomplete);
 
-        shootingLogbookServiceToJfxModel.getShootingLogbookList().stream()
-                .filter(logbook -> logbook.getLicenseeId() == licenseeJfxModel.getId())
-                .findFirst()
-                .ifPresent(shootingLogbookJfxModel -> {
-                    shootingLogbookPane.setManaged(true);
-                    shootingLogbookPane.setVisible(true);
-                    shootingLogbookCreationDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getCreationDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), shootingLogbookJfxModel.creationDateProperty()));
-                    shootingLogbookLastSessionDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getSessions().stream()
-                            .map(ShootingSessionJfxModel::getSessionDate)
-                            .max(Comparator.comparing(LocalDate::toEpochDay))
-                            .map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))
-                            .orElse(EMPTY), shootingLogbookJfxModel.sessionsProperty()));
-                });
+        shootingLogbookServiceToJfxModel.getShootingLogbookList().stream().filter(logbook -> logbook.getLicenseeId() == licenseeJfxModel.getId()).findFirst().ifPresent(shootingLogbookJfxModel -> {
+            shootingLogbookPane.setManaged(true);
+            shootingLogbookPane.setVisible(true);
+            shootingLogbookCreationDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getCreationDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), shootingLogbookJfxModel.creationDateProperty()));
+            shootingLogbookLastSessionDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getSessions().stream().map(ShootingSessionJfxModel::getSessionDate).max(Comparator.comparing(LocalDate::toEpochDay)).map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(EMPTY), shootingLogbookJfxModel.sessionsProperty()));
+        });
     }
 }

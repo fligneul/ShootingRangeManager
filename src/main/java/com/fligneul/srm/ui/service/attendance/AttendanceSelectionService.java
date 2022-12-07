@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Optional;
 
@@ -29,6 +30,17 @@ public class AttendanceSelectionService {
             return true;
         } else {
             LOGGER.warn("No licensee registered with the licence {}", licenceNumber);
+            return false;
+        }
+    }
+
+    public boolean select(@Nonnull final LicenseeJfxModel licenseeJfxModel) {
+        LOGGER.info("Select licensee {}", licenseeJfxModel);
+        if (licenseeServiceToJfxModel.getLicenseeList().contains(licenseeJfxModel)) {
+            selectedLicensee.onNext(Optional.of(licenseeJfxModel));
+            return true;
+        } else {
+            LOGGER.warn("Licensee {} not present in DB", licenseeJfxModel);
             return false;
         }
     }
