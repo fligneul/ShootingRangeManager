@@ -126,7 +126,6 @@ class VisitorSearchOrRegisterNodeTest {
         fxRobot.clickOn(visitorSearchOrRegisterNode.saveButton);
         WaitForAsyncUtils.waitForFxEvents();
         Mockito.verify(licenseeServiceToJfxModelMock, Mockito.timeout(1_000)).saveLicensee(ArgumentMatchers.any());
-        Mockito.verify(attendanceSelectionServiceMock, Mockito.timeout(1_000)).select(ArgumentMatchers.any());
     }
 }
 
