@@ -15,8 +15,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.TextInputControlMatchers;
 
-import java.util.concurrent.TimeoutException;
-
 @ExtendWith(ApplicationExtension.class)
 class VisitorCreateNodeTest {
     private VisitorCreateNode visitorCreateNode;
@@ -34,7 +32,7 @@ class VisitorCreateNodeTest {
     }
 
     @Test
-    void visitorCreateNodeTest(final FxRobot fxRobot) throws TimeoutException {
+    void visitorCreateNodeTest(final FxRobot fxRobot) {
         FxAssert.verifyThat(visitorCreateNode.firstnameTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(visitorCreateNode.lastnameTextField, TextInputControlMatchers.hasText(""));
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker.getEditor(), TextInputControlMatchers.hasText(""));
@@ -44,6 +42,8 @@ class VisitorCreateNodeTest {
         FxAssert.verifyThat(visitorCreateNode.firstnameTextField, PseudoClassMatchers.withPseudoClass("error"));
         FxAssert.verifyThat(visitorCreateNode.lastnameTextField, PseudoClassMatchers.withPseudoClass("error"));
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker, PseudoClassMatchers.withPseudoClass("error"));
+        FxAssert.verifyThat(visitorCreateNode.emailTextField, PseudoClassMatchers.withoutPseudoClass("error"));
+        FxAssert.verifyThat(visitorCreateNode.phoneNumberTextField, PseudoClassMatchers.withoutPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.firstnameTextField).write("TEST_FIRSTNAME");
         FxAssert.verifyThat(visitorCreateNode.firstnameTextField, PseudoClassMatchers.withoutPseudoClass("error"));
@@ -54,6 +54,12 @@ class VisitorCreateNodeTest {
         fxRobot.clickOn(visitorCreateNode.dateOfBirthPicker.getEditor());
         visitorCreateNode.dateOfBirthPicker.getEditor().setText("01/01/2000");
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker, PseudoClassMatchers.withoutPseudoClass("error"));
+
+        fxRobot.clickOn(visitorCreateNode.emailTextField).write("test@test.fr");
+        FxAssert.verifyThat(visitorCreateNode.emailTextField, PseudoClassMatchers.withoutPseudoClass("error"));
+
+        fxRobot.clickOn(visitorCreateNode.phoneNumberTextField).write("0123456789");
+        FxAssert.verifyThat(visitorCreateNode.phoneNumberTextField, PseudoClassMatchers.withoutPseudoClass("error"));
     }
 }
 

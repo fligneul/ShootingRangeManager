@@ -37,29 +37,29 @@ public class VisitorSearchOrRegisterNode extends StackPane {
     private static final int MAX_LICENSEE_RESULT = 5;
 
     @FXML
-    private ValidatedTextField<String> firstname;
+    protected ValidatedTextField<String> firstname;
     @FXML
-    private ValidatedTextField<String> lastname;
+    protected ValidatedTextField<String> lastname;
     @FXML
-    private ValidatedDatePicker birthDate;
+    protected ValidatedDatePicker birthDate;
     @FXML
-    private Button searchButton;
+    protected Button searchButton;
     @FXML
-    private VBox candidateContainer;
+    protected VBox candidateContainer;
     @FXML
-    private Label noCandidateLabel;
+    protected Label noCandidateLabel;
     @FXML
-    private ListView<LicenseeJfxModel> candidateListView;
+    protected ListView<LicenseeJfxModel> candidateListView;
     @FXML
-    private Button validateCandidateButton;
+    protected Button validateCandidateButton;
     @FXML
-    private VisitorCreateNode visitorCreateNode;
+    protected VisitorCreateNode visitorCreateNode;
     @FXML
-    private Button createVisitorButton;
+    protected Button createVisitorButton;
     @FXML
-    private Button saveButton;
+    protected Button saveButton;
     @FXML
-    private VBox visitorCreationContainer;
+    protected VBox visitorCreationContainer;
 
     private AttendanceSelectionService attendanceSelectionService;
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
