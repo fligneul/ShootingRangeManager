@@ -14,6 +14,7 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.util.WaitForAsyncUtils;
 
 @ExtendWith(ApplicationExtension.class)
 class VisitorCreateNodeTest {
@@ -46,19 +47,24 @@ class VisitorCreateNodeTest {
         FxAssert.verifyThat(visitorCreateNode.phoneNumberTextField, PseudoClassMatchers.withoutPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.firstnameTextField).write("TEST_FIRSTNAME");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorCreateNode.firstnameTextField, PseudoClassMatchers.withoutPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.lastnameTextField).write("TEST_LASTNAME");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorCreateNode.lastnameTextField, PseudoClassMatchers.withoutPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.dateOfBirthPicker.getEditor());
         visitorCreateNode.dateOfBirthPicker.getEditor().setText("01/01/2000");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorCreateNode.dateOfBirthPicker, PseudoClassMatchers.withoutPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.emailTextField).write("test@test.fr");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorCreateNode.emailTextField, PseudoClassMatchers.withoutPseudoClass("error"));
 
         fxRobot.clickOn(visitorCreateNode.phoneNumberTextField).write("0123456789");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorCreateNode.phoneNumberTextField, PseudoClassMatchers.withoutPseudoClass("error"));
     }
 }

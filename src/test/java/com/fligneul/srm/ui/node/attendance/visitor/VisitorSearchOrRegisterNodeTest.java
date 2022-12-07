@@ -20,6 +20,7 @@ import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.matcher.control.ListViewMatchers;
 import org.testfx.matcher.control.TextInputControlMatchers;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.time.LocalDate;
 
@@ -52,6 +53,7 @@ class VisitorSearchOrRegisterNodeTest {
         fxRobot.clickOn(visitorSearchOrRegisterNode.lastname).write("TEST_LASTNAME");
         fxRobot.clickOn(visitorSearchOrRegisterNode.birthDate.getEditor());
         visitorSearchOrRegisterNode.birthDate.getEditor().setText("01/01/2000");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorSearchOrRegisterNode.searchButton, NodeMatchers.isEnabled());
 
         LicenseeJfxModel licenseeJfxModel = new LicenseeJfxModelBuilder()
@@ -62,6 +64,7 @@ class VisitorSearchOrRegisterNodeTest {
         Mockito.when(licenseeServiceToJfxModelMock.getLicenseeList()).thenReturn(FXCollections.observableArrayList(licenseeJfxModel));
 
         fxRobot.clickOn(visitorSearchOrRegisterNode.searchButton);
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorSearchOrRegisterNode.candidateContainer, NodeMatchers.isVisible());
         FxAssert.verifyThat(visitorSearchOrRegisterNode.noCandidateLabel, NodeMatchers.isInvisible());
         FxAssert.verifyThat(visitorSearchOrRegisterNode.candidateListView, NodeMatchers.isVisible());
@@ -70,10 +73,12 @@ class VisitorSearchOrRegisterNodeTest {
         FxAssert.verifyThat(visitorSearchOrRegisterNode.createVisitorButton, NodeMatchers.isEnabled());
 
         visitorSearchOrRegisterNode.candidateListView.getSelectionModel().selectFirst();
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorSearchOrRegisterNode.validateCandidateButton, NodeMatchers.isEnabled());
         FxAssert.verifyThat(visitorSearchOrRegisterNode.createVisitorButton, NodeMatchers.isDisabled());
 
         fxRobot.clickOn(visitorSearchOrRegisterNode.validateCandidateButton);
+        WaitForAsyncUtils.waitForFxEvents();
         Mockito.verify(attendanceSelectionServiceMock, Mockito.timeout(1_000)).select(licenseeJfxModel);
     }
 
@@ -92,10 +97,12 @@ class VisitorSearchOrRegisterNodeTest {
         fxRobot.clickOn(visitorSearchOrRegisterNode.lastname).write("TEST_LASTNAME");
         fxRobot.clickOn(visitorSearchOrRegisterNode.birthDate.getEditor());
         visitorSearchOrRegisterNode.birthDate.getEditor().setText("01/01/2000");
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorSearchOrRegisterNode.searchButton, NodeMatchers.isEnabled());
 
         Mockito.when(licenseeServiceToJfxModelMock.getLicenseeList()).thenReturn(FXCollections.emptyObservableList());
         fxRobot.clickOn(visitorSearchOrRegisterNode.searchButton);
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorSearchOrRegisterNode.candidateContainer, NodeMatchers.isVisible());
         FxAssert.verifyThat(visitorSearchOrRegisterNode.noCandidateLabel, NodeMatchers.isVisible());
         FxAssert.verifyThat(visitorSearchOrRegisterNode.candidateListView, NodeMatchers.isInvisible());
@@ -103,6 +110,7 @@ class VisitorSearchOrRegisterNodeTest {
         FxAssert.verifyThat(visitorSearchOrRegisterNode.createVisitorButton, NodeMatchers.isEnabled());
 
         fxRobot.clickOn(visitorSearchOrRegisterNode.createVisitorButton);
+        WaitForAsyncUtils.waitForFxEvents();
         FxAssert.verifyThat(visitorSearchOrRegisterNode.visitorCreationContainer, NodeMatchers.isVisible());
 
         Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.firstnameTextField.getText(), "TEST_FIRSTNAME");
@@ -116,6 +124,7 @@ class VisitorSearchOrRegisterNodeTest {
                 .createLicenseeJfxModel();
         Mockito.when(licenseeServiceToJfxModelMock.getLicenseeList()).thenReturn(FXCollections.observableArrayList(licenseeJfxModel));
         fxRobot.clickOn(visitorSearchOrRegisterNode.saveButton);
+        WaitForAsyncUtils.waitForFxEvents();
         Mockito.verify(licenseeServiceToJfxModelMock, Mockito.timeout(1_000)).saveLicensee(ArgumentMatchers.any());
         Mockito.verify(attendanceSelectionServiceMock, Mockito.timeout(1_000)).select(ArgumentMatchers.any());
     }
