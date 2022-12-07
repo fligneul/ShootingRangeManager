@@ -107,7 +107,7 @@ class VisitorSearchOrRegisterNodeTest {
 
         Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.firstnameTextField.getText(), "TEST_FIRSTNAME");
         Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.lastnameTextField.getText(), "TEST_LASTNAME");
-        Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.dateOfBirthPicker.getEditor().getText(), "01/01/2000");
+        Assertions.assertEquals(visitorSearchOrRegisterNode.visitorCreateNode.dateOfBirthPicker.getValue(), LocalDate.of(2000, 1, 1));
 
         LicenseeJfxModel licenseeJfxModel = new LicenseeJfxModelBuilder()
                 .setFirstName("TEST_FIRSTNAME")
