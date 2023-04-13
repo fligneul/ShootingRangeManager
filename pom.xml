@@ -40,6 +40,7 @@
         <jooq.version>3.16.10</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
         <commons-csv.version>1.9.0</commons-csv.version>
+        <apache-poi.version>5.2.0</apache-poi.version>
         <zip4j.version>2.11.2</zip4j.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <commons-text.version>1.9</commons-text.version>
@@ -194,11 +195,23 @@
             <version>${snakeyaml.version}</version>
         </dependency>
 
-        <!-- CSV -->
+        <!-- Apache commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons-csv.version}</version>
+        </dependency>
+
+        <!-- XLSX -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache-poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache-poi.version}</version>
         </dependency>
 
         <!-- Zip4j -->

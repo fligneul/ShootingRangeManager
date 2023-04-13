@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<fx:root prefHeight="500.0" prefWidth="800.0" type="StackPane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+    <HBox>
+        <VBox alignment="TOP_CENTER" spacing="15.0" HBox.hgrow="ALWAYS" maxWidth="250">
+            <Label text="Création des statistiques">
+                <font>
+                    <Font size="16.0"/>
+                </font>
+            </Label>
+            <VBox alignment="CENTER" spacing="5">
+                <Label>Date de début</Label>
+                <DatePicker fx:id="statisticsBeginDatePicker" prefWidth="140"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5">
+                <Label>Date de fin</Label>
+                <DatePicker fx:id="statisticsEndDatePicker" prefWidth="140"/>
+            </VBox>
+            <Button fx:id="computeStatisticsButton" text="Calculer" onAction="#computeStatistics" disable="true"/>
+        </VBox>
+        <Separator orientation="VERTICAL" prefHeight="200.0"/>
+        <VBox fx:id="statisticsDisplayContainer" visible="false" alignment="CENTER" HBox.hgrow="ALWAYS" spacing="5">
+        </VBox>
+    </HBox>
+</fx:root>

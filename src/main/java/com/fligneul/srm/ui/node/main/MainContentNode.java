@@ -8,6 +8,7 @@ import com.fligneul.srm.ui.node.attendance.AttendanceNode;
 import com.fligneul.srm.ui.node.history.HistoryNode;
 import com.fligneul.srm.ui.node.licensee.LicenseeNode;
 import com.fligneul.srm.ui.node.settings.SettingsNode;
+import com.fligneul.srm.ui.node.statistics.StatisticsNode;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.fxml.FXML;
@@ -68,6 +69,7 @@ public class MainContentNode extends AnchorPane {
         if (ERole.ADMINISTRATOR.equals(role)) {
             mainTabPane.getTabs().add(createTab("Historique", new HistoryNode()));
             mainTabPane.getTabs().add(createTab("Licenciés", new LicenseeNode()));
+            mainTabPane.getTabs().add(createTab("Statistiques", new StatisticsNode()));
             mainTabPane.getTabs().add(createTab("Réglages", new SettingsNode()));
         }
     }
