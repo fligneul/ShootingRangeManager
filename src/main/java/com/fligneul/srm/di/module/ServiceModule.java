@@ -3,10 +3,12 @@ package com.fligneul.srm.di.module;
 import com.fligneul.srm.service.AuthenticationService;
 import com.fligneul.srm.service.BackupService;
 import com.fligneul.srm.service.FirstStartService;
+import com.fligneul.srm.service.IExportService;
 import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.service.RoleService;
 import com.fligneul.srm.service.ShutdownService;
 import com.fligneul.srm.service.UserService;
+import com.fligneul.srm.service.XLSXExportService;
 import com.google.inject.AbstractModule;
 
 import javax.inject.Singleton;
@@ -26,5 +28,6 @@ public class ServiceModule extends AbstractModule {
         bind(ShutdownService.class).in(Singleton.class);
 
         bind(BackupService.class).in(Singleton.class);
+        bind(IExportService.class).to(XLSXExportService.class).in(Singleton.class);
     }
 }

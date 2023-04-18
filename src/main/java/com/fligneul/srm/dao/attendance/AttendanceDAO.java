@@ -160,6 +160,28 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
     }
 
     /**
+     * Return all licensee presence for the provided date and the provided firingPoints
+     *
+     * @param localDate
+     *         the requested date
+     * @param firingPointIdList
+     *         the requested firingPoints list
+     * @return a list of all {@link LicenseePresenceJfxModel} of the provided date and the provided firingPoints
+     */
+    public List<LicenseePresenceJfxModel> getByDateAndFiringPointId(final LocalDate localDate, final List<Integer> firingPointIdList) {
+        try {
+            return internalGet(
+                    Tables.ATTENDANCE.STARTDATE.greaterOrEqual(localDate.atTime(LocalTime.MIDNIGHT))
+                            .and(Tables.ATTENDANCE.STARTDATE.lessThan(localDate.plusDays(1).atTime(LocalTime.MIDNIGHT)))
+                            .and(Tables.ATTENDANCE.FIRINGPOINTID.in(firingPointIdList)))
+                    .collect(Collectors.toList());
+        } catch (DataAccessException e) {
+            LOGGER.error("Error during licensee presence get", e);
+        }
+        return new ArrayList<>();
+    }
+
+    /**
      * Return all licensee presence in DB
      *
      * @return a list of all {@link LicenseePresenceJfxModel}
@@ -227,6 +249,26 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         }
     }
 
+    /**
+     * Return true if the shooting range was opened for the given date
+     *
+     * @param date
+     *         date to check
+     * @return true if the shooting range was opened
+     */
+    public boolean wasOpened(final LocalDate date) {
+        if (date.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Can't test a future date");
+        }
+        return databaseConnectionService.getContext()
+                .select()
+                .from(Tables.ATTENDANCE)
+                .where(Tables.ATTENDANCE.STARTDATE.greaterOrEqual(date.atTime(LocalTime.MIDNIGHT))
+                        .and(Tables.ATTENDANCE.STARTDATE.lessThan(date.plusDays(1).atTime(LocalTime.MIDNIGHT))))
+                .fetch()
+                .isNotEmpty();
+    }
+
     private Stream<LicenseePresenceJfxModel> internalGet(final Condition... conditions) throws DataAccessException {
         return databaseConnectionService.getContext()
                 .select()
@@ -255,4 +297,5 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
 
         return builder.createLicenseePresenceJfxModel();
     }
+
 }
