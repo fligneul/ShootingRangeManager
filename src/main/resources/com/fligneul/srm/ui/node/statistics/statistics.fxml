@@ -41,7 +41,7 @@
             <Button fx:id="computeStatisticsButton" text="Générer" onAction="#computeStatistics" disable="true"/>
         </VBox>
         <Separator orientation="VERTICAL" prefHeight="200.0"/>
-        <VBox fx:id="statisticsDisplayContainer" visible="false" alignment="CENTER" HBox.hgrow="ALWAYS" spacing="5">
+        <VBox fx:id="statisticsDisplayContainer" visible="false" alignment="CENTER" HBox.hgrow="ALWAYS" spacing="20">
             <Label fx:id="statisticsGenerationLabel"/>
             <ProgressIndicator fx:id="statisticsGenerationIndicator" visible="false" managed="false"/>
         </VBox>

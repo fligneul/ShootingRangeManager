@@ -2,9 +2,11 @@ package com.fligneul.srm.service;
 
 import com.fligneul.srm.dao.attendance.AttendanceDAO;
 import com.fligneul.srm.dao.licensee.LicenseeDAO;
+import com.fligneul.srm.dao.range.FiringPointDAO;
 import com.fligneul.srm.generated.jooq.Tables;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import io.reactivex.rxjava3.core.Observable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,20 +46,25 @@ import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY_HYPHEN;
  */
 public class XLSXExportService implements IExportService {
     private static final Logger LOGGER = LogManager.getLogger(XLSXExportService.class);
+    private static final int HEADER_ROW_COUNT = 3;
+    private static final int HEADER_COLUMN_COUNT = 3;
+    private static final int LICENCE_COLUMN_ID = 0;
+    private static final int LASTNAME_COLUMN_ID = 1;
+    private static final int FIRSTNAME_COLUMN_ID = 2;
 
     private LicenseeDAO licenseeDAO;
     private AttendanceDAO attendanceDAO;
-    private List<LicenseeJfxModel> licenseeList;
+    private FiringPointDAO firingPointDAO;
     private Map<DayOfWeek, IndexedColors> daysOfWeekColorMap;
-    private Map<DayOfWeek, CellStyle> daysOfWeekStyleMap;
 
     /**
      * Inject GUICE dependencies
      */
     @Inject
-    public void injectDependencies(final LicenseeDAO licenseeDAO, final AttendanceDAO attendanceDAO) {
+    public void injectDependencies(final LicenseeDAO licenseeDAO, final AttendanceDAO attendanceDAO, final FiringPointDAO firingPointDAO) {
         this.licenseeDAO = licenseeDAO;
         this.attendanceDAO = attendanceDAO;
+        this.firingPointDAO = firingPointDAO;
 
         daysOfWeekColorMap = new HashMap<>();
         daysOfWeekColorMap.put(DayOfWeek.MONDAY, IndexedColors.LIGHT_TURQUOISE);
@@ -73,8 +81,11 @@ public class XLSXExportService implements IExportService {
         return Observable.fromCallable(() -> {
             LOGGER.info("Start statistics generation from {} to {}", beginDate, endDate);
             // Get all licensee
-            licenseeList = licenseeDAO.getAll(Arrays.asList(DSL.upper(Tables.LICENSEE.LASTNAME).asc(), DSL.upper(Tables.LICENSEE.FIRSTNAME).asc()));
+            List<LicenseeJfxModel> licenseeList = licenseeDAO.getAll(Arrays.asList(DSL.upper(Tables.LICENSEE.LASTNAME).asc(), DSL.upper(Tables.LICENSEE.FIRSTNAME).asc()));
+            // Map for cell style
+            Map<DayOfWeek, CellStyle> daysOfWeekStyleMap = new HashMap<>();
 
+            // Create a XLSX workbook and sheet
             XSSFWorkbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet(Stream.of(beginDate, endDate)
                     .map(LocalDate::getYear)
@@ -82,147 +93,177 @@ public class XLSXExportService implements IExportService {
                     .distinct()
                     .collect(Collectors.joining(EMPTY_HYPHEN)));
 
-            createStyle(workbook);
+            // Create style map
+            createStyle(workbook, daysOfWeekStyleMap);
 
-            createHeaders(workbook, sheet);
+            // Write selected firing points in 1st cell
+            writeSettings(workbook, sheet, firingPointIdList);
 
-            computePresenceForDate(workbook, sheet, firingPointIdList,
-                    beginDate.datesUntil(endDate.plusDays(1))
-                            .filter(date -> attendanceDAO.wasOpened(date))
-                            .collect(Collectors.toList()));
+            // Create table licensee headers
+            createLicenseeHeaders(workbook, sheet, licenseeList);
 
-            computeStats(sheet);
+            // Add total header on last row
+            createTotalHeader(workbook, sheet, licenseeList);
 
-            sheet.autoSizeColumn(0);
-            sheet.autoSizeColumn(1);
-            sheet.autoSizeColumn(2);
+            // Query the DB to retrieve presence for every registered licensee
+            computePresenceForDate(workbook, sheet, firingPointIdList, licenseeList, getOpenedDateList(beginDate, endDate), daysOfWeekStyleMap);
 
+            // Create statistics cells
+            computeStats(workbook, sheet, firingPointIdList);
+
+            // Save XLSX workbook to disk
             writeToDisk(file, workbook);
+
+            // Close workbook
+            workbook.close();
 
             LOGGER.info("Generation complete");
             return file.toPath();
         });
     }
 
-    private void createStyle(Workbook workbook) {
-        daysOfWeekStyleMap = new HashMap<>();
-        daysOfWeekColorMap.forEach((dayOfWeek, indexedColors) -> {
-            CellStyle style = workbook.createCellStyle();
-            style.setFillForegroundColor(indexedColors.index);
-            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            style.setBorderBottom(BorderStyle.MEDIUM);
-            style.setBorderTop(BorderStyle.MEDIUM);
-            style.setBorderRight(BorderStyle.MEDIUM);
-            style.setBorderLeft(BorderStyle.MEDIUM);
-            daysOfWeekStyleMap.put(dayOfWeek, style);
-        });
+    private void createStyle(Workbook workbook, Map<DayOfWeek, CellStyle> daysOfWeekStyleMap) {
+        daysOfWeekStyleMap.putAll(
+                daysOfWeekColorMap.entrySet().stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                            CellStyle style = workbook.createCellStyle();
+                            style.setFillForegroundColor(e.getValue().getIndex());
+                            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                            addMediumBorders(style);
+                            return style;
+                        }))
+        );
     }
 
-    private void createHeaders(XSSFWorkbook workbook, Sheet sheet) {
-        Row header = sheet.createRow(2);
+    private void writeSettings(XSSFWorkbook workbook, Sheet sheet, List<Integer> firingPointIdList) {
+        Row headerRow = getOrCreateRow(sheet, 0);
+        Cell headerCell = headerRow.createCell(0);
+        CellStyle headerStyle = workbook.createCellStyle();
+        addFont(workbook, headerStyle, 14, true);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        headerCell.setCellValue(firingPointIdList.stream()
+                .map(id -> firingPointDAO.getById(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(FiringPointJfxModel::getName)
+                .collect(Collectors.joining("/")));
+        headerCell.setCellStyle(headerStyle);
+    }
+
+    private void createLicenseeHeaders(XSSFWorkbook workbook, Sheet sheet, List<LicenseeJfxModel> licenseeList) {
+        // Create licensee header row
+        Row header = getOrCreateRow(sheet, 2);
 
         CellStyle headerStyle = workbook.createCellStyle();
-
-        XSSFFont font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeight(14);
-        headerStyle.setFont(font);
+        addFont(workbook, headerStyle, 14, true);
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
-        headerStyle.setBorderBottom(BorderStyle.MEDIUM);
-        headerStyle.setBorderTop(BorderStyle.MEDIUM);
-        headerStyle.setBorderRight(BorderStyle.MEDIUM);
-        headerStyle.setBorderLeft(BorderStyle.MEDIUM);
+        addMediumBorders(headerStyle);
 
-        Cell headerCell = header.createCell(0);
+        // Create title cells
+        Cell headerCell = header.createCell(LICENCE_COLUMN_ID);
         headerCell.setCellValue("Licence");
         headerCell.setCellStyle(headerStyle);
 
-        headerCell = header.createCell(1);
+        headerCell = header.createCell(LASTNAME_COLUMN_ID);
         headerCell.setCellValue("Nom");
         headerCell.setCellStyle(headerStyle);
 
-        headerCell = header.createCell(2);
+        headerCell = header.createCell(FIRSTNAME_COLUMN_ID);
         headerCell.setCellValue("Prénom");
         headerCell.setCellStyle(headerStyle);
 
+        // Create entry for each licensee
         for (int i = 0; i < licenseeList.size(); i++) {
             LicenseeJfxModel currentLicensee = licenseeList.get(i);
-            Row licenseeHeader = sheet.createRow(3 + i);
+            Row licenseeHeader = sheet.createRow(HEADER_ROW_COUNT + i);
 
             CellStyle style = workbook.createCellStyle();
-            style.setBorderBottom(BorderStyle.MEDIUM);
-            style.setBorderTop(BorderStyle.MEDIUM);
-            style.setBorderRight(BorderStyle.MEDIUM);
-            style.setBorderLeft(BorderStyle.MEDIUM);
+            addMediumBorders(style);
 
-            Cell licenseeHeaderCell = licenseeHeader.createCell(0);
+            Cell licenseeHeaderCell = licenseeHeader.createCell(LICENCE_COLUMN_ID);
             licenseeHeaderCell.setCellValue(currentLicensee.getLicenceNumber());
             licenseeHeaderCell.setCellStyle(style);
 
-            licenseeHeaderCell = licenseeHeader.createCell(1);
+            licenseeHeaderCell = licenseeHeader.createCell(LASTNAME_COLUMN_ID);
             licenseeHeaderCell.setCellValue(currentLicensee.getLastName());
             licenseeHeaderCell.setCellStyle(style);
 
-            licenseeHeaderCell = licenseeHeader.createCell(2);
+            licenseeHeaderCell = licenseeHeader.createCell(FIRSTNAME_COLUMN_ID);
             licenseeHeaderCell.setCellValue(currentLicensee.getFirstName());
             licenseeHeaderCell.setCellStyle(style);
         }
 
+        // Resize licensee column
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+        sheet.autoSizeColumn(2);
 
-        sheet.createFreezePane(3, 3);
+        // Freeze table headers
+        sheet.createFreezePane(HEADER_ROW_COUNT, HEADER_COLUMN_COUNT);
     }
 
-    private void computePresenceForDate(XSSFWorkbook workbook, Sheet sheet, List<Integer> firingPointIdList, List<LocalDate> dates) {
+    private void createTotalHeader(XSSFWorkbook workbook, Sheet sheet, List<LicenseeJfxModel> licenseeList) {
+        Row totalHeader = sheet.createRow(HEADER_ROW_COUNT + licenseeList.size() + 1);
+
+        CellStyle headerStyle = workbook.createCellStyle();
+        addFont(workbook, headerStyle, 14, true);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        addMediumBorders(headerStyle);
+
+        Cell headerCell = totalHeader.createCell(2);
+        headerCell.setCellValue("Total");
+        headerCell.setCellStyle(headerStyle);
+    }
+
+    private void computePresenceForDate(XSSFWorkbook workbook, Sheet sheet, List<Integer> firingPointIdList, List<LicenseeJfxModel> licenseeList, List<LocalDate> dates, Map<DayOfWeek, CellStyle> daysOfWeekStyleMap) {
         int offset = 0;
 
         Map<DayOfWeek, CellStyle> daysOfWeekHeaderStyleMap = new HashMap<>();
         daysOfWeekColorMap.forEach((dayOfWeek, indexedColors) -> {
             CellStyle style = workbook.createCellStyle();
-            XSSFFont font = workbook.createFont();
-            font.setBold(true);
-            font.setFontHeight(14);
-            style.setFont(font);
+            addFont(workbook, style, 14, true);
             style.setAlignment(HorizontalAlignment.CENTER);
             style.setFillForegroundColor(indexedColors.index);
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            style.setBorderBottom(BorderStyle.MEDIUM);
-            style.setBorderTop(BorderStyle.MEDIUM);
-            style.setBorderRight(BorderStyle.MEDIUM);
-            style.setBorderLeft(BorderStyle.MEDIUM);
+            addMediumBorders(style);
             daysOfWeekHeaderStyleMap.put(dayOfWeek, style);
         });
 
-        Row header0 = sheet.createRow(0);
-        Row header = sheet.createRow(1);
-        Row header2 = sheet.getRow(2);
+        // Table header are separated in 3 row
+        // 0 - Month and year
+        // 1 - Day of week
+        // 2 - Day of month
+        Row header0 = getOrCreateRow(sheet, 0);
+        Row header1 = getOrCreateRow(sheet, 1);
+        Row header2 = getOrCreateRow(sheet, 2);
 
         for (int i = 0; i < dates.size(); i++) {
 
             if (i == 0 || i > 1 && dates.get(i - 1).getDayOfMonth() > dates.get(i).getDayOfMonth()) {
+                // Add an empty column between each month
                 if (i > 0) {
                     offset++;
                 }
                 CellStyle style = workbook.createCellStyle();
-                XSSFFont font = workbook.createFont();
-                font.setBold(true);
-                font.setFontHeight(18);
-                style.setFont(font);
+                addFont(workbook, style, 18, true);
                 style.setAlignment(HorizontalAlignment.LEFT);
-                Cell cell = header0.createCell(3 + i + offset);
+                Cell cell = header0.createCell(HEADER_COLUMN_COUNT + i + offset);
                 cell.setCellValue(dates.get(i).format(DateTimeFormatter.ofPattern("MMMM yyyy")));
                 cell.setCellStyle(style);
             }
 
-            Cell headerCell = header.createCell(3 + i + offset);
+            Cell headerCell = header1.createCell(HEADER_COLUMN_COUNT + i + offset);
             headerCell.setCellValue(dates.get(i).format(DateTimeFormatter.ofPattern("E")));
             headerCell.setCellStyle(daysOfWeekHeaderStyleMap.get(dates.get(i).getDayOfWeek()));
 
-            headerCell = header2.createCell(3 + i + offset);
+            headerCell = header2.createCell(HEADER_COLUMN_COUNT + i + offset);
             headerCell.setCellValue(dates.get(i).getDayOfMonth());
             headerCell.setCellStyle(daysOfWeekHeaderStyleMap.get(dates.get(i).getDayOfWeek()));
 
             List<LicenseePresenceJfxModel> attendanceByDate = attendanceDAO.getByDateAndFiringPointId(dates.get(i), firingPointIdList);
 
+            // Fill presence for each day
             for (int j = 0; j < licenseeList.size(); j++) {
                 LicenseeJfxModel currentLicensee = licenseeList.get(j);
                 String value = attendanceByDate.stream()
@@ -232,22 +273,70 @@ public class XLSXExportService implements IExportService {
                         .distinct()
                         .collect(Collectors.joining("/"));
 
-                Row presenceHeader = sheet.getRow(3 + j);
-                Cell licenseeHeaderCell = presenceHeader.createCell(3 + i + offset);
+                Row presenceHeader = sheet.getRow(HEADER_ROW_COUNT + j);
+                Cell licenseeHeaderCell = presenceHeader.createCell(HEADER_COLUMN_COUNT + i + offset);
                 if (!value.isEmpty()) {
                     licenseeHeaderCell.setCellValue(value);
                 }
                 licenseeHeaderCell.setCellStyle(daysOfWeekStyleMap.get(dates.get(i).getDayOfWeek()));
             }
+
+            // Add total count by day
+            Row totalHeader = sheet.getRow(HEADER_ROW_COUNT + licenseeList.size() + 1);
+            Cell licenseeHeaderCell = totalHeader.createCell(HEADER_COLUMN_COUNT + i + offset);
+            licenseeHeaderCell.setCellFormula("COUNTA(" + sheet.getRow(HEADER_ROW_COUNT).getCell(HEADER_COLUMN_COUNT + i + offset).getAddress().formatAsString() + ":" + sheet.getRow(HEADER_ROW_COUNT + licenseeList.size() - 1).getCell(HEADER_COLUMN_COUNT + i + offset).getAddress().formatAsString() + ")");
+            licenseeHeaderCell.setCellStyle(daysOfWeekStyleMap.get(dates.get(i).getDayOfWeek()));
         }
     }
 
-    private void computeStats(Sheet sheet) {
-        for (int i = 3; i < sheet.getLastRowNum(); i++) {
-            Row currentRow = sheet.getRow(i);
-            int lastCellNum = currentRow.getLastCellNum();
-            Cell formulaCell = currentRow.createCell(lastCellNum + 1);
-            formulaCell.setCellFormula("COUNTA(" + currentRow.getCell(3).getAddress().formatAsString() + ":" + currentRow.getCell(lastCellNum - 1).getAddress().formatAsString() + ")");
+    private void computeStats(XSSFWorkbook workbook, Sheet sheet, List<Integer> firingPointIdList) {
+
+        // Add headers
+        Row currentRow = getOrCreateRow(sheet, 2);
+        int lastCellNum = currentRow.getLastCellNum();
+
+        // Create style
+        CellStyle style = workbook.createCellStyle();
+        addFont(workbook, style, 14, true);
+        addMediumBorders(style);
+        style.setAlignment(HorizontalAlignment.CENTER);
+
+        // By firingPoint
+        for (int j = 0; j < firingPointIdList.size(); j++) {
+            String firingPointName = firingPointDAO.getById(firingPointIdList.get(j)).orElseThrow().getName();
+            Cell headerCell = currentRow.createCell(lastCellNum + j + 1);
+            headerCell.setCellValue(firingPointName);
+            headerCell.setCellStyle(style);
+        }
+
+        // Total
+        Cell headerCell = currentRow.createCell(lastCellNum + firingPointIdList.size() + 1);
+        headerCell.setCellValue("Total");
+        headerCell.setCellStyle(style);
+
+        style = workbook.createCellStyle();
+        addFont(workbook, style, 12, false);
+        addMediumBorders(style);
+        style.setAlignment(HorizontalAlignment.CENTER);
+
+        // Add total count by licensee
+        // No total by licensee for last row (which is total by day)
+        for (int i = HEADER_ROW_COUNT; i < sheet.getLastRowNum() - 1; i++) {
+            currentRow = sheet.getRow(i);
+            lastCellNum = currentRow.getLastCellNum();
+
+            // Count by firingPoint
+            for (int j = 0; j < firingPointIdList.size(); j++) {
+                String firingPointName = firingPointDAO.getById(firingPointIdList.get(j)).orElseThrow().getName();
+                Cell formulaCell = currentRow.createCell(lastCellNum + j + 1);
+                formulaCell.setCellFormula("COUNTIF(" + currentRow.getCell(HEADER_COLUMN_COUNT).getAddress().formatAsString() + ":" + currentRow.getCell(lastCellNum - 1).getAddress().formatAsString() + ",\"*" + firingPointName + "*\")");
+                formulaCell.setCellStyle(style);
+            }
+
+            // Total count
+            Cell formulaCell = currentRow.createCell(lastCellNum + firingPointIdList.size() + 1);
+            formulaCell.setCellFormula("COUNTA(" + currentRow.getCell(HEADER_COLUMN_COUNT).getAddress().formatAsString() + ":" + currentRow.getCell(lastCellNum - 1).getAddress().formatAsString() + ")");
+            formulaCell.setCellStyle(style);
         }
     }
 
@@ -255,7 +344,30 @@ public class XLSXExportService implements IExportService {
         LOGGER.info("Save to disk");
         FileOutputStream outputStream = new FileOutputStream(file);
         workbook.write(outputStream);
-        workbook.close();
+    }
+
+    private List<LocalDate> getOpenedDateList(LocalDate beginDate, LocalDate endDate) {
+        return beginDate.datesUntil(endDate.plusDays(1))
+                .filter(date -> attendanceDAO.wasOpened(date))
+                .collect(Collectors.toList());
+    }
+
+    private void addFont(final XSSFWorkbook workbook, final CellStyle style, final int fontHeight, final boolean isBold) {
+        XSSFFont font = workbook.createFont();
+        font.setBold(isBold);
+        font.setFontHeight(fontHeight);
+        style.setFont(font);
+    }
+
+    private void addMediumBorders(final CellStyle style) {
+        style.setBorderBottom(BorderStyle.MEDIUM);
+        style.setBorderTop(BorderStyle.MEDIUM);
+        style.setBorderRight(BorderStyle.MEDIUM);
+        style.setBorderLeft(BorderStyle.MEDIUM);
+    }
+
+    private Row getOrCreateRow(Sheet sheet, int rowId) {
+        return Optional.ofNullable(sheet.getRow(rowId)).orElseGet(() -> sheet.createRow(rowId));
     }
 
 }

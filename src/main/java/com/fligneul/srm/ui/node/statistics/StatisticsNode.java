@@ -8,6 +8,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -57,6 +59,7 @@ public class StatisticsNode extends StackPane {
     private IExportService exportService;
 
     private Disposable disposable;
+    private final BooleanProperty isGeneratingProperty = new SimpleBooleanProperty(false);
 
     public StatisticsNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -66,6 +69,7 @@ public class StatisticsNode extends StackPane {
                         .or(statisticsEndDatePicker.valueProperty().isNull())
                         .or(Bindings.greaterThanOrEqual(statisticsBeginDatePicker.valueProperty().asString(), statisticsEndDatePicker.valueProperty().asString()))
                         .or(Bindings.isEmpty(rangeListView.getCheckModel().getCheckedIndices()))
+                        .or(isGeneratingProperty)
         );
 
         rangeListView.setCellFactory(listView -> new CheckBoxListCell<>(rangeListView::getItemBooleanProperty) {
@@ -108,6 +112,7 @@ public class StatisticsNode extends StackPane {
                     .subscribeOn(Schedulers.computation())
                     .observeOn(JavaFxScheduler.platform())
                     .doOnSubscribe(any -> {
+                        isGeneratingProperty.set(true);
                         statisticsGenerationLabel.setText("Génération en cours");
                         statisticsGenerationIndicator.setVisible(true);
                         statisticsGenerationIndicator.setManaged(true);
@@ -115,11 +120,12 @@ public class StatisticsNode extends StackPane {
                     })
                     .doOnComplete(() -> {
                         statisticsGenerationLabel.setText("Génération terminée");
-                        statisticsGenerationIndicator.setVisible(false);
-                        statisticsGenerationIndicator.setManaged(false);
                     })
                     .doOnError(throwable -> {
                         statisticsGenerationLabel.setText("Erreur lors de la génération");
+                    })
+                    .doOnTerminate(() -> {
+                        isGeneratingProperty.set(false);
                         statisticsGenerationIndicator.setVisible(false);
                         statisticsGenerationIndicator.setManaged(false);
                     })
