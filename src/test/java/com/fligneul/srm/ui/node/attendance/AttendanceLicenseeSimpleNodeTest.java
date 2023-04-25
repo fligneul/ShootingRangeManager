@@ -4,15 +4,18 @@ import com.fligneul.srm.service.PreferenceService;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
+import com.fligneul.srm.ui.service.licensee.ProfilePictureService;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -31,6 +34,7 @@ class AttendanceLicenseeSimpleNodeTest {
     private final AttendanceSelectionService attendanceSelectionServiceMock = Mockito.mock(AttendanceSelectionService.class);
     private final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModelMock = Mockito.mock(ShootingLogbookServiceToJfxModel.class);
     private final PreferenceService preferenceServiceMock = Mockito.mock(PreferenceService.class);
+    private final ProfilePictureService profilePictureServiceMock = Mockito.mock(ProfilePictureService.class);
     private final BehaviorSubject<Optional<LicenseeJfxModel>> selectedObs = BehaviorSubject.createDefault(Optional.empty());
     private final BehaviorSubject<Long> medicalCertificateValidityObs = BehaviorSubject.create();
 
@@ -40,9 +44,11 @@ class AttendanceLicenseeSimpleNodeTest {
         Mockito.when(shootingLogbookServiceToJfxModelMock.getShootingLogbookList()).thenReturn(FXCollections.emptyObservableList());
         Mockito.when(preferenceServiceMock.getMedicalCertificateValidityInfinite()).thenReturn(true);
         Mockito.when(preferenceServiceMock.medicalCertificateValidityChanged()).thenReturn(medicalCertificateValidityObs);
+        Mockito.when(profilePictureServiceMock.getProfilePicture()).thenReturn(Optional.of(new Image("/com/fligneul/srm/image/default-picture.png")));
+        Mockito.when(profilePictureServiceMock.getProfilePicture(ArgumentMatchers.matches("test.png"))).thenReturn(Optional.of(new Image("/com/fligneul/srm/image/test-picture.png")));
 
         attendanceLicenseeSimpleNode = new AttendanceLicenseeSimpleNode();
-        attendanceLicenseeSimpleNode.injectDependencies(attendanceSelectionServiceMock, shootingLogbookServiceToJfxModelMock, preferenceServiceMock);
+        attendanceLicenseeSimpleNode.injectDependencies(attendanceSelectionServiceMock, shootingLogbookServiceToJfxModelMock, preferenceServiceMock, profilePictureServiceMock);
         stage.setScene(new Scene(new StackPane(attendanceLicenseeSimpleNode), 600, 400));
         stage.show();
     }
@@ -60,6 +66,7 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.handisportCheckBox, checkBox -> !checkBox.isSelected());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceErrorLabel, NodeMatchers.isInvisible());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceBlacklistLabel, NodeMatchers.isInvisible());
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.profileImage, imageView -> imageView.getImage().getUrl().endsWith("default-picture.png"));
 
         selectedObs.onNext(Optional.of((new LicenseeJfxModelBuilder())
                 .setLicenceNumber("123")
@@ -72,6 +79,7 @@ class AttendanceLicenseeSimpleNodeTest {
                 .setSeason("SEASON_1")
                 .setAgeCategory("CATEGORY_1")
                 .setBlacklisted(true)
+                .setPhotoPath("test.png")
                 .createLicenseeJfxModel()));
 
         WaitForAsyncUtils.waitForFxEvents();
@@ -87,6 +95,7 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.handisportCheckBox, CheckBox::isSelected);
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceErrorLabel, NodeMatchers.isVisible());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceBlacklistLabel, NodeMatchers.isVisible());
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.profileImage, imageView -> imageView.getImage().getUrl().endsWith("test-picture.png"));
 
         selectedObs.onNext(Optional.of((new LicenseeJfxModelBuilder())
                 .setLicenceNumber("456")
@@ -113,6 +122,7 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.handisportCheckBox, checkBox -> !checkBox.isSelected());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceErrorLabel, NodeMatchers.isInvisible());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceBlacklistLabel, NodeMatchers.isInvisible());
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.profileImage, imageView -> imageView.getImage().getUrl().endsWith("default-picture.png"));
     }
 
     @Test

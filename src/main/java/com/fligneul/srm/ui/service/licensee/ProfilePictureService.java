@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.service.licensee;
 
 
+import com.fligneul.srm.di.module.UIModule;
 import javafx.scene.image.Image;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -9,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,14 +26,20 @@ import java.util.function.Predicate;
  */
 public class ProfilePictureService {
     private static final Logger LOGGER = LogManager.getLogger(ProfilePictureService.class);
-    private static final String DEFAULT_PICTURE_PATH = "/com/fligneul/srm/image/empty-picture.png";
     private static final int PROFILE_PICTURE_TARGET_SIZE = 300;
-    private final Path pictureDirectoryPath = Path.of(System.getenv("APPDATA"), "ShootingRangeManager", "pictures");
+    private final String defaultPicturePath;
+    private Image defaultPicture;
+    private final Path pictureDirectoryPath;
 
     /**
      * Constructor
      */
-    public ProfilePictureService() {
+    @Inject
+    public ProfilePictureService(@Named(UIModule.DEFAULT_PICTURE_PATH_INJECT) final String defaultPicturePath,
+                                 @Named(UIModule.PICTURE_DIRECTORY_PATH_INJECT) final Path pictureDirectoryPath) {
+        this.defaultPicturePath = defaultPicturePath;
+        this.pictureDirectoryPath = pictureDirectoryPath;
+
         // Check if directory exists
         File picturesDirectory = pictureDirectoryPath.toFile();
         if (!picturesDirectory.exists()) {
@@ -47,14 +56,18 @@ public class ProfilePictureService {
      * @return an Optional of the default profile picture
      */
     public Optional<Image> getProfilePicture() {
-        try (InputStream in = getClass().getResourceAsStream(DEFAULT_PICTURE_PATH)) {
-            if (in != null) {
-                return Optional.of(new Image(in));
-            }
-        } catch (IOException e) {
-            LOGGER.error("Can't find default picture", e);
-        }
-        return Optional.empty();
+        return Optional.ofNullable(defaultPicture)
+                .or(() -> {
+                    try (InputStream in = getClass().getResourceAsStream(defaultPicturePath)) {
+                        if (in != null) {
+                            defaultPicture = new Image(in);
+                            return Optional.of(defaultPicture);
+                        }
+                    } catch (IOException e) {
+                        LOGGER.error("Can't find default picture", e);
+                    }
+                    return Optional.empty();
+                });
     }
 
     /**

@@ -18,13 +18,20 @@ import com.fligneul.srm.ui.service.status.StatusServiceToJfxModel;
 import com.fligneul.srm.ui.service.user.UserViewService;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
+import java.nio.file.Path;
 
 /**
  * UI injection module
  */
 public class UIModule extends AbstractModule {
+
+    public static final String DEFAULT_PICTURE_PATH_INJECT = "DEFAULT_PICTURE_PATH";
+    public static final String PICTURE_DIRECTORY_PATH_INJECT = "PICTURE_DIRECTORY_PATH";
+
     @Override
     protected void configure() {
         bind(UserViewService.class).in(Singleton.class);
@@ -48,4 +55,17 @@ public class UIModule extends AbstractModule {
         bind(WeaponSettingsNode.class).in(Singleton.class);
         bind(StatusSettingsNode.class).in(Singleton.class);
     }
+
+    @Provides
+    @Named(DEFAULT_PICTURE_PATH_INJECT)
+    private String provideDefaultPicturePath() {
+        return "/com/fligneul/srm/image/empty-picture.png";
+    }
+
+    @Provides
+    @Named(PICTURE_DIRECTORY_PATH_INJECT)
+    private Path providePictureDirectoryPath() {
+        return Path.of(System.getenv("APPDATA"), "ShootingRangeManager", "pictures");
+    }
+
 }
