@@ -174,4 +174,9 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet author="Florian L." id="7">
+        <addColumn tableName="licensee">
+            <column name="photoPath" afterColumn="idPhoto" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

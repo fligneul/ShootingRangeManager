@@ -77,6 +77,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                             .set(Tables.LICENSEE.AGECATEGORY, item.getAgeCategory())
                             .set(Tables.LICENSEE.HANDISPORT, item.isHandisport())
                             .set(Tables.LICENSEE.BLACKLISTED, item.isBlacklisted())
+                            .set(Tables.LICENSEE.PHOTOPATH, item.getPhotoPath())
                             .returning()
                             .fetchOne())
                     .map(this::convertToJfxModel);
@@ -158,6 +159,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                     .set(Tables.LICENSEE.AGECATEGORY, item.getAgeCategory())
                     .set(Tables.LICENSEE.HANDISPORT, item.isHandisport())
                     .set(Tables.LICENSEE.BLACKLISTED, item.isBlacklisted())
+                    .set(Tables.LICENSEE.PHOTOPATH, item.getPhotoPath())
                     .where(Tables.LICENSEE.ID.eq(item.getId()))
                     .execute();
 
@@ -229,6 +231,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         Optional.ofNullable(licenseeRecord.getHandisport()).ifPresent(builder::setHandisport);
         Optional.ofNullable(licenseeRecord.getBlacklisted()).ifPresent(builder::setBlacklisted);
         shootingLogbookDAO.getByLicenseeId(licenseeRecord.getId()).ifPresent(builder::setShootingLogbook);
+        Optional.ofNullable(licenseeRecord.getPhotopath()).ifPresent(builder::setPhotoPath);
 
         return builder.createLicenseeJfxModel();
     }

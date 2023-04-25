@@ -46,6 +46,7 @@ public class LicenseeJfxModel {
     private final BooleanProperty handisport = new SimpleBooleanProperty(false);
     private final BooleanProperty blacklisted = new SimpleBooleanProperty(false);
     private final ObjectProperty<ShootingLogbookJfxModel> shootingLogbook = new SimpleObjectProperty<>();
+    private final StringProperty photoPath = new SimpleStringProperty(EMPTY);
 
     protected LicenseeJfxModel(int id, @NotBlank String firstName, @NotBlank String lastName, @NotNull LocalDate dateOfBirth) {
         this.id = id;
@@ -344,6 +345,18 @@ public class LicenseeJfxModel {
 
     public void setShootingLogbook(ShootingLogbookJfxModel shootingLogbook) {
         this.shootingLogbook.set(shootingLogbook);
+    }
+
+    public String getPhotoPath() {
+        return photoPath.get();
+    }
+
+    public StringProperty photoPathProperty() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(final String photoPath) {
+        this.photoPath.set(photoPath);
     }
 
     @Override

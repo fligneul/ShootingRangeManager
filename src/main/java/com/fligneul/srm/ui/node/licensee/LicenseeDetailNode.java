@@ -11,6 +11,7 @@ import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.node.utils.NodeUtils;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import com.fligneul.srm.ui.service.licensee.ProfilePictureService;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import io.reactivex.rxjavafx.observers.JavaFxObserver;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -22,7 +23,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 
@@ -109,12 +108,10 @@ public class LicenseeDetailNode extends VBox {
         NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, newV == null);
     };
     private PreferenceService preferenceService;
+    private ProfilePictureService profilePictureService;
 
     public LicenseeDetailNode() {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
-
-        Optional.ofNullable(getClass().getResourceAsStream("/blank.png"))
-                .ifPresent(is -> this.profileImage.setImage(new Image(is)));
     }
 
     /**
@@ -128,16 +125,20 @@ public class LicenseeDetailNode extends VBox {
      *         service to jfx model for shooting logbook
      * @param preferenceService
      *         application preferences
+     * @param profilePictureService
+     *         profile picture service
      */
     @Inject
     public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
                                    final LicenseeSelectionService licenseeSelectionService,
                                    final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel,
-                                   final PreferenceService preferenceService) {
+                                   final PreferenceService preferenceService,
+                                   final ProfilePictureService profilePictureService) {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
         this.licenseeSelectionService = licenseeSelectionService;
         this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
         this.preferenceService = preferenceService;
+        this.profilePictureService = profilePictureService;
 
         licenseeSelectionService.selectedObs()
                 .distinctUntilChanged()
@@ -177,6 +178,7 @@ public class LicenseeDetailNode extends VBox {
         idPhotoCheckBox.selectedProperty().unbind();
         licenceBlacklistLabel.managedProperty().unbind();
         licenceBlacklistLabel.visibleProperty().unbind();
+        profileImage.imageProperty().unbind();
 
         licenceNumberTextField.setText(EMPTY);
         firstnameTextField.setText(EMPTY);
@@ -205,6 +207,7 @@ public class LicenseeDetailNode extends VBox {
         licenceBlacklistLabel.setVisible(false);
         openOrCreateShootingLogbookButton.setDisable(true);
         NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, true);
+        profilePictureService.getProfilePicture().ifPresent(image -> profileImage.setImage(image));
     }
 
     private void updateComponents(final LicenseeJfxModel licenseeJfxModel) {
@@ -263,6 +266,8 @@ public class LicenseeDetailNode extends VBox {
 
         licenseeJfxModel.shootingLogbookProperty().addListener(shootingLogbookJfxModelChangeListener);
         NodeUtils.manageGetOrCreateFontIcon(openOrCreateShootingLogbookButton, licenseeJfxModel.getShootingLogbook() == null);
+
+        profileImage.imageProperty().bind(Bindings.createObjectBinding(() -> profilePictureService.getProfilePicture(licenseeJfxModel.getPhotoPath()).orElse(null), licenseeJfxModel.photoPathProperty()));
     }
 
     @FXML

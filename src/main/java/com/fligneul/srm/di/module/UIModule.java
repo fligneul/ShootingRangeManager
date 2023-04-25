@@ -11,6 +11,7 @@ import com.fligneul.srm.ui.service.attendance.AttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.history.HistoryAttendanceServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.LicenseeSelectionService;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import com.fligneul.srm.ui.service.licensee.ProfilePictureService;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
 import com.fligneul.srm.ui.service.status.StatusServiceToJfxModel;
@@ -27,6 +28,7 @@ public class UIModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(UserViewService.class).in(Singleton.class);
+        bind(ProfilePictureService.class).in(Singleton.class);
 
         bind(WeaponServiceToJfxModel.class).in(Singleton.class);
         bind(StatusServiceToJfxModel.class).in(Singleton.class);
