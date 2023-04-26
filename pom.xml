@@ -43,7 +43,7 @@
         <zip4j.version>2.11.2</zip4j.version>
         <imgscalr.version>4.2</imgscalr.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <commons-text.version>1.10</commons-text.version>
+        <commons-text.version>1.10.0</commons-text.version>
         <commons-lang.version>3.12.0</commons-lang.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-validator.version>1.4.1</commons-validator.version>
