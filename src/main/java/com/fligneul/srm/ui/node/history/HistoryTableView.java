@@ -2,7 +2,10 @@ package com.fligneul.srm.ui.node.history;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
+import com.fligneul.srm.ui.component.cell.table.SimpleTableCell;
+import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
@@ -18,12 +21,14 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_GREY;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_RED;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EDIT_FA_ICON;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY_HYPHEN;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TIME_FORMATTER;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TRASH_FA_ICON;
 
 /**
@@ -34,19 +39,19 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     private static final String FXML_PATH = "historyTableView.fxml";
 
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> licenseeColumn;
+    private TableColumn<LicenseePresenceJfxModel, LicenseeJfxModel> licenseeColumn;
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> statusColumn;
+    private TableColumn<LicenseePresenceJfxModel, Optional<StatusJfxModel>> statusColumn;
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> startTimeColumn;
+    private TableColumn<LicenseePresenceJfxModel, LocalDateTime> startTimeColumn;
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> firingPointColumn;
+    private TableColumn<LicenseePresenceJfxModel, FiringPointJfxModel> firingPointColumn;
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> firingPostColumn;
+    private TableColumn<LicenseePresenceJfxModel, Optional<FiringPostJfxModel>> firingPostColumn;
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> weaponColumn;
+    private TableColumn<LicenseePresenceJfxModel, Optional<WeaponJfxModel>> weaponColumn;
     @FXML
-    private TableColumn<LicenseePresenceJfxModel, String> stopTimeColumn;
+    private TableColumn<LicenseePresenceJfxModel, Optional<LocalDateTime>> stopTimeColumn;
     @FXML
     private TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> editColumn;
     @FXML
@@ -65,13 +70,27 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
      */
     @Inject
     private void injectDependencies(HistoryAttendanceServiceToJfxModel attendanceService) {
-        licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(FormatterUtils.formatLicenseeName(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee())));
-        statusColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStatus()).map(StatusJfxModel::getName).orElse("-")));
-        startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate().format(DateTimeFormatter.ofPattern("HH:mm"))));
-        firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint().getName()));
-        firingPostColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPost()).map(FiringPostJfxModel::getName).orElse("-")));
-        weaponColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getWeapon()).map(WeaponJfxModel::getName).orElse("-")));
-        stopTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStopDate()).map(date -> date.format(DateTimeFormatter.ofPattern("HH:mm"))).orElse("-")));
+        licenseeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getLicensee()));
+        licenseeColumn.setCellFactory(param -> new SimpleTableCell<>(FormatterUtils::formatLicenseeName));
+
+        statusColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStatus())));
+        statusColumn.setCellFactory(param -> new SimpleTableCell<>(optStatus -> optStatus.map(StatusJfxModel::getName).orElse(EMPTY_HYPHEN)));
+
+        startTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStartDate()));
+        startTimeColumn.setCellFactory(param -> new SimpleTableCell<>(startTime -> startTime.format(TIME_FORMATTER)));
+
+        firingPointColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPoint()));
+        firingPointColumn.setCellFactory(param -> new SimpleTableCell<>(FiringPointJfxModel::getName));
+
+        firingPostColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getFiringPost())));
+        firingPostColumn.setCellFactory(param -> new SimpleTableCell<>(optFiringPost -> optFiringPost.map(FiringPostJfxModel::getName).orElse(EMPTY_HYPHEN)));
+
+        weaponColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getWeapon())));
+        weaponColumn.setCellFactory(param -> new SimpleTableCell<>(optWeapon -> optWeapon.map(WeaponJfxModel::getName).orElse(EMPTY_HYPHEN)));
+
+        stopTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStopDate())));
+        stopTimeColumn.setCellFactory(param -> new SimpleTableCell<>(stopTime -> stopTime.map(date -> date.format(TIME_FORMATTER)).orElse(EMPTY_HYPHEN)));
+
         editColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue()));
         deleteColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue()));
 

@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.node.logbook;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.ValidatedDatePicker;
 import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
+import com.fligneul.srm.ui.component.cell.table.SimpleTableCell;
 import com.fligneul.srm.ui.model.logbook.ShootingLogbookJfxModel;
 import com.fligneul.srm.ui.model.logbook.ShootingSessionJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
@@ -11,6 +12,7 @@ import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -23,11 +25,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_RED;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.DATE_FORMATTER;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TRASH_FA_ICON;
 
@@ -49,11 +52,11 @@ public class ShootingLogbookNode extends VBox {
     @FXML
     private TableView<ShootingSessionJfxModel> shootingSessionTableView;
     @FXML
-    private TableColumn<ShootingSessionJfxModel, String> shootingSessionDateColumn;
+    private TableColumn<ShootingSessionJfxModel, LocalDate> shootingSessionDateColumn;
     @FXML
     private TableColumn<ShootingSessionJfxModel, String> shootingSessionInstructorNameColumn;
     @FXML
-    private TableColumn<ShootingSessionJfxModel, String> shootingSessionWeaponColumn;
+    private TableColumn<ShootingSessionJfxModel, Optional<WeaponJfxModel>> shootingSessionWeaponColumn;
     @FXML
     private TableColumn<ShootingSessionJfxModel, ShootingSessionJfxModel> deleteColumn;
     @FXML
@@ -78,15 +81,23 @@ public class ShootingLogbookNode extends VBox {
             }
         });
 
-        shootingSessionDateColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getSessionDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        shootingSessionDateColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getSessionDate()));
+        shootingSessionDateColumn.setCellFactory(param -> new SimpleTableCell<>(sessionDate -> sessionDate.format(DATE_FORMATTER)));
+        shootingSessionDateColumn.setSortType(TableColumn.SortType.DESCENDING);
+
         shootingSessionInstructorNameColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getInstructorName()));
-        shootingSessionWeaponColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getWeapon().map(WeaponJfxModel::getName).orElse("Personnelle")));
+
+        shootingSessionWeaponColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getWeapon()));
+        shootingSessionWeaponColumn.setCellFactory(param -> new SimpleTableCell<>(optWeapon -> optWeapon.map(WeaponJfxModel::getName).orElse("Personnelle")));
+
         deleteColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue()));
         deleteColumn.setCellFactory(param -> new ButtonActionTableCell<>(TRASH_FA_ICON, COLOR_RED, item -> {
             DialogUtils.showConfirmationDialog("Suppression d'une séance de tir", "Supprimer une séance de tir",
                     "Etes-vous sur de vouloir supprimer la séance de tir sélectionnée ?",
                     () -> shootingLogbookServiceToJfxModel.deleteShootingSession(currentShootingLogbookJfxModel.getId(), item));
         }));
+
+        shootingSessionTableView.getSortOrder().add(shootingSessionDateColumn);
 
     }
 
@@ -118,7 +129,9 @@ public class ShootingLogbookNode extends VBox {
         creationDatePicker.setValue(shootingLogbookJfxModel.getCreationDate());
         knowledgeCheckDatePicker.setValue(shootingLogbookJfxModel.getKnowledgeCheckDate());
         whiteTargetLevelCheckBox.setSelected(shootingLogbookJfxModel.hasWhiteTargetLevel());
-        shootingSessionTableView.setItems(shootingLogbookJfxModel.getSessions());
+        SortedList<ShootingSessionJfxModel> sortedList = new SortedList<>(shootingLogbookJfxModel.getSessions());
+        sortedList.comparatorProperty().bind(shootingSessionTableView.comparatorProperty());
+        shootingSessionTableView.setItems(sortedList);
     }
 
     @FXML
