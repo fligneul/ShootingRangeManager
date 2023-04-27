@@ -3,6 +3,7 @@ package com.fligneul.srm.ui.service.attendance;
 import com.fligneul.srm.dao.attendance.AttendanceDAO;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.util.ListUtil;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class AAttendanceServiceToJfxModel {
     private static final Logger LOGGER = LogManager.getLogger(AAttendanceServiceToJfxModel.class);
 
-    protected ObservableList<LicenseePresenceJfxModel> licenseePresenceJfxModels = FXCollections.observableArrayList();
+    protected ObservableList<LicenseePresenceJfxModel> licenseePresenceJfxModels = FXCollections.observableArrayList(model ->
+            new Observable[]{model.startDateProperty(), model.stopDateProperty(), model.firingPointProperty(), model.firingPostProperty(),
+                    model.weaponProperty(), model.statusProperty(), model.targetHolderProperty(), model.caliberProperty()});
+
     protected AttendanceDAO attendanceDAO;
 
     @Inject
