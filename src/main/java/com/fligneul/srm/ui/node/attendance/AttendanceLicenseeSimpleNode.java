@@ -6,6 +6,7 @@ import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.logbook.ShootingSessionJfxModel;
 import com.fligneul.srm.ui.node.utils.FormatterUtils;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
+import com.fligneul.srm.ui.service.licensee.ProfilePictureService;
 import com.fligneul.srm.ui.service.logbook.ShootingLogbookServiceToJfxModel;
 import io.reactivex.rxjavafx.observers.JavaFxObserver;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -16,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +42,8 @@ public class AttendanceLicenseeSimpleNode extends VBox {
     private static final PseudoClass ERROR_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("error");
     private static final PseudoClass WARNING_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("warning");
 
+    @FXML
+    protected ImageView profileImage;
     @FXML
     protected TextField licenceNumberTextField;
     @FXML
@@ -75,6 +79,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
 
     private ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel;
     private PreferenceService preferenceService;
+    private ProfilePictureService profilePictureService;
 
     /**
      * Create the node and load the associated FXML file
@@ -92,14 +97,23 @@ public class AttendanceLicenseeSimpleNode extends VBox {
      *         service to jfx model for shooting logbook
      * @param preferenceService
      *         application preferences
+     * @param profilePictureService
+     *         profile picture service
      */
     @Inject
     public void injectDependencies(final AttendanceSelectionService attendanceSelectionService,
                                    final ShootingLogbookServiceToJfxModel shootingLogbookServiceToJfxModel,
-                                   final PreferenceService preferenceService) {
+                                   final PreferenceService preferenceService,
+                                   final ProfilePictureService profilePictureService) {
         this.shootingLogbookServiceToJfxModel = shootingLogbookServiceToJfxModel;
         this.preferenceService = preferenceService;
-        attendanceSelectionService.selectedObs().distinctUntilChanged().observeOn(JavaFxScheduler.platform()).doOnNext(s -> LOGGER.debug("Select licensee " + s.map(LicenseeJfxModel::getLicenceNumber).orElse("null"))).subscribe(optLicensee -> optLicensee.ifPresentOrElse(this::updateComponents, this::clearComponents), LOGGER::error);
+        this.profilePictureService = profilePictureService;
+
+        attendanceSelectionService.selectedObs()
+                .distinctUntilChanged()
+                .observeOn(JavaFxScheduler.platform())
+                .doOnNext(s -> LOGGER.debug("Select licensee " + s.map(LicenseeJfxModel::getLicenceNumber).orElse("null")))
+                .subscribe(optLicensee -> optLicensee.ifPresentOrElse(this::updateComponents, this::clearComponents), LOGGER::error);
     }
 
     private void clearComponents() {
@@ -121,6 +135,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         licenceErrorLabel.visibleProperty().unbind();
         shootingLogbookCreationDateTextField.textProperty().unbind();
         shootingLogbookLastSessionDateTextField.textProperty().unbind();
+        profileImage.imageProperty().unbind();
 
         licenceNumberTextField.setText(EMPTY);
         firstnameTextField.setText(EMPTY);
@@ -140,6 +155,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         shootingLogbookPane.setVisible(false);
         shootingLogbookCreationDateTextField.setText(EMPTY);
         shootingLogbookLastSessionDateTextField.setText(EMPTY);
+        profilePictureService.getProfilePicture().ifPresent(image -> profileImage.setImage(image));
     }
 
     private void updateComponents(final LicenseeJfxModel licenseeJfxModel) {
@@ -190,5 +206,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
             shootingLogbookCreationDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getCreationDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)), shootingLogbookJfxModel.creationDateProperty()));
             shootingLogbookLastSessionDateTextField.textProperty().bind(Bindings.createStringBinding(() -> shootingLogbookJfxModel.getSessions().stream().map(ShootingSessionJfxModel::getSessionDate).max(Comparator.comparing(LocalDate::toEpochDay)).map(date -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))).orElse(EMPTY), shootingLogbookJfxModel.sessionsProperty()));
         });
+
+        profileImage.imageProperty().bind(Bindings.createObjectBinding(() -> profilePictureService.getProfilePicture(licenseeJfxModel.getPhotoPath()).or(() -> profilePictureService.getProfilePicture()).orElseThrow(), licenseeJfxModel.photoPathProperty()));
     }
 }

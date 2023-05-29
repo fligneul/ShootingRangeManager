@@ -43,8 +43,11 @@
         <commons-csv.version>1.9.0</commons-csv.version>
         <apache-poi.version>5.2.0</apache-poi.version>
         <zip4j.version>2.11.3</zip4j.version>
+        <imgscalr.version>4.2</imgscalr.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <commons-text.version>1.10.0</commons-text.version>
+        <commons-lang.version>3.12.0</commons-lang.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-validator.version>1.4.1</commons-validator.version>
 
         <!-- LOG -->
@@ -203,7 +206,7 @@
             <version>${snakeyaml.version}</version>
         </dependency>
 
-        <!-- Apache commons -->
+        <!-- CSV -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
@@ -229,6 +232,13 @@
             <version>${zip4j.version}</version>
         </dependency>
 
+        <!-- Image resize -->
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>${imgscalr.version}</version>
+        </dependency>
+
         <!-- Validation -->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -241,6 +251,16 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>${commons-text.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
 
         <!-- Validatiors -->

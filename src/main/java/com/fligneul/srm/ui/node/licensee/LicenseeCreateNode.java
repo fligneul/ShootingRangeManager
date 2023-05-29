@@ -7,6 +7,7 @@ import com.fligneul.srm.ui.component.ValidationUtils;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
+import com.fligneul.srm.ui.service.licensee.ProfilePictureService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -15,11 +16,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
@@ -85,14 +89,13 @@ public class LicenseeCreateNode extends VBox {
     private CheckBox idPhotoCheckBox;
 
     private LicenseeServiceToJfxModel licenseeServiceToJfxModel;
+    private ProfilePictureService profilePictureService;
 
     private LicenseeJfxModel currentLicenseeJfxModel;
+    private Path tempProfilePicture;
 
     public LicenseeCreateNode(final LicenseeJfxModel licenseeJfxModel) {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
-
-        Optional.ofNullable(getClass().getResourceAsStream("/blank.png"))
-                .ifPresent(is -> this.profileImage.setImage(new Image(is)));
 
         Optional.ofNullable(licenseeJfxModel).ifPresent(this::updateComponents);
 
@@ -117,6 +120,20 @@ public class LicenseeCreateNode extends VBox {
         firstnameTextField.setValidator(ValidationUtils.validateRequiredString());
         lastnameTextField.setValidator(ValidationUtils.validateRequiredString());
         saveButton.disableProperty().bind(firstnameTextField.isValidProperty().not().or(lastnameTextField.isValidProperty().not()).or(dateOfBirthPicker.isValidProperty().not()));
+
+        profileImage.setOnMouseClicked(mouseEvent -> {
+            FileChooser pictureChooser = new FileChooser();
+            pictureChooser.setTitle("Choix de la photo");
+            pictureChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            pictureChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png"));
+            File picture = pictureChooser.showOpenDialog(getScene().getWindow());
+            if (picture != null) {
+                tempProfilePicture = picture.toPath();
+                profileImage.setImage(new Image(picture.getPath()));
+            } else {
+                tempProfilePicture = null;
+            }
+        });
     }
 
     public LicenseeCreateNode() {
@@ -128,10 +145,16 @@ public class LicenseeCreateNode extends VBox {
      *
      * @param licenseeServiceToJfxModel
      *         service to jfx model for licensee
+     * @param profilePictureService
+     *         profile picture service
      */
     @Inject
-    public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel) {
+    public void injectDependencies(final LicenseeServiceToJfxModel licenseeServiceToJfxModel,
+                                   final ProfilePictureService profilePictureService) {
         this.licenseeServiceToJfxModel = licenseeServiceToJfxModel;
+        this.profilePictureService = profilePictureService;
+
+        profilePictureService.getProfilePicture().ifPresent(picture -> this.profileImage.setImage(picture));
     }
 
     private void clearComponents() {
@@ -159,6 +182,7 @@ public class LicenseeCreateNode extends VBox {
         handisportCheckBox.setSelected(false);
         blacklistCheckBox.setSelected(false);
         idPhotoCheckBox.setSelected(false);
+        profilePictureService.getProfilePicture().ifPresent(image -> profileImage.setImage(image));
     }
 
     private void updateComponents(LicenseeJfxModel licenseeJfxModel) {
@@ -186,6 +210,7 @@ public class LicenseeCreateNode extends VBox {
         handisportCheckBox.setSelected(licenseeJfxModel.isHandisport());
         blacklistCheckBox.setSelected(licenseeJfxModel.isBlacklisted());
         idPhotoCheckBox.setSelected(licenseeJfxModel.hasIdPhoto());
+        profilePictureService.getProfilePicture(licenseeJfxModel.getPhotoPath()).ifPresent(image -> profileImage.setImage(image));
     }
 
     @FXML
@@ -216,6 +241,10 @@ public class LicenseeCreateNode extends VBox {
         Optional.ofNullable(ageCategoryTextField.getText()).ifPresent(builder::setAgeCategory);
         Optional.ofNullable(medicalCertificateDatePicker.getValue()).ifPresent(builder::setMedicalCertificateDate);
         Optional.ofNullable(idCardDatePicker.getValue()).ifPresent(builder::setIdCardDate);
+        Optional.ofNullable(idCardDatePicker.getValue()).ifPresent(builder::setIdCardDate);
+        Optional.ofNullable(tempProfilePicture)
+                .flatMap(picture -> profilePictureService.saveProfilePicture(picture, Optional.ofNullable(currentLicenseeJfxModel).map(LicenseeJfxModel::getPhotoPath)))
+                .ifPresent(builder::setPhotoPath);
 
         licenseeServiceToJfxModel.saveLicensee(builder.createLicenseeJfxModel());
         clearComponents();
