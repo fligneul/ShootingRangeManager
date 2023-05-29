@@ -42,9 +42,9 @@
         <ikonli.version>12.3.1</ikonli.version>
         <commons-csv.version>1.9.0</commons-csv.version>
         <apache-poi.version>5.2.0</apache-poi.version>
-        <zip4j.version>2.11.2</zip4j.version>
+        <zip4j.version>2.11.3</zip4j.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <commons-text.version>1.9</commons-text.version>
+        <commons-text.version>1.10.0</commons-text.version>
         <commons-validator.version>1.4.1</commons-validator.version>
 
         <!-- LOG -->

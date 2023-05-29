@@ -4,15 +4,15 @@
 <?import javafx.scene.control.TableView?>
 <fx:root prefWidth="500.0" type="TableView" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <columns>
-        <TableColumn fx:id="licenseeColumn" prefWidth="105" text="Licencié" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="statusColumn" prefWidth="85" text="Statut" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="startTimeColumn" prefWidth="55" text="Début" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="firingPointColumn" prefWidth="85" text="Pas de tir" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="firingPostColumn" prefWidth="85" text="Poste de tir" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="weaponColumn" prefWidth="70" text="Arme" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="targetHolderColumn" prefWidth="60" text="Support" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="caliberColumn" prefWidth="60" text="Calibre" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="stopTimeColumn" prefWidth="55" text="Fin" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="exitColumn" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="licenseeColumn" prefWidth="105" text="Licencié" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="statusColumn" prefWidth="85" text="Statut" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="startTimeColumn" prefWidth="55" text="Début" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="firingPointColumn" prefWidth="85" text="Pas de tir" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="firingPostColumn" prefWidth="85" text="Poste de tir" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="weaponColumn" prefWidth="70" text="Arme" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="targetHolderColumn" prefWidth="60" text="Support" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="caliberColumn" prefWidth="60" text="Calibre" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="stopTimeColumn" prefWidth="55" text="Fin" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="exitColumn" sortable="false" style="-fx-alignment: center-left;"/>
     </columns>
 </fx:root>
