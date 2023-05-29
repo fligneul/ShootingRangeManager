@@ -10,12 +10,14 @@ import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
+import org.jooq.OrderField;
 import org.jooq.exception.DataAccessException;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -102,7 +104,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
     @Override
     public Optional<LicenseeJfxModel> getById(final int id) {
         try {
-            return internalGet(Tables.LICENSEE.ID.eq(id)).findFirst();
+            return internalGet(List.of(Tables.LICENSEE.ID.eq(id))).findFirst();
         } catch (DataAccessException e) {
             LOGGER.error("Error during licensee get", e);
         }
@@ -118,6 +120,23 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
     public List<LicenseeJfxModel> getAll() {
         try {
             return internalGet().collect(Collectors.toList());
+        } catch (DataAccessException e) {
+            LOGGER.error("Error during licensee get", e);
+
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * Return all licensee in DB ordered by the field in parameter
+     *
+     * @param orders
+     *         list of OrderField for the query
+     * @return an ordered list of all {@link LicenseeJfxModel}
+     */
+    public List<LicenseeJfxModel> getAll(List<OrderField<?>> orders) {
+        try {
+            return internalGet(List.of(), orders).collect(Collectors.toList());
         } catch (DataAccessException e) {
             LOGGER.error("Error during licensee get", e);
 
@@ -191,11 +210,20 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         }
     }
 
-    private Stream<LicenseeJfxModel> internalGet(Condition... conditions) throws DataAccessException {
+    private Stream<LicenseeJfxModel> internalGet() throws DataAccessException {
+        return internalGet(List.of());
+    }
+
+    private Stream<LicenseeJfxModel> internalGet(Collection<Condition> conditions) throws DataAccessException {
+        return internalGet(conditions, List.of());
+    }
+
+    private Stream<LicenseeJfxModel> internalGet(Collection<Condition> conditions, Collection<OrderField<?>> orders) throws DataAccessException {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.LICENSEE)
                 .where(conditions)
+                .orderBy(orders)
                 .fetch()
                 .stream()
                 .filter(record -> LicenseeRecord.class.isAssignableFrom(record.getClass()))
