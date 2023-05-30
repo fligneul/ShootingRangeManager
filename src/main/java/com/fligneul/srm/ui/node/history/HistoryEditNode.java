@@ -3,14 +3,18 @@ package com.fligneul.srm.ui.node.history;
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.ValidatedTextField;
 import com.fligneul.srm.ui.component.ValidationUtils;
+import com.fligneul.srm.ui.converter.CaliberConverter;
 import com.fligneul.srm.ui.converter.FiringPointConverter;
 import com.fligneul.srm.ui.converter.FiringPostConverter;
 import com.fligneul.srm.ui.converter.StatusConverter;
+import com.fligneul.srm.ui.converter.TargetHolderConverter;
 import com.fligneul.srm.ui.converter.WeaponConverter;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModelBuilder;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
@@ -61,6 +65,11 @@ public class HistoryEditNode extends VBox {
     private ComboBox<WeaponJfxModel> weaponComboBox;
     @FXML
     private ComboBox<StatusJfxModel> statusComboBox;
+    @FXML
+    private ComboBox<TargetHolderJfxModel> targetHolderComboBox;
+    @FXML
+    private ComboBox<CaliberJfxModel> caliberComboBox;
+
     @FXML
     private ValidatedTextField<LocalTime> startTimeTextField;
 
@@ -119,9 +128,21 @@ public class HistoryEditNode extends VBox {
                 firingPostComboBox.setItems(newV.getPosts());
                 firingPostComboBox.setDisable(newV.getPosts().isEmpty());
                 firingPostComboBox.requestFocus();
+
+                targetHolderComboBox.setItems(newV.getTargetHolders());
+                targetHolderComboBox.setDisable(newV.getTargetHolders().isEmpty());
+
+                caliberComboBox.setItems(newV.getCalibers());
+                caliberComboBox.setDisable(newV.getCalibers().isEmpty());
             } else {
                 firingPostComboBox.setItems(FXCollections.emptyObservableList());
                 firingPostComboBox.setDisable(true);
+
+                targetHolderComboBox.setItems(FXCollections.emptyObservableList());
+                targetHolderComboBox.setDisable(true);
+
+                caliberComboBox.setItems(FXCollections.emptyObservableList());
+                caliberComboBox.setDisable(true);
             }
         });
 
@@ -132,6 +153,9 @@ public class HistoryEditNode extends VBox {
 
         statusComboBox.setItems(statusService.getStatusList());
         statusComboBox.setConverter(new StatusConverter());
+
+        targetHolderComboBox.setConverter(new TargetHolderConverter());
+        caliberComboBox.setConverter(new CaliberConverter());
 
         saveButton.disableProperty().bind(startTimeTextField.isValidProperty().not()
                 .or(firingPointComboBox.getSelectionModel().selectedItemProperty().isNull()));
@@ -147,6 +171,8 @@ public class HistoryEditNode extends VBox {
         firingPostComboBox.getSelectionModel().clearSelection();
         weaponComboBox.getSelectionModel().clearSelection();
         statusComboBox.getSelectionModel().clearSelection();
+        targetHolderComboBox.getSelectionModel().clearSelection();
+        caliberComboBox.getSelectionModel().clearSelection();
         startTimeTextField.setText(EMPTY);
     }
 
@@ -167,6 +193,8 @@ public class HistoryEditNode extends VBox {
                 .ifPresent(time -> startTimeTextField.setText(time));
         weaponComboBox.getSelectionModel().select(licenseePresenceJfxModel.getWeapon());
         statusComboBox.getSelectionModel().select(licenseePresenceJfxModel.getStatus());
+        targetHolderComboBox.getSelectionModel().select(licenseePresenceJfxModel.getTargetHolder());
+        caliberComboBox.getSelectionModel().select(licenseePresenceJfxModel.getCaliber());
 
     }
 
@@ -184,6 +212,8 @@ public class HistoryEditNode extends VBox {
             Optional.ofNullable(firingPostComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setFiringPost);
             Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setWeapon);
             Optional.ofNullable(statusComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setStatus);
+            Optional.ofNullable(targetHolderComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setTargetHolder);
+            Optional.ofNullable(caliberComboBox.getSelectionModel().getSelectedItem()).ifPresent(builder::setCaliber);
 
             historyAttendanceServiceToJfxModel.saveLicenseePresence(builder.createLicenseePresenceJfxModel());
 

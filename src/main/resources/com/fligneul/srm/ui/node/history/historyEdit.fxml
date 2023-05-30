@@ -25,6 +25,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
 
             <Label text="Numéro de licence" GridPane.halignment="RIGHT"/>
@@ -45,6 +47,12 @@
             <Label text="Statut" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
             <ComboBox fx:id="statusComboBox" prefWidth="150.0" GridPane.columnIndex="3"
                       GridPane.rowIndex="3"/>
+            <Label text="Support" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="targetHolderComboBox" prefWidth="150.0" GridPane.columnIndex="3"
+                      GridPane.rowIndex="4"/>
+            <Label text="Calibre" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5"/>
+            <ComboBox fx:id="caliberComboBox" prefWidth="150.0" GridPane.columnIndex="3"
+                      GridPane.rowIndex="5"/>
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" top="10.0"/>
             </VBox.margin>

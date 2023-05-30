@@ -5,8 +5,10 @@ import com.fligneul.srm.ui.component.cell.table.ButtonActionTableCell;
 import com.fligneul.srm.ui.component.cell.table.SimpleTableCell;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
+import com.fligneul.srm.ui.model.range.CaliberJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPostJfxModel;
+import com.fligneul.srm.ui.model.range.TargetHolderJfxModel;
 import com.fligneul.srm.ui.model.status.StatusJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
@@ -51,6 +53,10 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
     @FXML
     private TableColumn<LicenseePresenceJfxModel, Optional<WeaponJfxModel>> weaponColumn;
     @FXML
+    private TableColumn<LicenseePresenceJfxModel, Optional<TargetHolderJfxModel>> targetHolderColumn;
+    @FXML
+    private TableColumn<LicenseePresenceJfxModel, Optional<CaliberJfxModel>> caliberColumn;
+    @FXML
     private TableColumn<LicenseePresenceJfxModel, Optional<LocalDateTime>> stopTimeColumn;
     @FXML
     private TableColumn<LicenseePresenceJfxModel, LicenseePresenceJfxModel> editColumn;
@@ -87,6 +93,12 @@ public class HistoryTableView extends TableView<LicenseePresenceJfxModel> {
 
         weaponColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getWeapon())));
         weaponColumn.setCellFactory(param -> new SimpleTableCell<>(optWeapon -> optWeapon.map(WeaponJfxModel::getName).orElse(EMPTY_HYPHEN)));
+
+        targetHolderColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getTargetHolder())));
+        targetHolderColumn.setCellFactory(param -> new SimpleTableCell<>(optTargetHolder -> optTargetHolder.map(TargetHolderJfxModel::getName).orElse(EMPTY_HYPHEN)));
+
+        caliberColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getCaliber())));
+        caliberColumn.setCellFactory(param -> new SimpleTableCell<>(optCaliber -> optCaliber.map(CaliberJfxModel::getName).orElse(EMPTY_HYPHEN)));
 
         stopTimeColumn.setCellValueFactory(licenseePresenceLicenseeJfxModelCellDataFeatures -> new ReadOnlyObjectWrapper<>(Optional.ofNullable(licenseePresenceLicenseeJfxModelCellDataFeatures.getValue().getStopDate())));
         stopTimeColumn.setCellFactory(param -> new SimpleTableCell<>(stopTime -> stopTime.map(date -> date.format(TIME_FORMATTER)).orElse(EMPTY_HYPHEN)));

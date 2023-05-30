@@ -4,12 +4,14 @@
 <?import javafx.scene.control.TableView?>
 <fx:root prefWidth="500.0" type="TableView" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <columns>
-        <TableColumn fx:id="licenseeColumn" prefWidth="170" text="Licencié" sortable="false" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="statusColumn" prefWidth="120" text="Statut" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="licenseeColumn" prefWidth="135" text="Licencié" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="statusColumn" prefWidth="110" text="Statut" sortable="false" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="startTimeColumn" prefWidth="55" text="Début" sortable="false" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="firingPointColumn" prefWidth="150" text="Pas de tir" sortable="false" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="firingPostColumn" prefWidth="150" text="Poste de tir" sortable="false" style="-fx-alignment: center-left;"/>
-        <TableColumn fx:id="weaponColumn" prefWidth="150" text="Arme" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="firingPointColumn" prefWidth="120" text="Pas de tir" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="firingPostColumn" prefWidth="120" text="Poste de tir" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="weaponColumn" prefWidth="120" text="Arme" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="targetHolderColumn" prefWidth="60" text="Support" sortable="false" style="-fx-alignment: center-left;"/>
+        <TableColumn fx:id="caliberColumn" prefWidth="60" text="Calibre" sortable="false" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="stopTimeColumn" prefWidth="55" text="Fin" sortable="false" style="-fx-alignment: center-left;"/>
         <TableColumn fx:id="editColumn" prefWidth="40.0" sortable="false" style="-fx-alignment: center;" />
         <TableColumn fx:id="deleteColumn" prefWidth="40.0" sortable="false" style="-fx-alignment: center;" />
