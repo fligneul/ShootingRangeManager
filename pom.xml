@@ -10,7 +10,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/fligneul/ShootingRangeManager.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:fligneul/ShootingRangeManager.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/fligneul/ShootingRangeManager.git</developerConnection>
         <url>https://github.com/fligneul/ShootingRangeManager</url>
     </scm>
 
