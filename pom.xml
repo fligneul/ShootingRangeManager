@@ -8,6 +8,12 @@
     <artifactId>shooting-range-manager</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
+    <scm>
+        <connection>scm:git:https://github.com/fligneul/ShootingRangeManager.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:fligneul/ShootingRangeManager.git</developerConnection>
+        <url>https://github.com/fligneul/ShootingRangeManager</url>
+    </scm>
+
     <repositories>
         <repository>
             <id>jitpack.io</id>
@@ -60,6 +66,8 @@
         <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+
         <launch4j-maven-plugin.version>2.1.2</launch4j-maven-plugin.version>
         <jsign-maven-plugin.version>4.0</jsign-maven-plugin.version>
         <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
@@ -382,6 +390,11 @@
                     <groupId>org.jooq</groupId>
                     <artifactId>jooq-codegen-maven</artifactId>
                     <version>${jooq.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
