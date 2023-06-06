@@ -4,13 +4,13 @@
 
     <groupId>com.fligneul.srm</groupId>
     <artifactId>shooting-range-manager</artifactId>
-    <version>1.2.3</version>
+    <version>4.5.6-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:https://github.com/fligneul/ShootingRangeManager.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/fligneul/ShootingRangeManager.git</developerConnection>
         <url>https://github.com/fligneul/ShootingRangeManager</url>
-      <tag>superTag-1.2.3</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <repositories>
