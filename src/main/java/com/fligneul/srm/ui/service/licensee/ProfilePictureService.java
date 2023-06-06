@@ -2,6 +2,7 @@ package com.fligneul.srm.ui.service.licensee;
 
 
 import com.fligneul.srm.di.module.UIModule;
+import com.fligneul.srm.util.FileUtil;
 import javafx.scene.image.Image;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -82,7 +83,7 @@ public class ProfilePictureService {
                 .filter(Predicate.not(String::isBlank))
                 .map(file -> pictureDirectoryPath.resolve(pictureFile))
                 .filter(Files::exists)
-                .map(path -> new Image(path.toString()))
+                .flatMap(FileUtil::loadImage)
                 .or(this::getProfilePicture);
     }
 

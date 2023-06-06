@@ -1,5 +1,6 @@
 package com.fligneul.srm.ui.service.licensee;
 
+import com.fligneul.srm.util.FileUtil;
 import javafx.scene.image.Image;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -22,7 +23,7 @@ public class ProfilePictureServiceTest {
     @AfterEach
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void cleanUp() {
-        File tmpDirectory = Path.of(System.getenv("TMP"), "ShootingRangeManager_" + salt).toFile();
+        File tmpDirectory = Path.of(System.getProperty("java.io.tmpdir"), "ShootingRangeManager_" + salt).toFile();
         for (File file : Objects.requireNonNull(tmpDirectory.listFiles())) {
             file.delete();
         }
@@ -32,7 +33,7 @@ public class ProfilePictureServiceTest {
     @Test
     void profilePictureTest() throws URISyntaxException {
         String defaultPicture = "/com/fligneul/srm/image/default-picture.png";
-        Path pictureDirectory = Path.of(System.getenv("TMP"), "ShootingRangeManager_" + salt);
+        Path pictureDirectory = Path.of(System.getProperty("java.io.tmpdir"), "ShootingRangeManager_" + salt);
         ProfilePictureService profilePictureService = new ProfilePictureService(defaultPicture, pictureDirectory);
 
         // Get default picture
@@ -50,7 +51,7 @@ public class ProfilePictureServiceTest {
         Optional<Image> image = profilePictureService.getProfilePicture(fileName.get());
         Assertions.assertTrue(image.isPresent());
         // Saved picture should be different from the original picture
-        Assertions.assertNotEquals(Optional.of(new Image(Path.of(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI()).toString())), image);
+        Assertions.assertNotEquals(FileUtil.loadImage(Path.of(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI()).toAbsolutePath()), image);
         // Saved picture should be different from the default one
         Assertions.assertNotEquals(profilePictureService.getProfilePicture(), image);
 
