@@ -150,7 +150,8 @@ public class CaliberDAO implements IDAOWithForeignKey<CaliberJfxModel> {
     public void delete(@Nonnull final CaliberJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.CALIBER)
+                    .update(Tables.CALIBER)
+                    .set(Tables.CALIBER.DELETED, true)
                     .where(Tables.CALIBER.ID.eq(item.getId()))
                     .execute();
             databaseConnectionService.getConnection().commit();
@@ -163,7 +164,7 @@ public class CaliberDAO implements IDAOWithForeignKey<CaliberJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.CALIBER)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.CALIBER.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> CaliberRecord.class.isAssignableFrom(record.getClass()))

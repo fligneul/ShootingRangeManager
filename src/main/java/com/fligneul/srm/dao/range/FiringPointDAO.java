@@ -153,7 +153,8 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
     public void delete(@Nonnull final FiringPointJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.FIRINGPOINT)
+                    .update(Tables.FIRINGPOINT)
+                    .set(Tables.FIRINGPOINT.DELETED, true)
                     .where(Tables.FIRINGPOINT.ID.eq(item.getId()))
                     .execute();
             databaseConnectionService.getConnection().commit();
@@ -167,7 +168,7 @@ public class FiringPointDAO implements IDAO<FiringPointJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.FIRINGPOINT)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.FIRINGPOINT.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> FiringpointRecord.class.isAssignableFrom(record.getClass()))
