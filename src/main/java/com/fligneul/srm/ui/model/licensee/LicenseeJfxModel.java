@@ -36,7 +36,7 @@ public class LicenseeJfxModel {
     private final StringProperty city = new SimpleStringProperty(EMPTY);
     private final StringProperty email = new SimpleStringProperty(EMPTY);
     private final StringProperty phoneNumber = new SimpleStringProperty(EMPTY);
-    private final StringProperty licenceState = new SimpleStringProperty(EMPTY);
+    private final ObjectProperty<ELicenceState> licenceState = new SimpleObjectProperty<>(ELicenceState.UNKNOWN);
     private final ObjectProperty<LocalDate> medicalCertificateDate = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDate> idCardDate = new SimpleObjectProperty<>();
     private final BooleanProperty idPhoto = new SimpleBooleanProperty(false);
@@ -227,15 +227,15 @@ public class LicenseeJfxModel {
         this.phoneNumber.set(phoneNumber);
     }
 
-    public String getLicenceState() {
+    public ELicenceState getLicenceState() {
         return licenceState.get();
     }
 
-    public StringProperty licenceStateProperty() {
+    public ObjectProperty<ELicenceState> licenceStateProperty() {
         return licenceState;
     }
 
-    public void setLicenceState(final String licenceState) {
+    public void setLicenceState(final ELicenceState licenceState) {
         this.licenceState.set(licenceState);
     }
 

@@ -24,7 +24,7 @@ public class LicenseeJfxModelBuilder {
     private String city;
     private String email;
     private String phoneNumber;
-    private String licenceState;
+    private ELicenceState licenceState;
     private LocalDate medicalCertificateDate;
     private LocalDate idCardDate;
     private Boolean idPhoto;
@@ -111,7 +111,7 @@ public class LicenseeJfxModelBuilder {
         return this;
     }
 
-    public LicenseeJfxModelBuilder setLicenceState(final String licenceState) {
+    public LicenseeJfxModelBuilder setLicenceState(final ELicenceState licenceState) {
         this.licenceState = licenceState;
         return this;
     }

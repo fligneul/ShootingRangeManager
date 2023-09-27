@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -135,7 +136,7 @@
                 <CheckBox fx:id="blacklistCheckBox" mnemonicParsing="false" GridPane.columnIndex="1"
                           GridPane.rowIndex="1"/>
                 <Label text="Etat de la licence" GridPane.rowIndex="2"/>
-                <TextField fx:id="licenceStateTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="licenceStateComboBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Label text="Date d'origine" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                 <DatePicker fx:id="firstLicenceDatePicker" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
                 <Label text="Saison" GridPane.rowIndex="3"/>
