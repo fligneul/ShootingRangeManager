@@ -150,7 +150,8 @@ public class TargetHolderDAO implements IDAOWithForeignKey<TargetHolderJfxModel>
     public void delete(@Nonnull final TargetHolderJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.TARGETHOLDER)
+                    .update(Tables.TARGETHOLDER)
+                    .set(Tables.TARGETHOLDER.DELETED, true)
                     .where(Tables.TARGETHOLDER.ID.eq(item.getId()))
                     .execute();
             databaseConnectionService.getConnection().commit();
@@ -163,7 +164,7 @@ public class TargetHolderDAO implements IDAOWithForeignKey<TargetHolderJfxModel>
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.TARGETHOLDER)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.TARGETHOLDER.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> TargetholderRecord.class.isAssignableFrom(record.getClass()))
