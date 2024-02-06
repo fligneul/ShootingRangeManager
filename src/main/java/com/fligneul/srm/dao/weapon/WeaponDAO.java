@@ -1,11 +1,14 @@
 package com.fligneul.srm.dao.weapon;
 
 import com.fligneul.srm.dao.IDAO;
+import com.fligneul.srm.dao.range.FiringPointDAO;
 import com.fligneul.srm.generated.jooq.Tables;
 import com.fligneul.srm.generated.jooq.tables.records.WeaponRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModelBuilder;
+import javafx.collections.FXCollections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
@@ -15,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,16 +31,20 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
     private static final Logger LOGGER = LogManager.getLogger(WeaponDAO.class);
 
     private DatabaseConnectionService databaseConnectionService;
+    private FiringPointDAO firingPointDAO;
 
     /**
      * Inject GUICE dependencies
      *
      * @param databaseConnectionService
      *         connection service to the DB
+     * @param firingPointDAO
+     *         dao for firing point
      */
     @Inject
-    public void injectDependencies(final DatabaseConnectionService databaseConnectionService) {
+    public void injectDependencies(final DatabaseConnectionService databaseConnectionService, final FiringPointDAO firingPointDAO) {
         this.databaseConnectionService = databaseConnectionService;
+        this.firingPointDAO = firingPointDAO;
     }
 
     /**
@@ -55,6 +63,7 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
                             .set(Tables.WEAPON.IDENTIFICATIONNUMBER, item.getIdentificationNumber())
                             .set(Tables.WEAPON.CALIBER, item.getCaliber())
                             .set(Tables.WEAPON.BUYDATE, item.getBuyDate())
+                            .set(Tables.WEAPON.AVAILABLEFIRINGPOINT, item.getAvailableFiringPoint().stream().map(FiringPointJfxModel::getId).map(String::valueOf).collect(Collectors.joining(",")))
                             .returning()
                             .fetchOne())
                     .map(this::convertToJfxModel);
@@ -118,6 +127,7 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
                     .set(Tables.WEAPON.IDENTIFICATIONNUMBER, item.getIdentificationNumber())
                     .set(Tables.WEAPON.CALIBER, item.getCaliber())
                     .set(Tables.WEAPON.BUYDATE, item.getBuyDate())
+                    .set(Tables.WEAPON.AVAILABLEFIRINGPOINT, item.getAvailableFiringPoint().stream().map(FiringPointJfxModel::getId).map(String::valueOf).collect(Collectors.joining(",")))
                     .where(Tables.WEAPON.ID.eq(item.getId()))
                     .execute();
 
@@ -162,12 +172,24 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
     }
 
     private WeaponJfxModel convertToJfxModel(WeaponRecord weaponRecord) {
+        List<FiringPointJfxModel> firingPoints =
+                Optional.ofNullable(weaponRecord.getAvailablefiringpoint())
+                        .map(availableFiringPoint ->
+                                Arrays.stream(weaponRecord.getAvailablefiringpoint().split(","))
+                                        .map(Integer::valueOf)
+                                        .map(firingPointDAO::getById)
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList()))
+                        .orElse(List.of());
+
         WeaponJfxModelBuilder builder = new WeaponJfxModelBuilder()
                 .setId(weaponRecord.getId())
                 .setName(weaponRecord.getName())
                 .setIdentificationNumber(weaponRecord.getIdentificationnumber())
                 .setCaliber(weaponRecord.getCaliber())
-                .setBuyDate(weaponRecord.getBuydate());
+                .setBuyDate(weaponRecord.getBuydate())
+                .setAvailableFiringPoint(FXCollections.observableArrayList(firingPoints));
 
         return builder.createWeaponJfxModel();
     }
