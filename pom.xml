@@ -43,6 +43,7 @@
         <commons-csv.version>1.9.0</commons-csv.version>
         <apache-poi.version>5.2.0</apache-poi.version>
         <zip4j.version>2.11.3</zip4j.version>
+        <imageio.version>3.10.1</imageio.version>
         <imgscalr.version>4.2</imgscalr.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <commons-text.version>1.10.0</commons-text.version>
@@ -230,6 +231,18 @@
             <groupId>net.lingala.zip4j</groupId>
             <artifactId>zip4j</artifactId>
             <version>${zip4j.version}</version>
+        </dependency>
+
+        <!-- ImageIO -->
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-bmp</artifactId>
+            <version>${imageio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-jpeg</artifactId>
+            <version>${imageio.version}</version>
         </dependency>
 
         <!-- Image resize -->
