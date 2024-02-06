@@ -1,7 +1,7 @@
 package com.fligneul.srm.ui.model.licensee;
 
 public enum ELicenceState {
-    PAID("Payé"), NOT_RENEWED("Non renouvelé"), FORBIDDEN("Interdit"), SECOND_LICENCE("2ème licence"), UNKNOWN("Inconnu");
+    PAID("Payé"), TO_PAY("A devoir"), NOT_RENEWED("Non renouvelé"), FORBIDDEN("Interdit"), SECOND_LICENCE("2ème licence"), OTHER("Initiation"), INTRODUCTION("Autre"), UNKNOWN("Inconnu");
 
     private final String text;
 

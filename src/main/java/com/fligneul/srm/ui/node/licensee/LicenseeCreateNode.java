@@ -136,7 +136,7 @@ public class LicenseeCreateNode extends VBox {
             }
         });
 
-        licenceStateComboBox.setItems(FXCollections.observableArrayList(ELicenceState.PAID, ELicenceState.NOT_RENEWED, ELicenceState.FORBIDDEN, ELicenceState.SECOND_LICENCE, ELicenceState.UNKNOWN));
+        licenceStateComboBox.setItems(FXCollections.observableArrayList(ELicenceState.values()));
 
         Optional.ofNullable(licenseeJfxModel).ifPresent(this::updateComponents);
 
