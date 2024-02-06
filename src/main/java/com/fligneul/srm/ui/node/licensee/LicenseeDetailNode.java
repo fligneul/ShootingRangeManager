@@ -230,7 +230,7 @@ public class LicenseeDetailNode extends VBox {
         cityTextField.textProperty().bind(licenseeJfxModel.cityProperty());
         emailTextField.textProperty().bind(licenseeJfxModel.emailProperty());
         phoneNumberTextField.textProperty().bind(licenseeJfxModel.phoneNumberProperty());
-        licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
+        licenceStateTextField.textProperty().bind(Bindings.createStringBinding(() -> licenseeJfxModel.getLicenceState().toString(), licenseeJfxModel.licenceStateProperty()));
         firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getFirstLicenceDate()), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());

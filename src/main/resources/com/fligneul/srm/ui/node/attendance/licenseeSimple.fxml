@@ -73,7 +73,7 @@
                         <Font name="System Bold" size="14.0"/>
                     </font>
                 </Label>
-                <Label text="Etat" GridPane.rowIndex="2"/>
+                <Label text="Statut" GridPane.rowIndex="2"/>
                 <TextField fx:id="licenceStateTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Label text="Date d'origine" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                 <TextField fx:id="firstLicenceDateTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
