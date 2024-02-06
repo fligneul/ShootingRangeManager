@@ -114,8 +114,11 @@ public class ProfilePictureService {
             BufferedImage inputImage = ImageIO.read(picture.toFile());
             BufferedImage scaledImage = Scalr.resize(inputImage, Scalr.Mode.FIT_TO_WIDTH, PROFILE_PICTURE_TARGET_SIZE);
             // Generate random filename
-            String imageName = RandomStringUtils.randomAlphanumeric(20).toUpperCase() + "." + PROFILE_PICTURE_TARGET_EXTENSION;
+            String imageName = RandomStringUtils.randomAlphanumeric(32).toUpperCase() + "." + PROFILE_PICTURE_TARGET_EXTENSION;
             File outputFile = new File(pictureDirectoryPath.toString(), imageName);
+            if (outputFile.exists()) {
+                throw new IOException("Filename collision");
+            }
             ImageIO.write(scaledImage, PROFILE_PICTURE_TARGET_EXTENSION, outputFile);
             return Optional.of(imageName);
         } catch (IOException e) {
