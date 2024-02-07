@@ -107,7 +107,7 @@ public class ProfilePictureService {
                         if (oldPicture.delete()) {
                             LOGGER.info("Old profile picture successfully deleted");
                         } else {
-                            LOGGER.error("Error during old profile picture deletion");
+                            LOGGER.warn("Error during old profile picture deletion");
                         }
                     });
             // Load image and resize it
@@ -120,7 +120,7 @@ public class ProfilePictureService {
                 throw new IOException("Filename collision");
             }
             ImageIO.write(scaledImage, PROFILE_PICTURE_TARGET_EXTENSION, outputFile);
-            return Optional.of(imageName);
+            return outputFile.exists() ? Optional.of(imageName) : Optional.empty();
         } catch (IOException e) {
             LOGGER.error("Error during picture save", e);
             return Optional.empty();

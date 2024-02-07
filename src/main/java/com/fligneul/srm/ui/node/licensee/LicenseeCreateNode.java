@@ -126,7 +126,7 @@ public class LicenseeCreateNode extends VBox {
             FileChooser pictureChooser = new FileChooser();
             pictureChooser.setTitle("Choix de la photo");
             pictureChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-            pictureChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png"));
+            pictureChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp"));
             File picture = pictureChooser.showOpenDialog(getScene().getWindow());
             if (picture != null) {
                 tempProfilePicture = picture.toPath();
