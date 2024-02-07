@@ -36,8 +36,8 @@
                         <ComboBox fx:id="firingPointComboBox" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <Label text="Poste de tir" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
                         <ComboBox fx:id="firingPostComboBox" disable="true" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                        <Label text="Arme du club" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-                        <ComboBox fx:id="weaponComboBox" prefWidth="125.0" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <Label text="Arme" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="weaponComboBox" disable="true" prefWidth="125.0" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                         <Label text="Porte cible" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
                         <ComboBox fx:id="targetHolderComboBox" disable="true" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                         <Label text="Calibre" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
