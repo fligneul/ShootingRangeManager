@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.service.weapon;
 
 import com.fligneul.srm.dao.weapon.WeaponDAO;
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.util.ListUtil;
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class WeaponServiceToJfxModel {
     private static final Logger LOGGER = LogManager.getLogger(WeaponServiceToJfxModel.class);
@@ -26,6 +28,13 @@ public class WeaponServiceToJfxModel {
 
     public ObservableList<WeaponJfxModel> getWeaponList() {
         return weaponJfxModels;
+    }
+
+    public ObservableList<WeaponJfxModel> getWeaponListForFiringPoint(FiringPointJfxModel firingPointJfxModel) {
+        return FXCollections.observableArrayList(
+                weaponJfxModels.stream()
+                        .filter(weapon -> weapon.getAvailableFiringPoint().stream().anyMatch(fpModel -> fpModel.getId() == firingPointJfxModel.getId()))
+                        .collect(Collectors.toList()));
     }
 
     public boolean saveWeapon(WeaponJfxModel weaponJfxModel) {

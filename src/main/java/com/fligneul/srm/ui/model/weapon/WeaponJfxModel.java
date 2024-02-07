@@ -1,14 +1,19 @@
 package com.fligneul.srm.ui.model.weapon;
 
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 
@@ -25,14 +30,16 @@ public class WeaponJfxModel {
     private final IntegerProperty identificationNumber = new SimpleIntegerProperty();
     private final StringProperty caliber = new SimpleStringProperty(EMPTY);
     private final ObjectProperty<LocalDate> buyDate = new SimpleObjectProperty<>(LocalDate.EPOCH);
+    private final ListProperty<FiringPointJfxModel> availableFiringPoint = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 
-    protected WeaponJfxModel(int id, String name, Integer identificationNumber, String caliber, LocalDate buyDate) {
+    protected WeaponJfxModel(int id, String name, Integer identificationNumber, String caliber, LocalDate buyDate, ObservableList<FiringPointJfxModel> availableFiringPointList) {
         this.id = id;
         this.name.set(name);
         this.identificationNumber.set(identificationNumber);
         this.caliber.set(caliber);
         this.buyDate.set(buyDate);
+        this.availableFiringPoint.set(availableFiringPointList);
     }
 
     public int getId() {
@@ -85,5 +92,13 @@ public class WeaponJfxModel {
 
     public void setBuyDate(final LocalDate buyDate) {
         this.buyDate.set(buyDate);
+    }
+
+    public ObservableList<FiringPointJfxModel> getAvailableFiringPoint() {
+        return availableFiringPoint.get();
+    }
+
+    public ListProperty<FiringPointJfxModel> availableFiringPointProperty() {
+        return availableFiringPoint;
     }
 }
