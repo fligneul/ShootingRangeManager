@@ -47,6 +47,7 @@
                     <TableColumn fx:id="shootingSessionDateColumn" prefWidth="75.0" text="Date"/>
                     <TableColumn fx:id="shootingSessionInstructorNameColumn" prefWidth="150" text="Nom du contrôleur" sortable="false" />
                     <TableColumn fx:id="shootingSessionWeaponColumn" prefWidth="75.0" text="Arme" sortable="false" />
+                    <TableColumn fx:id="editColumn" prefWidth="40.0" sortable="false" style="-fx-alignment: center;"/>
                     <TableColumn fx:id="deleteColumn" prefWidth="40.0" sortable="false" style="-fx-alignment: center;"/>
                 </columns>
             </TableView>

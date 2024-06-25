@@ -29,8 +29,10 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_GREY;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.COLOR_RED;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.DATE_FORMATTER;
+import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EDIT_FA_ICON;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.TRASH_FA_ICON;
 
@@ -57,6 +59,8 @@ public class ShootingLogbookNode extends VBox {
     private TableColumn<ShootingSessionJfxModel, String> shootingSessionInstructorNameColumn;
     @FXML
     private TableColumn<ShootingSessionJfxModel, Optional<WeaponJfxModel>> shootingSessionWeaponColumn;
+    @FXML
+    private TableColumn<ShootingSessionJfxModel, ShootingSessionJfxModel> editColumn;
     @FXML
     private TableColumn<ShootingSessionJfxModel, ShootingSessionJfxModel> deleteColumn;
     @FXML
@@ -89,6 +93,11 @@ public class ShootingLogbookNode extends VBox {
 
         shootingSessionWeaponColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue().getWeapon()));
         shootingSessionWeaponColumn.setCellFactory(param -> new SimpleTableCell<>(optWeapon -> optWeapon.map(WeaponJfxModel::getName).orElse("Personnelle")));
+
+        editColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue()));
+        editColumn.setCellFactory(param -> new ButtonActionTableCell<>(EDIT_FA_ICON, COLOR_GREY, item -> {
+            DialogUtils.showCustomDialog("Modification d'une séance de tir", new ShootingSessionDialog(currentShootingLogbookJfxModel, item));
+        }));
 
         deleteColumn.setCellValueFactory(cellDataFeatures -> new ReadOnlyObjectWrapper<>(cellDataFeatures.getValue()));
         deleteColumn.setCellFactory(param -> new ButtonActionTableCell<>(TRASH_FA_ICON, COLOR_RED, item -> {

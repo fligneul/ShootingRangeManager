@@ -48,8 +48,8 @@
             <fx:define>
                 <ToggleGroup fx:id="weaponGroup"/>
             </fx:define>
-            <RadioButton text="Personelle" toggleGroup="$weaponGroup" selected="true" onAction="#personalWeapon"/>
-            <RadioButton text="Club" toggleGroup="$weaponGroup" onAction="#clubWeapon"/>
+            <RadioButton fx:id="personalWeaponToggle" text="Personelle" toggleGroup="$weaponGroup" selected="true" onAction="#personalWeapon"/>
+            <RadioButton fx:id="clubWeaponToggle" text="Club" toggleGroup="$weaponGroup" onAction="#clubWeapon"/>
         </HBox>
         <ComboBox fx:id="weaponComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" disable="true"/>
 
