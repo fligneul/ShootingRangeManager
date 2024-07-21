@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.SIGN_KEYSTORE }}
+        run: |
+          echo $ENCODED_STRING > keystore-b64.txt
+          certutil -decode keystore-b64.txt keystore.pfx
+
+      - uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # 1.6.0
+        name: Download JRE for release
+        with:
+          url: "${{ vars.JRE_DOWNLOAD_URL }}"
+          target: download/
+          retry-times: 3
+
+      - name: Extract some files
+        run: 7z x download/*.zip
+
+      - name: List Files
+        run: Get-ChildItem -Path .
+
+      - name: Build with Maven
+        run: mvn -B clean package --file pom.xml -Djre_path=${{ vars.JRE_DOWNLOAD_URL }} -Dsrm.keystore.path=srm-keystore.pfx -Dsrm.keystore.alias=${{ secrets.SIGN_KEYSTORE_ALIAS }} -Dsrm.keystore.password=${{ secrets.SIGN_KEYSTORE_PASSWORD }} -Pdist
