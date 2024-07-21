@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: Release version
+        required: true
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.SIGN_KEYSTORE }}" > keystore-b64.txt
+          certutil -decode keystore-b64.txt keystore.pfx
+          del keystore-b64.txt
+
+      - uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # 1.6.0
+        name: Download JRE for release
+        with:
+          url: "${{ vars.JRE_DOWNLOAD_URL }}"
+          target: download/
+          retry-times: 3
+
+      - name: Extract some files
+        run: 7z x download/*.zip
+
+      - name: Set release version
+        run: mvn versions:set -DnewVersion="${{ github.event.inputs.version }}"
+
+      - name: Build with Maven
+        run: mvn -B clean package -Pdist -DJRE_PATH="${{ vars.JRE_DIRECTORY }}" -DSRM_KEYSTORE_ALIAS="${{ secrets.SIGN_KEYSTORE_ALIAS }}" -DSRM_KEYSTORE_PASSWORD="${{ secrets.SIGN_KEYSTORE_PASSWORD }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ShootingRangeManager
+          path: target/shooting-range-manager-*.zip

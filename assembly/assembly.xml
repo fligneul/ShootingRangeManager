@@ -28,7 +28,7 @@
             <outputDirectory>lib</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${jre_path}</directory>
+            <directory>${JRE_PATH}</directory>
             <outputDirectory>java</outputDirectory>
         </fileSet>
     </fileSets>
