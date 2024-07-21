@@ -2,7 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
-  push:
+    inputs:
+      version:
+        type: string
+        description: Release version
+        required: true
 
 jobs:
   build:
@@ -20,11 +24,10 @@ jobs:
           cache: maven
 
       - name: Decode Keystore
-        env:
-          ENCODED_STRING: ${{ secrets.SIGN_KEYSTORE }}
         run: |
-          echo $ENCODED_STRING > keystore-b64.txt
+          echo "${{ secrets.SIGN_KEYSTORE }}" > keystore-b64.txt
           certutil -decode keystore-b64.txt keystore.pfx
+          del keystore-b64.txt
 
       - uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # 1.6.0
         name: Download JRE for release
@@ -36,8 +39,13 @@ jobs:
       - name: Extract some files
         run: 7z x download/*.zip
 
-      - name: List Files
-        run: Get-ChildItem -Path .
+      - name: Set release version
+        run: mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
 
       - name: Build with Maven
-        run: mvn -B clean package --file pom.xml -Djre_path=${{ vars.JRE_DOWNLOAD_URL }} -Dsrm.keystore.path=srm-keystore.pfx -Dsrm.keystore.alias=${{ secrets.SIGN_KEYSTORE_ALIAS }} -Dsrm.keystore.password=${{ secrets.SIGN_KEYSTORE_PASSWORD }} -Pdist
+        run: mvn -B clean package -Pdist -DJRE_PATH="${{ vars.JRE_DIRECTORY }}" -DSRM_KEYSTORE_ALIAS="${{ secrets.SIGN_KEYSTORE_ALIAS }}" -DSRM_KEYSTORE_PASSWORD="${{ secrets.SIGN_KEYSTORE_PASSWORD }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ShootingRangeManager
+          path: target/shooting-range-manager-*.zip

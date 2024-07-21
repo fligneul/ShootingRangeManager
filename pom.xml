@@ -584,9 +584,9 @@
                                     <file>${project.build.directory}/${application.name}.exe</file>
                                     <name>${application.name}</name>
                                     <url>https://github.com/fligneul/ShootingRangeManager</url>
-                                    <keystore>${srm.keystore.path}</keystore>
-                                    <alias>${srm.keystore.alias}</alias>
-                                    <storepass>${srm.keystore.password}</storepass>
+                                    <keystore>keystore.pfx</keystore>
+                                    <alias>${SRM_KEYSTORE_ALIAS}</alias>
+                                    <storepass>${SRM_KEYSTORE_PASSWORD}</storepass>
                                 </configuration>
                             </execution>
                         </executions>
