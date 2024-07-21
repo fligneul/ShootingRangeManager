@@ -111,4 +111,6 @@ fabric.properties
 
 ### Project specific
 *.db
+*.old
 *.pfx
+local/
