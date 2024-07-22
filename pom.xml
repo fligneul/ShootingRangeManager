@@ -541,11 +541,9 @@
                                     </classPath>
                                     <jre>
                                         <path>./java</path>
-                                        <bundledJre64Bit>true</bundledJre64Bit>
-                                        <bundledJreAsFallback>false</bundledJreAsFallback>
                                         <minVersion>17</minVersion>
-                                        <jdkPreference>preferJre</jdkPreference>
-                                        <runtimeBits>64/32</runtimeBits>
+                                        <requiresJdk>false</requiresJdk>
+                                        <requires64Bit>true</requires64Bit>
                                         <opts>
                                             <opt>-Dsrm.data.dir="%ProgramData%/${application.name}"</opt>
                                         </opts>
@@ -604,6 +602,8 @@
                                     <descriptors>
                                         <descriptor>assembly/assembly.xml</descriptor>
                                     </descriptors>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <finalName>ShootingRangeManager-v${project.version}</finalName>
                                 </configuration>
                             </execution>
                         </executions>
