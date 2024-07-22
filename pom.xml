@@ -71,6 +71,10 @@
         <junit-jupiter.version>5.10.3</junit-jupiter.version>
         <testfx.version>4.0.18</testfx.version>
         <mockito.version>5.12.0</mockito.version>
+
+        <!-- Args default values -->
+        <SRM_KEYSTORE_ALIAS>dummy</SRM_KEYSTORE_ALIAS>
+        <SRM_KEYSTORE_PASSWORD>dummy</SRM_KEYSTORE_PASSWORD>
     </properties>
 
     <dependencies>
