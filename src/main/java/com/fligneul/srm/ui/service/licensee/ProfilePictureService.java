@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -82,7 +83,9 @@ public class ProfilePictureService {
                 .filter(Predicate.not(String::isBlank))
                 .map(file -> pictureDirectoryPath.resolve(pictureFile))
                 .filter(Files::exists)
-                .map(path -> new Image(path.toString()))
+                .map(Path::toUri)
+                .map(URI::toString)
+                .map(Image::new)
                 .or(this::getProfilePicture);
     }
 

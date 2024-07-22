@@ -30,47 +30,51 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <javafx.version>18.0.2</javafx.version>
-        <controlsfx.version>11.1.2</controlsfx.version>
+        <javafx.version>21.0.4</javafx.version>
+        <controlsfx.version>11.2.1</controlsfx.version>
         <guice.version>5.1.0</guice.version>
-        <rxjava3.version>3.1.6</rxjava3.version>
+        <rxjava3.version>3.1.8</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
         <h2.version>2.1.214</h2.version>
-        <liquibase.version>4.12.0</liquibase.version>
-        <snakeyaml.version>1.33</snakeyaml.version>
-        <jooq.version>3.16.15</jooq.version>
+        <liquibase.version>4.21.0</liquibase.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <jooq.version>3.17.26</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
-        <commons-csv.version>1.10.0</commons-csv.version>
-        <apache-poi.version>5.2.2</apache-poi.version>
-        <zip4j.version>2.11.4</zip4j.version>
-        <imageio.version>3.10.1</imageio.version>
+        <commons-csv.version>1.11.0</commons-csv.version>
+        <apache-poi.version>5.3.0</apache-poi.version>
+        <zip4j.version>2.11.5</zip4j.version>
+        <imageio.version>3.11.0</imageio.version>
         <imgscalr.version>4.2</imgscalr.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <commons-text.version>1.10.0</commons-text.version>
-        <commons-lang.version>3.12.0</commons-lang.version>
-        <commons-io.version>2.11.0</commons-io.version>
-        <commons-validator.version>1.4.1</commons-validator.version>
+        <commons-text.version>1.12.0</commons-text.version>
+        <commons-lang.version>3.15.0</commons-lang.version>
+        <commons-io.version>2.16.1</commons-io.version>
+        <commons-validator.version>1.9.0</commons-validator.version>
 
         <!-- LOG -->
         <log4j.version>2.19.0</log4j.version>
         <slf4j.version>2.0.5</slf4j.version>
 
         <!-- MAVEN PLUGIN -->
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
-        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <launch4j-maven-plugin.version>2.1.2</launch4j-maven-plugin.version>
-        <jsign-maven-plugin.version>4.0</jsign-maven-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+        <launch4j-maven-plugin.version>2.5.1</launch4j-maven-plugin.version>
+        <jsign-maven-plugin.version>6.0</jsign-maven-plugin.version>
         <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
         <!-- Unit tests -->
-        <junit-launcher.version>1.9.0</junit-launcher.version>
-        <junit-jupiter.version>5.9.2</junit-jupiter.version>
-        <testfx.version>4.0.16-alpha</testfx.version>
-        <mockito.version>4.8.0</mockito.version>
+        <junit-launcher.version>1.10.3</junit-launcher.version>
+        <junit-jupiter.version>5.10.3</junit-jupiter.version>
+        <testfx.version>4.0.18</testfx.version>
+        <mockito.version>5.12.0</mockito.version>
+
+        <!-- Args default values -->
+        <SRM_KEYSTORE_ALIAS>dummy</SRM_KEYSTORE_ALIAS>
+        <SRM_KEYSTORE_PASSWORD>dummy</SRM_KEYSTORE_PASSWORD>
     </properties>
 
     <dependencies>
@@ -276,7 +280,7 @@
             <version>${commons-io.version}</version>
         </dependency>
 
-        <!-- Validatiors -->
+        <!-- Validators -->
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
@@ -361,10 +365,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
-                    <configuration>
-                        <forkCount>0</forkCount>
-                        <useSystemClassLoader>false</useSystemClassLoader>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -541,11 +541,9 @@
                                     </classPath>
                                     <jre>
                                         <path>./java</path>
-                                        <bundledJre64Bit>true</bundledJre64Bit>
-                                        <bundledJreAsFallback>false</bundledJreAsFallback>
                                         <minVersion>17</minVersion>
-                                        <jdkPreference>preferJre</jdkPreference>
-                                        <runtimeBits>64/32</runtimeBits>
+                                        <requiresJdk>false</requiresJdk>
+                                        <requires64Bit>true</requires64Bit>
                                         <opts>
                                             <opt>-Dsrm.data.dir="%ProgramData%/${application.name}"</opt>
                                         </opts>
@@ -604,6 +602,8 @@
                                     <descriptors>
                                         <descriptor>assembly/assembly.xml</descriptor>
                                     </descriptors>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <finalName>ShootingRangeManager-v${project.version}</finalName>
                                 </configuration>
                             </execution>
                         </executions>
