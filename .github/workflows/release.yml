@@ -48,4 +48,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ShootingRangeManager
-          path: target/shooting-range-manager-*.zip
+          path: target/ShootingRangeManager-v*.zip
