@@ -9,6 +9,7 @@ import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModelBuilder;
 import javafx.collections.FXCollections;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jooq.Condition;
@@ -172,16 +173,16 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
     }
 
     private WeaponJfxModel convertToJfxModel(WeaponRecord weaponRecord) {
-        List<FiringPointJfxModel> firingPoints =
-                Optional.ofNullable(weaponRecord.getAvailablefiringpoint())
-                        .map(availableFiringPoint ->
-                                Arrays.stream(weaponRecord.getAvailablefiringpoint().split(","))
-                                        .map(Integer::valueOf)
-                                        .map(firingPointDAO::getById)
-                                        .filter(Optional::isPresent)
-                                        .map(Optional::get)
-                                        .collect(Collectors.toList()))
-                        .orElse(List.of());
+        List<FiringPointJfxModel> firingPoints = Optional.ofNullable(weaponRecord.getAvailablefiringpoint())
+                .stream()
+                .map(s -> s.split(","))
+                .flatMap(Arrays::stream)
+                .filter(StringUtils::isNumeric)
+                .map(Integer::valueOf)
+                .map(firingPointDAO::getById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
         WeaponJfxModelBuilder builder = new WeaponJfxModelBuilder()
                 .setId(weaponRecord.getId())
