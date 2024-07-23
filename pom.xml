@@ -6,7 +6,7 @@
 
     <groupId>com.fligneul.srm</groupId>
     <artifactId>shooting-range-manager</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <repositories>
         <repository>
