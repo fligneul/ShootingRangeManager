@@ -1,0 +1,53 @@
+name: Perform release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: "👀 Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "⚙️ Set up JDK 17"
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: "🔐 Decode Keystore"
+        run: |
+          echo "${{ secrets.SIGN_KEYSTORE }}" > keystore-b64.txt
+          certutil -decode keystore-b64.txt keystore.pfx
+          del keystore-b64.txt
+
+      - name: "💻 Download JRE for release"
+        uses: suisei-cn/actions-download-file@818d6b7dc8fe73f2f924b6241f2b1134ca1377d9 # 1.6.0
+        with:
+          url: "${{ vars.JRE_DOWNLOAD_URL }}"
+          target: download/
+          retry-times: 3
+
+      - name: "🗃️ Extract some files"
+        run: 7z x download/*.zip
+
+      - name: "📦 Package dist with Maven"
+        run: mvn -B clean package -Pdist -Dmaven.test.skip=true -DJRE_PATH="${{ vars.JRE_DIRECTORY }}" -DSRM_KEYSTORE_ALIAS="${{ secrets.SIGN_KEYSTORE_ALIAS }}" -DSRM_KEYSTORE_PASSWORD="${{ secrets.SIGN_KEYSTORE_PASSWORD }}"
+
+      - name: "🗃️ Extract generated dist"
+        run: 7z x target/ShootingRangeManager-${{ github.ref_name }}.zip -oapplication
+
+      - name: "☁️ Upload application as ZIP"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShootingRangeManager-${{ github.ref_name }}
+          path: application/*
+          overwrite: true
+          if-no-files-found: error
