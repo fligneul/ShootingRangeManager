@@ -13,6 +13,8 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -33,11 +35,18 @@ public class ShootingSessionDialog extends GridPane {
     @FXML
     private ValidatedTextField<String> instructorNameTextField;
     @FXML
+    private ToggleGroup weaponGroup;
+    @FXML
+    private RadioButton personalWeaponToggle;
+    @FXML
+    private RadioButton clubWeaponToggle;
+    @FXML
     private ComboBox<WeaponJfxModel> weaponComboBox;
     @FXML
     private Button saveButton;
 
     private final ShootingLogbookJfxModel shootingLogbookJfxModel;
+    private ShootingSessionJfxModel shootingSessionJfxModel = null;
 
     public ShootingSessionDialog(ShootingLogbookJfxModel shootingLogbookJfxModel) {
         this.shootingLogbookJfxModel = shootingLogbookJfxModel;
@@ -46,6 +55,22 @@ public class ShootingSessionDialog extends GridPane {
         instructorNameTextField.setValidator(ValidationUtils.validateRequiredString());
         saveButton.disableProperty().bind(instructorNameTextField.isValidProperty().not().or(sessionDatePicker.isValidProperty().not())
                 .or(Bindings.createBooleanBinding(() -> weaponComboBox.isDisable() || weaponComboBox.getSelectionModel().getSelectedItem() != null, weaponComboBox.disableProperty(), weaponComboBox.getSelectionModel().selectedIndexProperty()).not()));
+    }
+
+    public ShootingSessionDialog(ShootingLogbookJfxModel shootingLogbookJfxModel, ShootingSessionJfxModel shootingSessionJfxModel) {
+        this(shootingLogbookJfxModel);
+        this.shootingSessionJfxModel = shootingSessionJfxModel;
+        loadValues(shootingSessionJfxModel);
+    }
+
+    private void loadValues(ShootingSessionJfxModel shootingSessionJfxModel) {
+        sessionDatePicker.setValue(shootingSessionJfxModel.getSessionDate());
+        instructorNameTextField.setText(shootingSessionJfxModel.getInstructorName());
+        shootingSessionJfxModel.getWeapon().ifPresent(weapon -> {
+            weaponGroup.selectToggle(clubWeaponToggle);
+            clubWeapon();
+            weaponComboBox.getSelectionModel().select(weapon);
+        });
     }
 
     @Inject
@@ -67,10 +92,16 @@ public class ShootingSessionDialog extends GridPane {
 
     @FXML
     private void saveSession() {
-        final ShootingSessionJfxModel shootingSessionJfxModel = new ShootingSessionJfxModel(sessionDatePicker.getValue(), instructorNameTextField.getText());
-        Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(shootingSessionJfxModel::setWeapon);
+        final ShootingSessionJfxModel sessionJfxModel = shootingSessionJfxModel != null
+                ? new ShootingSessionJfxModel(shootingSessionJfxModel.getId(), sessionDatePicker.getValue(), instructorNameTextField.getText())
+                : new ShootingSessionJfxModel(sessionDatePicker.getValue(), instructorNameTextField.getText());
+        Optional.ofNullable(weaponComboBox.getSelectionModel().getSelectedItem()).ifPresent(sessionJfxModel::setWeapon);
 
-        shootingLogbookJfxModel.getSessions().add(shootingSessionJfxModel);
+        if (sessionJfxModel.getId() > 0) {
+            shootingLogbookJfxModel.getSessions().removeIf(session -> session.getId() == sessionJfxModel.getId());
+        }
+
+        shootingLogbookJfxModel.getSessions().add(sessionJfxModel);
         closeStage();
     }
 
