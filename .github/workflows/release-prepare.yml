@@ -50,9 +50,6 @@ jobs:
         with:
           commit_message: Prepare release ${{ github.event.inputs.release-version }}
           tagging_message: 'v${{ github.event.inputs.release-version }}'
-          commit_author: "${{ steps.import-gpg.outputs.name }} <${{ steps.import-gpg.outputs.email }}>"
-          commit_user_name: ${{ steps.import-gpg.outputs.name }}
-          commit_user_email: ${{ steps.import-gpg.outputs.email }}
 
       - name: "✏️ Set next development version"
         run: mvn versions:set -DnewVersion="${{ github.event.inputs.development-version }}"
@@ -61,6 +58,3 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Prepare next version ${{ github.event.inputs.development-version }} [skip ci]
-          commit_author: "${{ steps.import-gpg.outputs.name }} <${{ steps.import-gpg.outputs.email }}>"
-          commit_user_name: ${{ steps.import-gpg.outputs.name }}
-          commit_user_email: ${{ steps.import-gpg.outputs.email }}
