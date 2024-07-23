@@ -47,6 +47,8 @@ public class AttendanceLicenseeSelectorNode extends StackPane {
             }
         });
 
+        validateButton.disableProperty().bind(licenceNumber.textProperty().isEmpty());
+
         Platform.runLater(() -> licenceNumber.requestFocus());
     }
 

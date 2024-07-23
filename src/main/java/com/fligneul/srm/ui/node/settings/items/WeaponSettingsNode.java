@@ -52,7 +52,7 @@ public class WeaponSettingsNode extends StackPane implements ISettingsItemNode {
     public void injectDependencies(final WeaponServiceToJfxModel weaponService) {
         this.weaponService = weaponService;
 
-        weaponListView.setCellFactory(param -> new SimpleListCell<>(WeaponJfxModel::getName));
+        weaponListView.setCellFactory(param -> new SimpleListCell<>(weaponJfxModel -> weaponJfxModel.getIdentificationNumber() + " - " + weaponJfxModel.getName()));
 
 
         weaponListView.setItems(weaponService.getWeaponList());
