@@ -1,0 +1,75 @@
+name: Prepare next release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        type: string
+        description: Release version
+        required: true
+      development-version:
+        type: string
+        description: Next development version
+        required: true
+
+jobs:
+  build-pre-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: "👀 Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "⚙️ Set up JDK 17"
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: "🏗️ Build and check test with Maven"
+        run: mvn -B clean verify
+
+  create-tag:
+    needs: build-pre-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "👀 Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "✏️ Set release version"
+        run: mvn versions:set -DnewVersion="${{ github.event.inputs.release-version }}"
+
+      - name: "🔐 Import GPG key"
+        id: import-gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: "✍️ Commit and push changes"
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Prepare release ${{ github.event.inputs.release-version }}
+          tagging_message: 'v${{ github.event.inputs.release-version }}'
+          commit_author: "${{ steps.import-gpg.outputs.name }} <${{ steps.import-gpg.outputs.email }}>"
+          commit_user_name: ${{ steps.import-gpg.outputs.name }}
+          commit_user_email: ${{ steps.import-gpg.outputs.email }}
+
+      - name: "✏️ Set next development version"
+        run: mvn versions:set -DnewVersion="${{ github.event.inputs.development-version }}"
+
+      - name: "✍️ Commit and push changes"
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Prepare next version ${{ github.event.inputs.development-version }} [skip ci]
+          commit_author: "${{ steps.import-gpg.outputs.name }} <${{ steps.import-gpg.outputs.email }}>"
+          commit_user_name: ${{ steps.import-gpg.outputs.name }}
+          commit_user_email: ${{ steps.import-gpg.outputs.email }}
