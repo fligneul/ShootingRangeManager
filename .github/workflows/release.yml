@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  build:
+  create-release:
     runs-on: windows-latest
 
     steps:
@@ -57,6 +57,15 @@ jobs:
           overwrite: true
           if-no-files-found: error
 
+  create-tag:
+    needs: create-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: rickstaa/action-create-tag@v1
         name: Create release tag
         with:
@@ -64,4 +73,4 @@ jobs:
           tag_exists_error: true
           message: "Release ${{ github.event.inputs.version }}"
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg_passphrase: ${{ secrets.GPG_PASSWORD }}H
+          gpg_passphrase: "${{ secrets.GPG_PASSWORD }}"
