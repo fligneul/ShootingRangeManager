@@ -44,7 +44,13 @@ jobs:
       - name: Build with Maven
         run: mvn -B clean package -Pdist -DJRE_PATH="${{ vars.JRE_DIRECTORY }}" -DSRM_KEYSTORE_ALIAS="${{ secrets.SIGN_KEYSTORE_ALIAS }}" -DSRM_KEYSTORE_PASSWORD="${{ secrets.SIGN_KEYSTORE_PASSWORD }}"
 
+      - name: Extract generated dist
+        run: 7z x target/ShootingRangeManager-v*.zip -oapplication
+
       - uses: actions/upload-artifact@v4
+        name: Upload application as ZIP
         with:
-          name: ShootingRangeManager
-          path: target/ShootingRangeManager-v*.zip
+          name: ShootingRangeManager-v${{ github.event.inputs.version }}
+          path: application/*
+          overwrite: true
+          if-no-files-found: error
