@@ -35,10 +35,10 @@
         <guice.version>5.1.0</guice.version>
         <rxjava3.version>3.1.8</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
-        <h2.version>2.1.214</h2.version>
-        <liquibase.version>4.21.0</liquibase.version>
+        <h2.version>2.2.224</h2.version>
+        <liquibase.version>4.28.0</liquibase.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <jooq.version>3.17.26</jooq.version>
+        <jooq.version>3.18.17</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
         <commons-csv.version>1.11.0</commons-csv.version>
         <apache-poi.version>5.3.0</apache-poi.version>
