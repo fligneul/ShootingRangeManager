@@ -1,8 +1,7 @@
 package com.fligneul.srm.service;
 
-import liquibase.Contexts;
-import liquibase.LabelExpression;
-import liquibase.Liquibase;
+import liquibase.Scope;
+import liquibase.command.CommandScope;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
@@ -65,8 +64,17 @@ public class DatabaseConnectionService {
     public Connection initConnection(String user, char[] passwd) throws SQLException, LiquibaseException {
         connect = DriverManager.getConnection(URL, user, String.valueOf(passwd));
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connect));
-        Liquibase liquibase = new Liquibase(DB_CHANGELOG_MASTER_XML, new ClassLoaderResourceAccessor(), database);
-        liquibase.update(new Contexts(), new LabelExpression());
+        try {
+            Scope.child(Scope.Attr.resourceAccessor,
+                    new ClassLoaderResourceAccessor(), () -> {
+                        CommandScope cmd = new CommandScope("update");
+                        cmd.addArgumentValue("database", database);
+                        cmd.addArgumentValue("changelogFile", DB_CHANGELOG_MASTER_XML);
+                        cmd.execute();
+                    });
+        } catch (Exception e) {
+            throw new LiquibaseException(e);
+        }
         context = DSL.using(connect, SQLDialect.H2, new Settings().withRenderNameCase(RenderNameCase.UPPER));
         return connect;
     }
@@ -119,9 +127,8 @@ public class DatabaseConnectionService {
      */
     protected List<File> getDatabaseFiles() {
         Path databasePath = Path.of(DATABASE_PATH);
-        try {
-            return Files.find(databasePath.getParent(), 1, (path, basicFileAttributes) -> path.toFile().getName().matches(databasePath.getFileName() + DB_EXTENSION_REGEX))
-                    .map(Path::toFile)
+        try (var dbFiles = Files.find(databasePath.getParent(), 1, (path, basicFileAttributes) -> path.toFile().getName().matches(databasePath.getFileName() + DB_EXTENSION_REGEX))) {
+            return dbFiles.map(Path::toFile)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             LOGGER.debug("Error during DB file search", e);
