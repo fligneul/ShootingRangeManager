@@ -39,7 +39,7 @@ jobs:
         run: 7z x download/*.zip
 
       - name: "📦 Package dist with Maven"
-        run: mvn -B clean package -Pdist -DJRE_PATH="${{ vars.JRE_DIRECTORY }}" -DSRM_KEYSTORE_ALIAS="${{ secrets.SIGN_KEYSTORE_ALIAS }}" -DSRM_KEYSTORE_PASSWORD="${{ secrets.SIGN_KEYSTORE_PASSWORD }}"
+        run: mvn -B clean package -Pdist,release -DJRE_PATH="${{ vars.JRE_DIRECTORY }}" -DSRM_KEYSTORE_ALIAS="${{ secrets.SIGN_KEYSTORE_ALIAS }}" -DSRM_KEYSTORE_PASSWORD="${{ secrets.SIGN_KEYSTORE_PASSWORD }}"
 
       - name: "🗃️ Extract generated dist"
         run: 7z x target/ShootingRangeManager-${{ github.ref_name }}.zip -oapplication
