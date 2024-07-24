@@ -18,6 +18,11 @@
             <name>jcenter</name>
             <url>https://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -52,8 +57,7 @@
         <commons-validator.version>1.9.0</commons-validator.version>
 
         <!-- LOG -->
-        <log4j.version>2.19.0</log4j.version>
-        <slf4j.version>2.0.5</slf4j.version>
+        <log4j.version>2.23.1</log4j.version>
 
         <!-- MAVEN PLUGIN -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
@@ -289,11 +293,6 @@
 
         <!-- Logging -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
@@ -305,25 +304,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j2-impl</artifactId>
+            <artifactId>log4j-jul</artifactId>
             <version>${log4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-liquibase</artifactId>
-            <version>${log4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>liquibase-core</artifactId>
-                    <groupId>org.liquibase</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- Unit test -->
