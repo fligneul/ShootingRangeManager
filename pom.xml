@@ -7,6 +7,11 @@
     <groupId>com.fligneul.srm</groupId>
     <artifactId>shooting-range-manager</artifactId>
     <version>0.0.2-SNAPSHOT</version>
+    <description>Shooting Range management software</description>
+    <organization>
+        <name>Florian L.</name>
+    </organization>
+    <inceptionYear>2021</inceptionYear>
 
     <repositories>
         <repository>
@@ -394,6 +399,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <includeScope>compile</includeScope>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
@@ -480,6 +486,24 @@
 
     <profiles>
         <profile>
+            <id>snapshot</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <exe.version>0.0.0.0</exe.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <exe.version>${project.version}.0</exe.version>
+            </properties>
+        </profile>
+        <profile>
             <id>dist</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -525,12 +549,12 @@
                                         <timeoutErr>true</timeoutErr>
                                     </splash>
                                     <versionInfo>
-                                        <fileVersion>1.0.0.0</fileVersion>
-                                        <txtFileVersion>1.0.0.0</txtFileVersion>
+                                        <fileVersion>${exe.version}</fileVersion>
+                                        <txtFileVersion>${exe.version}</txtFileVersion>
                                         <fileDescription>${application.name}</fileDescription>
                                         <copyright>Licensed under GPLv3 or any later version</copyright>
-                                        <productVersion>1.0.0.0</productVersion>
-                                        <txtProductVersion>1.0.0.0</txtProductVersion>
+                                        <productVersion>${exe.version}</productVersion>
+                                        <txtProductVersion>${exe.version}</txtProductVersion>
                                         <productName>${application.name}</productName>
                                         <internalName>${application.name}</internalName>
                                         <originalFilename>${application.name}.exe</originalFilename>
