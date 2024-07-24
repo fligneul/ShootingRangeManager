@@ -11,6 +11,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
@@ -19,6 +21,8 @@ import java.util.Objects;
  * Build the {@link MainNode} and display it
  */
 public class ShootingRangeManagerMain extends Application {
+    private static final Logger LOGGER = LogManager.getLogger(ShootingRangeManagerMain.class);
+
     private static final String APPLICATION_TITLE = "Shooting Range Manager";
     private static final String APPLICATION_ICON_PNG = "/ShootingRangeManager.png";
     private static final int APPLICATION_WIDTH = 1200;
@@ -37,6 +41,7 @@ public class ShootingRangeManagerMain extends Application {
      *         application command line arguments
      */
     public static void main(String[] args) {
+        LOGGER.debug("Start application with args {}", (Object[]) args);
         launch(ShootingRangeManagerMain.class);
     }
 
