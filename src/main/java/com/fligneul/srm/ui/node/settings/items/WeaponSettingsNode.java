@@ -7,6 +7,7 @@ import com.fligneul.srm.ui.node.settings.dialog.WeaponDialog;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
 import com.fligneul.srm.ui.node.utils.ListViewUtils;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -54,8 +56,10 @@ public class WeaponSettingsNode extends StackPane implements ISettingsItemNode {
 
         weaponListView.setCellFactory(param -> new SimpleListCell<>(weaponJfxModel -> weaponJfxModel.getIdentificationNumber() + " - " + weaponJfxModel.getName()));
 
+        SortedList<WeaponJfxModel> sortedWeaponJfxModels = new SortedList<>(weaponService.getWeaponList());
+        sortedWeaponJfxModels.setComparator(Comparator.comparing(WeaponJfxModel::getIdentificationNumber));
+        weaponListView.setItems(sortedWeaponJfxModels);
 
-        weaponListView.setItems(weaponService.getWeaponList());
         weaponListView.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) ->
                 Optional.ofNullable(newV).ifPresentOrElse(selectedWeaponJfx::set, () -> selectedWeaponJfx.set(null)));
         ListViewUtils.addClearOnEmptySelection(weaponListView);
