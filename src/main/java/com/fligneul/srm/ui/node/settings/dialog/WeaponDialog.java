@@ -1,8 +1,11 @@
 package com.fligneul.srm.ui.node.settings.dialog;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.converter.FiringPointConverter;
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModel;
 import com.fligneul.srm.ui.model.weapon.WeaponJfxModelBuilder;
+import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
 import com.fligneul.srm.ui.service.weapon.WeaponServiceToJfxModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.CheckComboBox;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -37,20 +41,27 @@ public class WeaponDialog extends VBox {
     private TextField caliberTextField;
     @FXML
     private DatePicker buyDatePicker;
+    @FXML
+    private CheckComboBox<FiringPointJfxModel> firingPointCheckComboBox;
 
     private WeaponServiceToJfxModel weaponService;
+    private FiringPointServiceToJfxModel firingPointService;
     private WeaponJfxModel currentWeaponJfxModel;
 
     public WeaponDialog(final WeaponJfxModel weaponJfxModel) {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
 
-        Optional.ofNullable(weaponJfxModel).ifPresent(this::updateComponents);
 
         buyDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
             if (!newV) {
                 buyDatePicker.setValue(buyDatePicker.getConverter().fromString(buyDatePicker.getEditor().getText()));
             }
         });
+
+        firingPointCheckComboBox.setConverter(new FiringPointConverter());
+        firingPointCheckComboBox.getItems().setAll(firingPointService.getFiringPointList());
+
+        Optional.ofNullable(weaponJfxModel).ifPresent(this::updateComponents);
     }
 
     public WeaponDialog() {
@@ -62,10 +73,13 @@ public class WeaponDialog extends VBox {
      *
      * @param weaponService
      *         weapon jfx service
+     * @param firingPointService
+     *         firing point jfx service
      */
     @Inject
-    public void injectDependencies(final WeaponServiceToJfxModel weaponService) {
+    public void injectDependencies(final WeaponServiceToJfxModel weaponService, final FiringPointServiceToJfxModel firingPointService) {
         this.weaponService = weaponService;
+        this.firingPointService = firingPointService;
     }
 
     private void clearComponents() {
@@ -84,6 +98,8 @@ public class WeaponDialog extends VBox {
         identificationNumberTextField.setText(String.valueOf(weaponJfxModel.getIdentificationNumber()));
         caliberTextField.setText(weaponJfxModel.getCaliber());
         buyDatePicker.setValue(weaponJfxModel.getBuyDate());
+
+        weaponJfxModel.availableFiringPointProperty().forEach(model -> firingPointCheckComboBox.getCheckModel().check(firingPointCheckComboBox.getItems().stream().filter(fpModel -> fpModel.getId() == model.getId()).findFirst().orElseThrow()));
     }
 
     @FXML
@@ -94,7 +110,8 @@ public class WeaponDialog extends VBox {
                 .setName(nameTextField.getText())
                 .setIdentificationNumber(Integer.parseInt(identificationNumberTextField.getText()))
                 .setCaliber(caliberTextField.getText())
-                .setBuyDate(buyDatePicker.getValue());
+                .setBuyDate(buyDatePicker.getValue())
+                .setAvailableFiringPoint(firingPointCheckComboBox.getCheckModel().getCheckedItems());
 
         weaponService.saveWeapon(builder.createWeaponJfxModel());
         clearComponents();

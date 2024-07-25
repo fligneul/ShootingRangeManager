@@ -1,5 +1,8 @@
 package com.fligneul.srm.ui.model.weapon;
 
+import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
+import javafx.collections.ObservableList;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -12,6 +15,7 @@ public class WeaponJfxModelBuilder {
     private Integer identificationNumber;
     private String caliber;
     private LocalDate buyDate;
+    private ObservableList<FiringPointJfxModel> availableFiringPoint;
 
     public WeaponJfxModelBuilder setId(final int id) {
         this.id = id;
@@ -38,7 +42,12 @@ public class WeaponJfxModelBuilder {
         return this;
     }
 
+    public WeaponJfxModelBuilder setAvailableFiringPoint(final ObservableList<FiringPointJfxModel> availableFiringPoint) {
+        this.availableFiringPoint = availableFiringPoint;
+        return this;
+    }
+
     public WeaponJfxModel createWeaponJfxModel() {
-        return new WeaponJfxModel(Optional.ofNullable(id).orElse(WeaponJfxModel.DEFAULT_ID), name, identificationNumber, caliber, buyDate);
+        return new WeaponJfxModel(Optional.ofNullable(id).orElse(WeaponJfxModel.DEFAULT_ID), name, identificationNumber, caliber, buyDate, availableFiringPoint);
     }
 }

@@ -165,7 +165,7 @@ public class AttendanceLicenseeSimpleNode extends VBox {
         firstnameTextField.textProperty().bind(licenseeJfxModel.firstNameProperty());
         lastnameTextField.textProperty().bind(licenseeJfxModel.lastNameProperty());
         dateOfBirthTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getDateOfBirth()), licenseeJfxModel.dateOfBirthProperty()));
-        licenceStateTextField.textProperty().bind(licenseeJfxModel.licenceStateProperty());
+        licenceStateTextField.textProperty().bind(Bindings.createStringBinding(() -> licenseeJfxModel.getLicenceState().toString(), licenseeJfxModel.licenceStateProperty()));
         firstLicenceDateTextField.textProperty().bind(Bindings.createStringBinding(() -> FormatterUtils.formatDate(licenseeJfxModel.getFirstLicenceDate()), licenseeJfxModel.firstLicenceDateProperty()));
         seasonTextField.textProperty().bind(licenseeJfxModel.seasonProperty());
         ageCategoryTextField.textProperty().bind(licenseeJfxModel.ageCategoryProperty());

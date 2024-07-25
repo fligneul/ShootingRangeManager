@@ -4,13 +4,16 @@ import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.ui.component.ValidatedDatePicker;
 import com.fligneul.srm.ui.component.ValidatedTextField;
 import com.fligneul.srm.ui.component.ValidationUtils;
+import com.fligneul.srm.ui.model.licensee.ELicenceState;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.licensee.LicenseeServiceToJfxModel;
 import com.fligneul.srm.ui.service.licensee.ProfilePictureService;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -74,7 +77,7 @@ public class LicenseeCreateNode extends VBox {
     @FXML
     private CheckBox blacklistCheckBox;
     @FXML
-    private TextField licenceStateTextField;
+    private ComboBox<ELicenceState> licenceStateComboBox;
     @FXML
     private DatePicker firstLicenceDatePicker;
     @FXML
@@ -96,8 +99,6 @@ public class LicenseeCreateNode extends VBox {
 
     public LicenseeCreateNode(final LicenseeJfxModel licenseeJfxModel) {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
-
-        Optional.ofNullable(licenseeJfxModel).ifPresent(this::updateComponents);
 
         firstLicenceDatePicker.focusedProperty().addListener((obs, oldV, newV) -> {
             if (!newV) {
@@ -125,7 +126,7 @@ public class LicenseeCreateNode extends VBox {
             FileChooser pictureChooser = new FileChooser();
             pictureChooser.setTitle("Choix de la photo");
             pictureChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-            pictureChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png"));
+            pictureChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp"));
             File picture = pictureChooser.showOpenDialog(getScene().getWindow());
             if (picture != null) {
                 tempProfilePicture = picture.toPath();
@@ -134,6 +135,11 @@ public class LicenseeCreateNode extends VBox {
                 tempProfilePicture = null;
             }
         });
+
+        licenceStateComboBox.setItems(FXCollections.observableArrayList(ELicenceState.values()));
+
+        Optional.ofNullable(licenseeJfxModel).ifPresent(this::updateComponents);
+
     }
 
     public LicenseeCreateNode() {
@@ -173,7 +179,8 @@ public class LicenseeCreateNode extends VBox {
         cityTextField.setText(EMPTY);
         emailTextField.setText(EMPTY);
         phoneNumberTextField.setText(EMPTY);
-        licenceStateTextField.setText(EMPTY);
+        licenceStateComboBox.getSelectionModel().clearSelection();
+        licenceStateComboBox.setDisable(true);
         firstLicenceDatePicker.getEditor().setText(EMPTY);
         seasonTextField.setText(EMPTY);
         ageCategoryTextField.setText(EMPTY);
@@ -201,7 +208,8 @@ public class LicenseeCreateNode extends VBox {
         cityTextField.setText(licenseeJfxModel.getCity());
         emailTextField.setText(licenseeJfxModel.getEmail());
         phoneNumberTextField.setText(licenseeJfxModel.getPhoneNumber());
-        licenceStateTextField.setText(licenseeJfxModel.getLicenceState());
+        licenceStateComboBox.getSelectionModel().select(licenseeJfxModel.getLicenceState());
+        licenceStateComboBox.setDisable(false);
         firstLicenceDatePicker.setValue(licenseeJfxModel.getFirstLicenceDate());
         seasonTextField.setText(licenseeJfxModel.getSeason());
         ageCategoryTextField.setText(licenseeJfxModel.getAgeCategory());
@@ -235,7 +243,7 @@ public class LicenseeCreateNode extends VBox {
         Optional.ofNullable(cityTextField.getText()).ifPresent(builder::setCity);
         Optional.ofNullable(emailTextField.getText()).ifPresent(builder::setEmail);
         Optional.ofNullable(phoneNumberTextField.getText()).ifPresent(builder::setPhoneNumber);
-        Optional.ofNullable(licenceStateTextField.getText()).ifPresent(builder::setLicenceState);
+        Optional.ofNullable(licenceStateComboBox.getValue()).ifPresent(builder::setLicenceState);
         Optional.ofNullable(firstLicenceDatePicker.getValue()).ifPresent(builder::setFirstLicenceDate);
         Optional.ofNullable(seasonTextField.getText()).ifPresent(builder::setSeason);
         Optional.ofNullable(ageCategoryTextField.getText()).ifPresent(builder::setAgeCategory);

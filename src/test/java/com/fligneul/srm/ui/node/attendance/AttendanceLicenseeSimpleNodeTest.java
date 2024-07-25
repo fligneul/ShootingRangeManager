@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.node.attendance;
 
 import com.fligneul.srm.service.PreferenceService;
+import com.fligneul.srm.ui.model.licensee.ELicenceState;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.service.attendance.AttendanceSelectionService;
@@ -74,7 +75,7 @@ class AttendanceLicenseeSimpleNodeTest {
                 .setLastName("LASTNAME_1")
                 .setDateOfBirth(LocalDate.EPOCH)
                 .setHandisport(true)
-                .setLicenceState("LICENCE_STATE_1")
+                .setLicenceState(ELicenceState.PAID)
                 .setFirstLicenceDate(LocalDate.of(1990, 1, 1))
                 .setSeason("SEASON_1")
                 .setAgeCategory("CATEGORY_1")
@@ -88,7 +89,7 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.firstnameTextField, TextInputControlMatchers.hasText("FIRSTNAME_1"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.lastnameTextField, TextInputControlMatchers.hasText("LASTNAME_1"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.dateOfBirthTextField, TextInputControlMatchers.hasText("01/01/1970"));
-        FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceStateTextField, TextInputControlMatchers.hasText("LICENCE_STATE_1"));
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceStateTextField, TextInputControlMatchers.hasText(ELicenceState.PAID.toString()));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.seasonTextField, TextInputControlMatchers.hasText("SEASON_1"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.firstLicenceDateTextField, TextInputControlMatchers.hasText("01/01/1990"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.ageCategoryTextField, TextInputControlMatchers.hasText("CATEGORY_1"));
@@ -103,7 +104,7 @@ class AttendanceLicenseeSimpleNodeTest {
                 .setLastName("LASTNAME_2")
                 .setDateOfBirth(LocalDate.EPOCH)
                 .setHandisport(false)
-                .setLicenceState("LICENCE_STATE_2")
+                .setLicenceState(ELicenceState.FORBIDDEN)
                 .setFirstLicenceDate(LocalDate.of(2000, 6, 1))
                 .setBlacklisted(false)
                 .setIdCardDate(LocalDate.of(2022, 1, 1))
@@ -117,7 +118,7 @@ class AttendanceLicenseeSimpleNodeTest {
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.firstnameTextField, TextInputControlMatchers.hasText("FIRSTNAME_2"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.lastnameTextField, TextInputControlMatchers.hasText("LASTNAME_2"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.dateOfBirthTextField, TextInputControlMatchers.hasText("01/01/1970"));
-        FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceStateTextField, TextInputControlMatchers.hasText("LICENCE_STATE_2"));
+        FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceStateTextField, TextInputControlMatchers.hasText(ELicenceState.FORBIDDEN.toString()));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.firstLicenceDateTextField, TextInputControlMatchers.hasText("01/06/2000"));
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.handisportCheckBox, checkBox -> !checkBox.isSelected());
         FxAssert.verifyThat(attendanceLicenseeSimpleNode.licenceErrorLabel, NodeMatchers.isInvisible());

@@ -3,7 +3,6 @@ package com.fligneul.srm.ui.service.licensee;
 
 import com.fligneul.srm.di.module.UIModule;
 import javafx.scene.image.Image;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 public class ProfilePictureService {
     private static final Logger LOGGER = LogManager.getLogger(ProfilePictureService.class);
     private static final int PROFILE_PICTURE_TARGET_SIZE = 300;
+    private static final String PROFILE_PICTURE_TARGET_EXTENSION = "png";
     private final String defaultPicturePath;
     private Image defaultPicture;
     private final Path pictureDirectoryPath;
@@ -82,7 +83,9 @@ public class ProfilePictureService {
                 .filter(Predicate.not(String::isBlank))
                 .map(file -> pictureDirectoryPath.resolve(pictureFile))
                 .filter(Files::exists)
-                .map(path -> new Image(path.toString()))
+                .map(Path::toUri)
+                .map(URI::toString)
+                .map(Image::new)
                 .or(this::getProfilePicture);
     }
 
@@ -107,19 +110,20 @@ public class ProfilePictureService {
                         if (oldPicture.delete()) {
                             LOGGER.info("Old profile picture successfully deleted");
                         } else {
-                            LOGGER.error("Error during old profile picture deletion");
+                            LOGGER.warn("Error during old profile picture deletion");
                         }
                     });
-            // Get input extension
-            String imageExtension = FilenameUtils.getExtension(picture.getFileName().toString());
             // Load image and resize it
             BufferedImage inputImage = ImageIO.read(picture.toFile());
             BufferedImage scaledImage = Scalr.resize(inputImage, Scalr.Mode.FIT_TO_WIDTH, PROFILE_PICTURE_TARGET_SIZE);
             // Generate random filename
-            String imageName = RandomStringUtils.randomAlphanumeric(20).toUpperCase() + "." + imageExtension;
+            String imageName = RandomStringUtils.randomAlphanumeric(32).toUpperCase() + "." + PROFILE_PICTURE_TARGET_EXTENSION;
             File outputFile = new File(pictureDirectoryPath.toString(), imageName);
-            ImageIO.write(scaledImage, imageExtension, outputFile);
-            return Optional.of(imageName);
+            if (outputFile.exists()) {
+                throw new IOException("Filename collision");
+            }
+            ImageIO.write(scaledImage, PROFILE_PICTURE_TARGET_EXTENSION, outputFile);
+            return outputFile.exists() ? Optional.of(imageName) : Optional.empty();
         } catch (IOException e) {
             LOGGER.error("Error during picture save", e);
             return Optional.empty();

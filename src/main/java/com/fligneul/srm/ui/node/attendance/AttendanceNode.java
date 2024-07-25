@@ -139,6 +139,8 @@ public class AttendanceNode extends StackPane {
                 targetHolderComboBox.setDisable(newV.getTargetHolders().isEmpty());
                 caliberComboBox.setItems(newV.getCalibers());
                 caliberComboBox.setDisable(newV.getCalibers().isEmpty());
+                weaponComboBox.setItems(weaponService.getWeaponListForFiringPoint(newV));
+                weaponComboBox.setDisable(weaponComboBox.getItems().isEmpty());
             } else {
                 firingPostComboBox.setItems(FXCollections.emptyObservableList());
                 firingPostComboBox.setDisable(true);
@@ -146,6 +148,8 @@ public class AttendanceNode extends StackPane {
                 targetHolderComboBox.setDisable(true);
                 caliberComboBox.setItems(FXCollections.emptyObservableList());
                 caliberComboBox.setDisable(true);
+                weaponComboBox.setItems(FXCollections.emptyObservableList());
+                weaponComboBox.setDisable(true);
             }
         });
     }
@@ -155,7 +159,6 @@ public class AttendanceNode extends StackPane {
     }
 
     private void initWeaponComboBox() {
-        weaponComboBox.setItems(weaponService.getWeaponList());
         weaponComboBox.setConverter(new WeaponConverter());
     }
 

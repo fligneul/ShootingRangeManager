@@ -6,7 +6,12 @@
 
     <groupId>com.fligneul.srm</groupId>
     <artifactId>shooting-range-manager</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
+    <description>Shooting Range management software</description>
+    <organization>
+        <name>Florian L.</name>
+    </organization>
+    <inceptionYear>2021</inceptionYear>
 
     <repositories>
         <repository>
@@ -18,58 +23,67 @@
             <name>jcenter</name>
             <url>https://jcenter.bintray.com</url>
         </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
     </repositories>
 
     <properties>
         <application.name>Shooting Range Manager</application.name>
         <application.main.class>com.fligneul.srm.ui.ShootingRangeManagerLauncher</application.main.class>
 
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <javafx.version>18.0.2</javafx.version>
-        <controlsfx.version>11.1.2</controlsfx.version>
+        <javafx.version>21.0.4</javafx.version>
+        <controlsfx.version>11.2.1</controlsfx.version>
         <guice.version>5.1.0</guice.version>
-        <rxjava3.version>3.1.5</rxjava3.version>
+        <rxjava3.version>3.1.8</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
-        <h2.version>2.1.214</h2.version>
-        <liquibase.version>4.12.0</liquibase.version>
-        <snakeyaml.version>1.32</snakeyaml.version>
-        <jooq.version>3.16.10</jooq.version>
+        <h2.version>2.2.224</h2.version>
+        <liquibase.version>4.28.0</liquibase.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <jooq.version>3.18.17</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
-        <commons-csv.version>1.9.0</commons-csv.version>
-        <apache-poi.version>5.2.0</apache-poi.version>
-        <zip4j.version>2.11.3</zip4j.version>
+        <commons-csv.version>1.11.0</commons-csv.version>
+        <apache-poi.version>5.3.0</apache-poi.version>
+        <zip4j.version>2.11.5</zip4j.version>
+        <imageio.version>3.11.0</imageio.version>
         <imgscalr.version>4.2</imgscalr.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
-        <commons-text.version>1.10.0</commons-text.version>
-        <commons-lang.version>3.12.0</commons-lang.version>
-        <commons-io.version>2.11.0</commons-io.version>
-        <commons-validator.version>1.4.1</commons-validator.version>
+        <commons-text.version>1.12.0</commons-text.version>
+        <commons-lang.version>3.15.0</commons-lang.version>
+        <commons-io.version>2.16.1</commons-io.version>
+        <commons-validator.version>1.9.0</commons-validator.version>
 
         <!-- LOG -->
-        <log4j.version>2.19.0</log4j.version>
-        <slf4j.version>2.0.1</slf4j.version>
+        <log4j.version>2.23.1</log4j.version>
 
         <!-- MAVEN PLUGIN -->
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
-        <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <launch4j-maven-plugin.version>2.1.2</launch4j-maven-plugin.version>
-        <jsign-maven-plugin.version>4.0</jsign-maven-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+        <launch4j-maven-plugin.version>2.5.1</launch4j-maven-plugin.version>
+        <jsign-maven-plugin.version>6.0</jsign-maven-plugin.version>
         <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
-        <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
         <!-- Unit tests -->
-        <junit-launcher.version>1.9.0</junit-launcher.version>
-        <junit-jupiter.version>5.9.0</junit-jupiter.version>
-        <testfx.version>4.0.16-alpha</testfx.version>
-        <mockito.version>4.8.0</mockito.version>
+        <junit-launcher.version>1.10.3</junit-launcher.version>
+        <junit-jupiter.version>5.10.3</junit-jupiter.version>
+        <testfx.version>4.0.18</testfx.version>
+        <mockito.version>5.12.0</mockito.version>
+
+        <!-- Args default values -->
+        <SRM_KEYSTORE_ALIAS>dummy</SRM_KEYSTORE_ALIAS>
+        <SRM_KEYSTORE_PASSWORD>dummy</SRM_KEYSTORE_PASSWORD>
     </properties>
 
     <dependencies>
@@ -232,6 +246,18 @@
             <version>${zip4j.version}</version>
         </dependency>
 
+        <!-- ImageIO -->
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-bmp</artifactId>
+            <version>${imageio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-jpeg</artifactId>
+            <version>${imageio.version}</version>
+        </dependency>
+
         <!-- Image resize -->
         <dependency>
             <groupId>org.imgscalr</groupId>
@@ -263,7 +289,7 @@
             <version>${commons-io.version}</version>
         </dependency>
 
-        <!-- Validatiors -->
+        <!-- Validators -->
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
@@ -271,11 +297,6 @@
         </dependency>
 
         <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -288,25 +309,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j2-impl</artifactId>
+            <artifactId>log4j-jul</artifactId>
             <version>${log4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-liquibase</artifactId>
-            <version>${log4j.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>liquibase-core</artifactId>
-                    <groupId>org.liquibase</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- Unit test -->
@@ -341,47 +345,8 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
-                    <configuration>
-                        <forkCount>0</forkCount>
-                        <useSystemClassLoader>false</useSystemClassLoader>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${maven-dependency-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>${maven-jar-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>${maven-assembly-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                    <artifactId>launch4j-maven-plugin</artifactId>
-                    <version>${launch4j-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>net.jsign</groupId>
-                    <artifactId>jsign-maven-plugin</artifactId>
-                    <version>${jsign-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.jooq</groupId>
-                    <artifactId>jooq-codegen-maven</artifactId>
-                    <version>${jooq.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -398,14 +363,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -414,6 +381,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
+                            <includeScope>compile</includeScope>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
                         </configuration>
                     </execution>
@@ -422,6 +390,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -435,6 +404,7 @@
             <plugin>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -498,6 +468,24 @@
 
     <profiles>
         <profile>
+            <id>snapshot</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <exe.version>0.0.0.0</exe.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <exe.version>${project.version}.0</exe.version>
+            </properties>
+        </profile>
+        <profile>
             <id>dist</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -507,6 +495,7 @@
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>${launch4j-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>l4j-srm</id>
@@ -528,11 +517,9 @@
                                     </classPath>
                                     <jre>
                                         <path>./java</path>
-                                        <bundledJre64Bit>true</bundledJre64Bit>
-                                        <bundledJreAsFallback>false</bundledJreAsFallback>
-                                        <minVersion>11</minVersion>
-                                        <jdkPreference>preferJre</jdkPreference>
-                                        <runtimeBits>64/32</runtimeBits>
+                                        <minVersion>17</minVersion>
+                                        <requiresJdk>false</requiresJdk>
+                                        <requires64Bit>true</requires64Bit>
                                         <opts>
                                             <opt>-Dsrm.data.dir="%ProgramData%/${application.name}"</opt>
                                         </opts>
@@ -544,12 +531,12 @@
                                         <timeoutErr>true</timeoutErr>
                                     </splash>
                                     <versionInfo>
-                                        <fileVersion>1.0.0.0</fileVersion>
-                                        <txtFileVersion>1.0.0.0</txtFileVersion>
+                                        <fileVersion>${exe.version}</fileVersion>
+                                        <txtFileVersion>${exe.version}</txtFileVersion>
                                         <fileDescription>${application.name}</fileDescription>
                                         <copyright>Licensed under GPLv3 or any later version</copyright>
-                                        <productVersion>1.0.0.0</productVersion>
-                                        <txtProductVersion>1.0.0.0</txtProductVersion>
+                                        <productVersion>${exe.version}</productVersion>
+                                        <txtProductVersion>${exe.version}</txtProductVersion>
                                         <productName>${application.name}</productName>
                                         <internalName>${application.name}</internalName>
                                         <originalFilename>${application.name}.exe</originalFilename>
@@ -562,6 +549,7 @@
                     <plugin>
                         <groupId>net.jsign</groupId>
                         <artifactId>jsign-maven-plugin</artifactId>
+                        <version>${jsign-maven-plugin.version}</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -571,15 +559,17 @@
                                     <file>${project.build.directory}/${application.name}.exe</file>
                                     <name>${application.name}</name>
                                     <url>https://github.com/fligneul/ShootingRangeManager</url>
-                                    <keystore>${srm.keystore.path}</keystore>
-                                    <alias>${srm.keystore.alias}</alias>
-                                    <storepass>${srm.keystore.password}</storepass>
+                                    <keystore>keystore.pfx</keystore>
+                                    <alias>${SRM_KEYSTORE_ALIAS}</alias>
+                                    <storepass>${SRM_KEYSTORE_PASSWORD}</storepass>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>${maven-assembly-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>assembly</id>
@@ -591,6 +581,8 @@
                                     <descriptors>
                                         <descriptor>assembly/assembly.xml</descriptor>
                                     </descriptors>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <finalName>ShootingRangeManager-v${project.version}</finalName>
                                 </configuration>
                             </execution>
                         </executions>

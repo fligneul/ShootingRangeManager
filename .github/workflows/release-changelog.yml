@@ -1,0 +1,22 @@
+name: Create release changelog
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "✏️ Generate release changelog"
+        uses: heinrichreimer/action-github-changelog-generator@v2.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "☁️ Upload changelog"
+        uses: actions/upload-artifact@v4
+        with:
+          name: CHANGELOG
+          path: CHANGELOG.md
+          if-no-files-found: error

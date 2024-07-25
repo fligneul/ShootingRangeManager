@@ -1,6 +1,7 @@
 package com.fligneul.srm.ui.node.licensee;
 
 import com.fligneul.srm.di.FXMLGuiceNodeLoader;
+import com.fligneul.srm.ui.model.licensee.ELicenceState;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import com.fligneul.srm.ui.node.utils.DialogUtils;
@@ -104,7 +105,7 @@ public class LicenseeNode extends StackPane {
                     Optional.ofNullable(record.get("Ville")).ifPresent(builder::setCity);
                     Optional.ofNullable(record.get("Email")).ifPresent(builder::setEmail);
                     Optional.ofNullable(record.get("Téléphone portable")).ifPresent(builder::setPhoneNumber);
-                    Optional.ofNullable(record.get("Etat de la licence")).ifPresent(builder::setLicenceState);
+                    Optional.ofNullable(record.get("Etat de la licence")).map(ELicenceState::parse).ifPresent(builder::setLicenceState);
                     Optional.ofNullable(record.get("Date d'origine")).map(date -> LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"))).ifPresent(builder::setFirstLicenceDate);
                     Optional.ofNullable(record.get("Saison")).ifPresent(builder::setSeason);
                     Optional.ofNullable(record.get("Code catégorie d'âge")).ifPresent(builder::setAgeCategory);

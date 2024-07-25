@@ -180,6 +180,11 @@
         </addColumn>
     </changeSet>
     <changeSet author="Florian L." id="8">
+        <addColumn tableName="weapon">
+            <column name="availableFiringPoint" afterColumn="buyDate" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Florian L." id="9"
         <addColumn tableName="licensee">
             <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
         </addColumn>

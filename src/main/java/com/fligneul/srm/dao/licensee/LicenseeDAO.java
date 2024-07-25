@@ -5,6 +5,7 @@ import com.fligneul.srm.dao.logbook.ShootingLogbookDAO;
 import com.fligneul.srm.generated.jooq.Tables;
 import com.fligneul.srm.generated.jooq.tables.records.LicenseeRecord;
 import com.fligneul.srm.service.DatabaseConnectionService;
+import com.fligneul.srm.ui.model.licensee.ELicenceState;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModelBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -70,7 +71,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                             .set(Tables.LICENSEE.CITY, item.getCity())
                             .set(Tables.LICENSEE.EMAIL, item.getEmail())
                             .set(Tables.LICENSEE.PHONENUMBER, item.getPhoneNumber())
-                            .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState())
+                            .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState().name())
                             .set(Tables.LICENSEE.MEDICALCERTIFICATEDATE, item.getMedicalCertificateDate())
                             .set(Tables.LICENSEE.IDCARDDATE, item.getIdCardDate())
                             .set(Tables.LICENSEE.IDPHOTO, item.hasIdPhoto())
@@ -169,7 +170,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
                     .set(Tables.LICENSEE.CITY, item.getCity())
                     .set(Tables.LICENSEE.EMAIL, item.getEmail())
                     .set(Tables.LICENSEE.PHONENUMBER, item.getPhoneNumber())
-                    .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState())
+                    .set(Tables.LICENSEE.LICENCESTATE, item.getLicenceState().name())
                     .set(Tables.LICENSEE.MEDICALCERTIFICATEDATE, item.getMedicalCertificateDate())
                     .set(Tables.LICENSEE.IDCARDDATE, item.getIdCardDate())
                     .set(Tables.LICENSEE.IDPHOTO, item.hasIdPhoto())
@@ -250,7 +251,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         Optional.ofNullable(licenseeRecord.getCity()).ifPresent(builder::setCity);
         Optional.ofNullable(licenseeRecord.getEmail()).ifPresent(builder::setEmail);
         Optional.ofNullable(licenseeRecord.getPhonenumber()).ifPresent(builder::setPhoneNumber);
-        Optional.ofNullable(licenseeRecord.getLicencestate()).ifPresent(builder::setLicenceState);
+        Optional.ofNullable(licenseeRecord.getLicencestate()).map(ELicenceState::parse).ifPresent(builder::setLicenceState);
         Optional.ofNullable(licenseeRecord.getMedicalcertificatedate()).ifPresent(builder::setMedicalCertificateDate);
         Optional.ofNullable(licenseeRecord.getIdcarddate()).ifPresent(builder::setIdCardDate);
         Optional.ofNullable(licenseeRecord.getIdphoto()).ifPresent(builder::setIdPhoto);
