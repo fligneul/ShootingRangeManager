@@ -7,7 +7,6 @@ import com.fligneul.srm.generated.jooq.Tables;
 import com.fligneul.srm.ui.model.licensee.LicenseeJfxModel;
 import com.fligneul.srm.ui.model.presence.LicenseePresenceJfxModel;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
-import io.reactivex.rxjava3.core.Observable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -77,49 +76,47 @@ public class XLSXExportService implements IExportService {
     }
 
     @Override
-    public Observable<Path> export(File file, List<Integer> firingPointIdList, LocalDate beginDate, LocalDate endDate) {
-        return Observable.fromCallable(() -> {
-            LOGGER.info("Start statistics generation from {} to {}", beginDate, endDate);
-            // Get all licensee
-            List<LicenseeJfxModel> licenseeList = licenseeDAO.getAll(Arrays.asList(DSL.upper(Tables.LICENSEE.LASTNAME).asc(), DSL.upper(Tables.LICENSEE.FIRSTNAME).asc()));
-            // Map for cell style
-            Map<DayOfWeek, CellStyle> daysOfWeekStyleMap = new HashMap<>();
+    public Path export(File file, List<Integer> firingPointIdList, LocalDate beginDate, LocalDate endDate) throws IOException {
+        LOGGER.info("Start statistics generation from {} to {}", beginDate, endDate);
+        // Get all licensee
+        List<LicenseeJfxModel> licenseeList = licenseeDAO.getAll(Arrays.asList(DSL.upper(Tables.LICENSEE.LASTNAME).asc(), DSL.upper(Tables.LICENSEE.FIRSTNAME).asc()));
+        // Map for cell style
+        Map<DayOfWeek, CellStyle> daysOfWeekStyleMap = new HashMap<>();
 
-            // Create a XLSX workbook and sheet
-            XSSFWorkbook workbook = new XSSFWorkbook();
-            Sheet sheet = workbook.createSheet(Stream.of(beginDate, endDate)
-                    .map(LocalDate::getYear)
-                    .map(String::valueOf)
-                    .distinct()
-                    .collect(Collectors.joining(EMPTY_HYPHEN)));
+        // Create a XLSX workbook and sheet
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(Stream.of(beginDate, endDate)
+                .map(LocalDate::getYear)
+                .map(String::valueOf)
+                .distinct()
+                .collect(Collectors.joining(EMPTY_HYPHEN)));
 
-            // Create style map
-            createStyle(workbook, daysOfWeekStyleMap);
+        // Create style map
+        createStyle(workbook, daysOfWeekStyleMap);
 
-            // Write selected firing points in 1st cell
-            writeSettings(workbook, sheet, firingPointIdList);
+        // Write selected firing points in 1st cell
+        writeSettings(workbook, sheet, firingPointIdList);
 
-            // Create table licensee headers
-            createLicenseeHeaders(workbook, sheet, licenseeList);
+        // Create table licensee headers
+        createLicenseeHeaders(workbook, sheet, licenseeList);
 
-            // Add total header on last row
-            createTotalHeader(workbook, sheet, licenseeList);
+        // Add total header on last row
+        createTotalHeader(workbook, sheet, licenseeList);
 
-            // Query the DB to retrieve presence for every registered licensee
-            computePresenceForDate(workbook, sheet, firingPointIdList, licenseeList, getOpenedDateList(beginDate, endDate), daysOfWeekStyleMap);
+        // Query the DB to retrieve presence for every registered licensee
+        computePresenceForDate(workbook, sheet, firingPointIdList, licenseeList, getOpenedDateList(beginDate, endDate), daysOfWeekStyleMap);
 
-            // Create statistics cells
-            computeStats(workbook, sheet, firingPointIdList);
+        // Create statistics cells
+        computeStats(workbook, sheet, firingPointIdList);
 
-            // Save XLSX workbook to disk
-            writeToDisk(file, workbook);
+        // Save XLSX workbook to disk
+        writeToDisk(file, workbook);
 
-            // Close workbook
-            workbook.close();
+        // Close workbook
+        workbook.close();
 
-            LOGGER.info("Generation complete");
-            return file.toPath();
-        });
+        LOGGER.info("Generation complete");
+        return file.toPath();
     }
 
     private void createStyle(Workbook workbook, Map<DayOfWeek, CellStyle> daysOfWeekStyleMap) {
