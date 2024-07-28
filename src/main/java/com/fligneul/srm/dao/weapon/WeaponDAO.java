@@ -150,7 +150,8 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
     public void delete(@Nonnull final WeaponJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.WEAPON)
+                    .update(Tables.WEAPON)
+                    .set(Tables.WEAPON.DELETED, true)
                     .where(Tables.WEAPON.ID.eq(item.getId()))
                     .execute();
 
@@ -164,7 +165,7 @@ public class WeaponDAO implements IDAO<WeaponJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.WEAPON)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.WEAPON.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> WeaponRecord.class.isAssignableFrom(record.getClass()))

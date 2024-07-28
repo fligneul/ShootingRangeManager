@@ -150,7 +150,8 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
     public void delete(@Nonnull final FiringPostJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.FIRINGPOST)
+                    .update(Tables.FIRINGPOST)
+                    .set(Tables.FIRINGPOST.DELETED, true)
                     .where(Tables.FIRINGPOST.ID.eq(item.getId()))
                     .execute();
             databaseConnectionService.getConnection().commit();
@@ -163,7 +164,7 @@ public class FiringPostDAO implements IDAOWithForeignKey<FiringPostJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.FIRINGPOST)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.FIRINGPOST.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> FiringpostRecord.class.isAssignableFrom(record.getClass()))
