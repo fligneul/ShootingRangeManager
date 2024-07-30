@@ -26,7 +26,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.nio.file.Path;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 
 import static com.fligneul.srm.ui.ShootingRangeManagerConstants.EMPTY;
@@ -95,7 +97,7 @@ public class LicenseeCreateNode extends VBox {
     private ProfilePictureService profilePictureService;
 
     private LicenseeJfxModel currentLicenseeJfxModel;
-    private Path tempProfilePicture;
+    private URI tempProfilePicture;
 
     public LicenseeCreateNode(final LicenseeJfxModel licenseeJfxModel) {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -129,8 +131,12 @@ public class LicenseeCreateNode extends VBox {
             pictureChooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp"));
             File picture = pictureChooser.showOpenDialog(getScene().getWindow());
             if (picture != null) {
-                tempProfilePicture = picture.toPath();
-                profileImage.setImage(new Image(picture.getPath()));
+                tempProfilePicture = picture.toURI();
+                try (FileInputStream profileImageInputStream = new FileInputStream(new File(picture.toURI()))) {
+                    profileImage.setImage(new Image(profileImageInputStream));
+                } catch (IOException e) {
+                    LOGGER.error("Error during profile image loading", e);
+                }
             } else {
                 tempProfilePicture = null;
             }

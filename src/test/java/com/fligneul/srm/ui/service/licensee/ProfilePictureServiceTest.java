@@ -30,6 +30,7 @@ public class ProfilePictureServiceTest {
     }
 
     @Test
+    @SuppressWarnings("ConstantConditions")
     void profilePictureTest() throws URISyntaxException {
         String defaultPicturePath = "/com/fligneul/srm/image/default-picture.png";
         Path pictureDirectory = Path.of(System.getenv("TMP"), "ShootingRangeManager_" + salt);
@@ -43,7 +44,7 @@ public class ProfilePictureServiceTest {
         Assertions.assertEquals(defaultPicture, profilePictureService.getProfilePicture("wrong-picture.png"));
 
         // Save picture
-        Optional<String> savedFileName = profilePictureService.saveProfilePicture(Path.of(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI()), Optional.empty());
+        Optional<String> savedFileName = profilePictureService.saveProfilePicture(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI(), Optional.empty());
         Assertions.assertTrue(savedFileName.isPresent());
         Assertions.assertTrue(Files.exists(Path.of(pictureDirectory.toString(), savedFileName.get())));
 
@@ -51,12 +52,12 @@ public class ProfilePictureServiceTest {
         Optional<Image> savedImage = profilePictureService.getProfilePicture(savedFileName.get());
         Assertions.assertTrue(savedImage.isPresent());
         // Saved picture should be different from the original picture
-        Assertions.assertNotEquals(Optional.of(new Image(Path.of(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI()).toUri().toString())), savedImage);
+        Assertions.assertNotEquals(Optional.of(new Image(getClass().getResourceAsStream("/com/fligneul/srm/image/default-picture.png"))), savedImage);
         // Saved picture should be different from the default one
         Assertions.assertNotEquals(profilePictureService.getProfilePicture(), savedImage);
 
         // Resave and delete old picture
-        Optional<String> fileName2 = profilePictureService.saveProfilePicture(Path.of(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI()), savedFileName);
+        Optional<String> fileName2 = profilePictureService.saveProfilePicture(getClass().getResource("/com/fligneul/srm/image/default-picture.png").toURI(), savedFileName);
         Assertions.assertTrue(fileName2.isPresent());
         Assertions.assertNotEquals(savedFileName, fileName2);
         Assertions.assertFalse(Files.exists(Path.of(pictureDirectory.toString(), savedFileName.get())));

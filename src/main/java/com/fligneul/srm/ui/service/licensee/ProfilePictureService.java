@@ -100,7 +100,7 @@ public class ProfilePictureService {
      *         name of the already saved picture
      * @return the random filename generated for the saved picture
      */
-    public Optional<String> saveProfilePicture(Path picture, Optional<String> alreadySavedPicture) {
+    public Optional<String> saveProfilePicture(URI picture, Optional<String> alreadySavedPicture) {
         try {
             // Remove old picture if exist
             alreadySavedPicture
@@ -114,7 +114,7 @@ public class ProfilePictureService {
                         }
                     });
             // Load image and resize it
-            BufferedImage inputImage = ImageIO.read(picture.toFile());
+            BufferedImage inputImage = ImageIO.read(picture.toURL());
             BufferedImage scaledImage = Scalr.resize(inputImage, Scalr.Mode.FIT_TO_WIDTH, PROFILE_PICTURE_TARGET_SIZE);
             // Generate random filename
             String imageName = RandomStringUtils.randomAlphanumeric(32).toUpperCase() + "." + PROFILE_PICTURE_TARGET_EXTENSION;
