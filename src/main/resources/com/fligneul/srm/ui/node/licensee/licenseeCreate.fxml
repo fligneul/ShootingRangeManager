@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <fx:root maxWidth="800.0" type="VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
     <children>
         <GridPane hgap="10.0" vgap="5.0">
@@ -36,9 +37,16 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
-            <ImageView fx:id="profileImage" fitWidth="130.0" pickOnBounds="true" preserveRatio="true"
-                       GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="5"
-                       GridPane.valignment="CENTER"/>
+            <VBox GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="5"
+                  GridPane.valignment="CENTER" alignment="CENTER" spacing="10">
+
+                <ImageView fx:id="profileImage" fitWidth="120.0" pickOnBounds="true" preserveRatio="true"/>
+                <Button fx:id="deleteButton" maxHeight="20" maxWidth="20" minHeight="20" minWidth="20" onAction="#deletePicture">
+                    <graphic>
+                        <FontIcon iconColor="#e53935" iconLiteral="fas-trash-alt" iconSize="16"/>
+                    </graphic>
+                </Button>
+            </VBox>
 
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0"
                   GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">

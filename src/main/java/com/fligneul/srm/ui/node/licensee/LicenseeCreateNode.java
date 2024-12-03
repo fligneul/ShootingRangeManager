@@ -98,6 +98,7 @@ public class LicenseeCreateNode extends VBox {
 
     private LicenseeJfxModel currentLicenseeJfxModel;
     private URI tempProfilePicture;
+    private boolean deletePicture = false;
 
     public LicenseeCreateNode(final LicenseeJfxModel licenseeJfxModel) {
         FXMLGuiceNodeLoader.loadFxml(FXML_PATH, this);
@@ -132,6 +133,7 @@ public class LicenseeCreateNode extends VBox {
             File picture = pictureChooser.showOpenDialog(getScene().getWindow());
             if (picture != null) {
                 tempProfilePicture = picture.toURI();
+                deletePicture = false;
                 try (FileInputStream profileImageInputStream = new FileInputStream(new File(picture.toURI()))) {
                     profileImage.setImage(new Image(profileImageInputStream));
                 } catch (IOException e) {
@@ -171,6 +173,7 @@ public class LicenseeCreateNode extends VBox {
 
     private void clearComponents() {
         currentLicenseeJfxModel = null;
+        deletePicture = false;
 
         licenceNumberTextField.setText(EMPTY);
         firstnameTextField.setText(EMPTY);
@@ -200,6 +203,7 @@ public class LicenseeCreateNode extends VBox {
 
     private void updateComponents(LicenseeJfxModel licenseeJfxModel) {
         currentLicenseeJfxModel = licenseeJfxModel;
+        deletePicture = false;
 
         licenceNumberTextField.setText(licenseeJfxModel.getLicenceNumber());
         firstnameTextField.setText(licenseeJfxModel.getFirstName());
@@ -256,9 +260,14 @@ public class LicenseeCreateNode extends VBox {
         Optional.ofNullable(medicalCertificateDatePicker.getValue()).ifPresent(builder::setMedicalCertificateDate);
         Optional.ofNullable(idCardDatePicker.getValue()).ifPresent(builder::setIdCardDate);
         Optional.ofNullable(idCardDatePicker.getValue()).ifPresent(builder::setIdCardDate);
-        Optional.ofNullable(tempProfilePicture)
-                .flatMap(picture -> profilePictureService.saveProfilePicture(picture, Optional.ofNullable(currentLicenseeJfxModel).map(LicenseeJfxModel::getPhotoPath)))
-                .ifPresent(builder::setPhotoPath);
+
+        if (deletePicture) {
+            builder.setPhotoPath(null);
+        } else {
+            Optional.ofNullable(tempProfilePicture)
+                    .flatMap(picture -> profilePictureService.saveProfilePicture(picture, Optional.ofNullable(currentLicenseeJfxModel).map(LicenseeJfxModel::getPhotoPath)))
+                    .ifPresentOrElse(builder::setPhotoPath, () -> builder.setPhotoPath(currentLicenseeJfxModel.getPhotoPath()));
+        }
 
         licenseeServiceToJfxModel.saveLicensee(builder.createLicenseeJfxModel());
         clearComponents();
@@ -269,6 +278,12 @@ public class LicenseeCreateNode extends VBox {
     private void cancel() {
         clearComponents();
         closeStage();
+    }
+
+    @FXML
+    private void deletePicture() {
+        deletePicture = true;
+        profilePictureService.getProfilePicture().ifPresent(image -> profileImage.setImage(image));
     }
 
     private void closeStage() {
