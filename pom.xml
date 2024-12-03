@@ -6,7 +6,7 @@
 
     <groupId>com.fligneul.srm</groupId>
     <artifactId>shooting-range-manager</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <description>Shooting Range management software</description>
     <organization>
         <name>Florian L.</name>
