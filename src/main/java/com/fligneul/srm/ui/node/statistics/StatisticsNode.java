@@ -4,6 +4,7 @@ import com.fligneul.srm.di.FXMLGuiceNodeLoader;
 import com.fligneul.srm.service.IExportService;
 import com.fligneul.srm.ui.model.range.FiringPointJfxModel;
 import com.fligneul.srm.ui.service.range.FiringPointServiceToJfxModel;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -108,7 +109,7 @@ public class StatisticsNode extends StackPane {
             }
             statisticsDisplayContainer.setVisible(false);
 
-            disposable = exportService.export(file, rangeListView.getCheckModel().getCheckedItems().stream().map(FiringPointJfxModel::getId).collect(Collectors.toList()), statisticsBeginDatePicker.getValue(), statisticsEndDatePicker.getValue())
+            disposable = Observable.fromCallable(() -> exportService.export(file, rangeListView.getCheckModel().getCheckedItems().stream().map(FiringPointJfxModel::getId).collect(Collectors.toList()), statisticsBeginDatePicker.getValue(), statisticsEndDatePicker.getValue()))
                     .subscribeOn(Schedulers.computation())
                     .observeOn(JavaFxScheduler.platform())
                     .doOnSubscribe(any -> {

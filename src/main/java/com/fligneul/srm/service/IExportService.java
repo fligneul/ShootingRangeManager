@@ -1,8 +1,7 @@
 package com.fligneul.srm.service;
 
-import io.reactivex.rxjava3.core.Observable;
-
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +21,7 @@ public interface IExportService {
      *         begin date of export
      * @param endDate
      *         end date of export
-     * @return an {@link Observable} of the export file path
+     * @return the export file path
      */
-    Observable<Path> export(File file, List<Integer> firingPointIdList, LocalDate beginDate, LocalDate endDate);
+    Path export(File file, List<Integer> firingPointIdList, LocalDate beginDate, LocalDate endDate) throws IOException;
 }
