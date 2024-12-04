@@ -201,7 +201,8 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
     public void delete(@Nonnull final LicenseeJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.LICENSEE)
+                    .update(Tables.LICENSEE)
+                    .set(Tables.LICENSEE.DELETED, true)
                     .where(Tables.LICENSEE.ID.eq(item.getId()))
                     .execute();
 
@@ -223,7 +224,7 @@ public class LicenseeDAO implements IDAO<LicenseeJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.LICENSEE)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.LICENSEE.DELETED.eq(false)), conditions.stream()).toArray(Condition[]::new))
                 .orderBy(orders)
                 .fetch()
                 .stream()
