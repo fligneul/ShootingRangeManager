@@ -266,7 +266,7 @@ public class LicenseeCreateNode extends VBox {
         } else {
             Optional.ofNullable(tempProfilePicture)
                     .flatMap(picture -> profilePictureService.saveProfilePicture(picture, Optional.ofNullable(currentLicenseeJfxModel).map(LicenseeJfxModel::getPhotoPath)))
-                    .ifPresentOrElse(builder::setPhotoPath, () -> builder.setPhotoPath(currentLicenseeJfxModel.getPhotoPath()));
+                    .ifPresentOrElse(builder::setPhotoPath, () -> Optional.ofNullable(currentLicenseeJfxModel).ifPresent(current -> builder.setPhotoPath(current.getPhotoPath())));
         }
 
         licenseeServiceToJfxModel.saveLicensee(builder.createLicenseeJfxModel());
