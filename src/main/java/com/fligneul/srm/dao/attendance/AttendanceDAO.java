@@ -239,10 +239,10 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
     public void delete(@Nonnull final LicenseePresenceJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.ATTENDANCE)
+                    .update(Tables.ATTENDANCE)
+                    .set(Tables.ATTENDANCE.DELETED, true)
                     .where(Tables.ATTENDANCE.ID.eq(item.getId()))
                     .execute();
-
             databaseConnectionService.getConnection().commit();
         } catch (DataAccessException | SQLException e) {
             LOGGER.error("Error during licensee presence deletion", e);
@@ -273,7 +273,7 @@ public class AttendanceDAO implements IDAO<LicenseePresenceJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.ATTENDANCE)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.ATTENDANCE.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> AttendanceRecord.class.isAssignableFrom(record.getClass()))

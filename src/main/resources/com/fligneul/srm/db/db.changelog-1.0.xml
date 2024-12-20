@@ -184,4 +184,30 @@
             <column name="availableFiringPoint" afterColumn="buyDate" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Florian L." id="9">
+        <addColumn tableName="licensee">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="firingPoint">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="firingPost">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="attendance">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="weapon">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="status">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="targetHolder">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+        <addColumn tableName="caliber">
+            <column name="deleted" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

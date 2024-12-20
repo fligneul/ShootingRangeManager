@@ -133,7 +133,8 @@ public class StatusDAO implements IDAO<StatusJfxModel> {
     public void delete(@Nonnull final StatusJfxModel item) {
         try {
             databaseConnectionService.getContext()
-                    .delete(Tables.STATUS)
+                    .update(Tables.STATUS)
+                    .set(Tables.STATUS.DELETED, true)
                     .where(Tables.STATUS.ID.eq(item.getId()))
                     .execute();
 
@@ -147,7 +148,7 @@ public class StatusDAO implements IDAO<StatusJfxModel> {
         return databaseConnectionService.getContext()
                 .select()
                 .from(Tables.STATUS)
-                .where(conditions)
+                .where(Stream.concat(Stream.of(Tables.STATUS.DELETED.eq(false)), Stream.of(conditions)).toArray(Condition[]::new))
                 .fetch()
                 .stream()
                 .filter(record -> StatusRecord.class.isAssignableFrom(record.getClass()))
