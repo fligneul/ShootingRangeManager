@@ -34,31 +34,31 @@
         <application.name>Shooting Range Manager</application.name>
         <application.main.class>com.fligneul.srm.ui.ShootingRangeManagerLauncher</application.main.class>
 
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <javafx.version>21.0.4</javafx.version>
+        <javafx.version>21.0.5</javafx.version>
         <controlsfx.version>11.2.1</controlsfx.version>
         <guice.version>5.1.0</guice.version>
-        <rxjava3.version>3.1.8</rxjava3.version>
+        <rxjava3.version>3.1.10</rxjava3.version>
         <rxjavafx.version>2.11.0-RC36</rxjavafx.version>
         <h2.version>2.2.224</h2.version>
-        <liquibase.version>4.28.0</liquibase.version>
+        <liquibase.version>4.29.2</liquibase.version>
         <snakeyaml.version>2.2</snakeyaml.version>
-        <jooq.version>3.18.17</jooq.version>
+        <jooq.version>3.18.22</jooq.version>
         <ikonli.version>12.3.1</ikonli.version>
-        <commons-csv.version>1.11.0</commons-csv.version>
+        <commons-csv.version>1.12.0</commons-csv.version>
         <apache-poi.version>5.3.0</apache-poi.version>
         <zip4j.version>2.11.5</zip4j.version>
-        <imageio.version>3.11.0</imageio.version>
+        <imageio.version>3.12.0</imageio.version>
         <imgscalr.version>4.2</imgscalr.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <commons-text.version>1.12.0</commons-text.version>
-        <commons-lang.version>3.15.0</commons-lang.version>
-        <commons-io.version>2.16.1</commons-io.version>
+        <commons-lang.version>3.17.0</commons-lang.version>
+        <commons-io.version>2.18.0</commons-io.version>
         <commons-validator.version>1.9.0</commons-validator.version>
 
         <!-- LOG -->
@@ -66,20 +66,20 @@
 
         <!-- MAVEN PLUGIN -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
-        <maven-dependency-plugin.version>3.7.1</maven-dependency-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-dependency-plugin.version>3.8.1</maven-dependency-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
-        <launch4j-maven-plugin.version>2.5.1</launch4j-maven-plugin.version>
+        <launch4j-maven-plugin.version>2.5.2</launch4j-maven-plugin.version>
         <jsign-maven-plugin.version>6.0</jsign-maven-plugin.version>
         <javafx-maven-plugin.version>0.0.8</javafx-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
 
         <!-- Unit tests -->
-        <junit-launcher.version>1.10.3</junit-launcher.version>
-        <junit-jupiter.version>5.10.3</junit-jupiter.version>
+        <junit-launcher.version>1.11.3</junit-launcher.version>
+        <junit-jupiter.version>5.11.3</junit-jupiter.version>
         <testfx.version>4.0.18</testfx.version>
-        <mockito.version>5.12.0</mockito.version>
+        <mockito.version>5.14.2</mockito.version>
 
         <!-- Args default values -->
         <SRM_KEYSTORE_ALIAS>dummy</SRM_KEYSTORE_ALIAS>
