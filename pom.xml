@@ -62,7 +62,7 @@
         <commons-validator.version>1.9.0</commons-validator.version>
 
         <!-- LOG -->
-        <log4j.version>2.23.1</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
 
         <!-- MAVEN PLUGIN -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
